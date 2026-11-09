@@ -4,61 +4,61 @@
 #include <math.h>
 #include <stdio.h>
 
-struct Vector2_t {
-  int x,y;
-};
-
 namespace vector2 {
 
-  const Vector2_t kZero = {0,0};
+  struct Type {
+    int x,y;
+  };
 
-  Vector2_t Sum(Vector2_t v1, Vector2_t v2) {
+  const Type kZero = {0,0};
+
+  Type Sum(Type v1, Type v2) {
     return { 
       v1.x + v2.x,
       v1.y + v2.y
     };
   }
 
-  Vector2_t Sub(Vector2_t v1, Vector2_t v2) {
+  Type Sub(Type v1, Type v2) {
     return { 
       v1.x - v2.x,
       v1.y - v2.y
     };
   }
 
-  Vector2_t Mult(Vector2_t v1, Vector2_t v2) {
+  Type Mult(Type v1, Type v2) {
     return { 
       v1.x * v2.x,
       v1.y * v2.y
     };
   }
 
-  Vector2_t Div(Vector2_t v1, Vector2_t v2) {
+  Type Div(Type v1, Type v2) {
     return { 
       v1.x / v2.x,
       v1.y / v2.y
     };
   }
 
-  Vector2_t Mult(Vector2_t v, int n) {
+  Type Mult(Type v, int n) {
     return { 
       v.x * n,
       v.y * n
     };
   }
 
-  Vector2_t Div(Vector2_t v, int n) {
+  Type Div(Type v, int n) {
     return { 
       v.x / n,
       v.y / n
     };
   }
 
-  float Magnitude(Vector2_t v) {
+  float Magnitude(Type v) {
     return sqrt(v.x*v.x + v.y*v.y);
   }
 
-  void Print(Vector2_t v) {
+  void Print(Type v) {
     printf("{ %d, %d }\n", v.x, v.y);
   }
 
