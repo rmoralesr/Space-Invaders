@@ -17,10 +17,6 @@ const int kScreenHeight = 600;
 // TYPES ---------------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------------
 
-struct Vector2 {
-    float x, y;
-};
-
 struct Game {
     // TODO
 };
@@ -29,22 +25,25 @@ struct Assets {
     // TODO
 };
 
+Game g_game = {};
+Assets g_assets = {};
+
 // ---------------------------------------------------------------------------------------------------------------------
 // MAIN FUNCTIONS ------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------------
 
 /** @brief Inicializa las variables necesarias para el juego */
-void GameInit(Game *game) {
+void GameInit() {
     // TODO
 }
 
 /** @brief Actualiza los datos del juego */
-void GameUpdate(Game *game) {
+void GameUpdate() {
     // TODO
 }
 
 /** @brief Dibuja el juego en la ventana */
-void GameRender(Game *game) {
+void GameRender() {
     // TODO
 }
 
@@ -57,15 +56,15 @@ void FrameWait(double last_time) {
 }
 
 /** @brief Bucle principal del juego, hasta que se cierra la ventana */
-void GameLoop(Game *game) {
+void GameLoop() {
     while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
         double last_time = esat::Time();
 
-        GameUpdate(game);
+        GameUpdate();
 
         esat::DrawBegin();
         esat::DrawClear(0,0,0);
-        GameRender(game);
+        GameRender();
         esat::DrawEnd();
 
         FrameWait(last_time);
@@ -76,11 +75,10 @@ void GameLoop(Game *game) {
 int esat::main(int argc, char **argv) {
     esat::WindowInit(800,600);
     WindowSetMouseVisibility(true);
-    Game game;
 
-    GameInit(&game);
+    GameInit();
 
-    GameLoop(&game);
+    GameLoop();
 
     esat::WindowDestroy();
     return 0;
