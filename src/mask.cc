@@ -19,7 +19,7 @@ namespace mask {
   };
 
 
-  unsigned char GetPosition(Type *mask, unsigned int x, unsigned int, y) {
+  unsigned int GetPosition(Type *mask, unsigned int x, unsigned int y) {
     assert(x < (unsigned int)mask->size.x);
     assert(y < (unsigned int)mask->size.y);
     assert((y * mask->size.x + x) / 8 < MASK_WORD_COUNT);
@@ -44,6 +44,7 @@ namespace mask {
 
   unsigned char ReadBit(Type *mask, unsigned int x, unsigned int y) {
     unsigned int pos = GetPosition(mask, x,y);
+
     return ReadBitFromWord(
       mask->matrix[ pos / 8 ],
       pos % 8
@@ -53,8 +54,9 @@ namespace mask {
   void WriteBit(Type *mask, unsigned int x, unsigned int y, unsigned int v) {
     unsigned int pos = GetPosition(mask, x,y);
 
-    WriteBitToWord(word,
-      GetBitIndex(mask, x,y) % 8,
+    WriteBitToWord(
+      &mask->matrix[ pos / 8 ],
+      pos % 8,
       v
     );
   }

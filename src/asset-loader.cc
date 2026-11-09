@@ -1,7 +1,7 @@
 #ifndef ASSET_LOADER_CC
 #define ASSET_LOADER_CC 1
 
-#include "vector2.cc"
+#include "cirno.cc"
 #include "mask.cc"
 
 namespace assets {

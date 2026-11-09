@@ -1,8 +1,28 @@
-#ifndef GAME_VECTOR2_CC
-#define GAME_VECTOR2_CC 1
+#ifndef CIRNO_PERFECT_MATH_CC
+#define CIRNO_PERFECT_MATH_CC 1
 
 #include <math.h>
 #include <stdio.h>
+
+
+int clamp(int x, int lower, int upper) {
+  if (x > upper) return upper;
+  if (x < lower) return lower;
+  return x;
+}
+
+int min(int a, int b) {
+  return a < b ? a : b;
+}
+
+int max(int a, int b) {
+  return a > b ? a : b;
+}
+
+int sign(int x) {
+  return x < 0 ? -1 : 1;
+}
+
 
 namespace vector2 {
 
@@ -68,4 +88,4 @@ namespace vector2 {
 
 }
 
-#endif // GAME_VECTOR2_CC
+#endif // CIRNO_PERFECT_MATH_CC
