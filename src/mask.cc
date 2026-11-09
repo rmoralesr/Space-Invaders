@@ -8,7 +8,7 @@
 #include <esat/sprite.h>
 #include <assert.h>
 
-#include "vector2.cc"
+#include "cirno.cc"
 
 
 namespace mask {
@@ -18,11 +18,16 @@ namespace mask {
     unsigned char matrix[MASK_WORD_COUNT] = {0}; // Uso unsigned char porque no necesitamos el signo y el size de char NO varia entre compiladores
   };
 
+  bool IsValidPosition(Type *mask, unsigned int x, unsigned int y) {
+    return (
+      x < (unsigned int)mask->size.x
+      && y < (unsigned int)mask->size.y
+      && (y * mask->size.x + x) / 8 < MASK_WORD_COUNT
+    );
+  }
 
   unsigned int GetPosition(Type *mask, unsigned int x, unsigned int y) {
-    assert(x < (unsigned int)mask->size.x);
-    assert(y < (unsigned int)mask->size.y);
-    assert((y * mask->size.x + x) / 8 < MASK_WORD_COUNT);
+    assert(IsValidPosition(mask, x,y)); // Borrar en release
 
     return y * mask->size.x + x;
   }
@@ -51,7 +56,7 @@ namespace mask {
     );
   }
 
-  void WriteBit(Type *mask, unsigned int x, unsigned int y, unsigned int v) {
+  void WriteBit(Type *mask, unsigned int x, unsigned int y, unsigned char v) {
     unsigned int pos = GetPosition(mask, x,y);
 
     WriteBitToWord(

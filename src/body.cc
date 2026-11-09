@@ -3,7 +3,7 @@
 
 #include <math.h>
 
-#include "vector2.cc"
+#include "cirno.cc"
 #include "mask.cc"
 
 namespace body {
@@ -29,15 +29,30 @@ namespace body {
     };
   }
   
-  bool Collide(Type *A, Type *B,
-    body::Type *outBody
+  /** @brief Retorna la cantidad de pixeles que se tocan entre dos bodies */
+  unsigned int Collide(Type *A, Type *B,
+    Type *out_body
   ) {
 
     vector2::Type overlap = GetOverlap(A, B);
 
     if (overlap.x > 0 && overlap.y > 0) {
 
+      unsigned int 
+
+      vector2::Type corner = {
+        max(A->position.x, B->position.x),
+        max(A->position.y, B->position.y)
+      };
+
       
+      for (int y = 0; y < overlap.y; y++) {
+        for (int x = 0; x < overlap.x; x++) {
+
+          // TODO
+
+        }
+      }
 
 
     } else {
