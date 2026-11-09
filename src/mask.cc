@@ -75,7 +75,7 @@ namespace mask {
         sub_size.x, sub_size.y
       );
 
-      east::SpriteRelease(sprite);
+      esat::SpriteRelease(sprite);
 
       sprite = aux;
     }
@@ -88,7 +88,7 @@ namespace mask {
     for (int y = 0; y < my; y++) {
       for (int x = 0; x < mx; x++) {
 
-        esat::SpriteGetPixel(x,y, RGBA);
+        esat::SpriteGetPixel(sprite, x,y, RGBA);
 
         if (RGBA[3] == 255) { // El pixel es opaco
           WriteBit(mask, x,y,1);
@@ -97,7 +97,7 @@ namespace mask {
       }
     }
 
-    east::SpriteRelease(sprite);
+    esat::SpriteRelease(sprite);
   }
 
 }
