@@ -13,6 +13,7 @@ const unsigned char kFps = 25; //Control de frames por segundo
 const int kScreenWidth = 800;
 const int kScreenHeight = 600;
 const int kPossibleCharacters = 42;
+const int kCharacterWidth = 5;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // TYPES ---------------------------------------------------------------------------------------------------------------
@@ -23,11 +24,36 @@ struct Game {
 };
 
 struct Assets {
-    // Sprite text[42]; Todos los posibles caracteres del juego, sacar un spritesheet de ellos y asignarlos TODO
+    // Sprite TextSprites[42]; Todos los posibles caracteres del juego, sacar un spritesheet de ellos y asignarlos TODO
 };
 
 Game g_game = {};
 Assets g_assets = {};
+
+// ---------------------------------------------------------------------------------------------------------------------
+// TEXT FUNCTIONS ------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
+
+void GenerateCharacter(unsigned char c, vector2:Vector2_t position){
+    if (c >= '0' && c <= '9') {
+        c -= '0';
+    } else {
+        if (c >= 'a' && c <= 'z') c -= 'a';
+    }
+    // body = GenerateBody(TextSprites[c], position) //FUNCION SIN IMPLEMENTAR
+    // Añadir body a la array de objetos "character"
+    }
+
+void GenerateNumberCharacters(int value, int digits, vector2:Vector2_t position){
+    if (value > pow(10, digits)-1) value = pow(10, digits)-1;
+    for (int i = 0; i<digits; i++){
+        int number = value/pow(10, digits-1-i);
+        GenerateCharacter('0'+number, position);
+        position.x += kCharacterWidth;
+        value %= pow(10,digits-1-i);
+    }
+    }
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 // MAIN FUNCTIONS ------------------------------------------------------------------------------------------------------
