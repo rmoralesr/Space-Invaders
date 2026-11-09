@@ -12,6 +12,7 @@
 const unsigned char kFps = 25; //Control de frames por segundo
 const int kScreenWidth = 800;
 const int kScreenHeight = 600;
+const int kPossibleCharacters = 42;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // TYPES ---------------------------------------------------------------------------------------------------------------
@@ -22,7 +23,7 @@ struct Game {
 };
 
 struct Assets {
-    // TODO
+    // Sprite text[42]; Todos los posibles caracteres del juego, sacar un spritesheet de ellos y asignarlos TODO
 };
 
 Game g_game = {};
