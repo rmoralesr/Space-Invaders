@@ -5,13 +5,14 @@
 #include <esat/time.h>
 #include <stdio.h>
 
+#include "vector2.cc"
+
 // ---------------------------------------------------------------------------------------------------------------------
 // CONSTANTS -----------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------------
 
-const unsigned char kFps = 25; //Control de frames por segundo
-const int kScreenWidth = 800;
-const int kScreenHeight = 600;
+const unsigned char kTargetFps = 25; //Control de frames por segundo
+const vector2::Type kWindowSize = {800, 600};
 const int kPossibleCharacters = 42;
 const int kCharacterWidth = 5;
 
@@ -21,10 +22,6 @@ const int kCharacterWidth = 5;
 
 struct Game {
     // TODO
-};
-
-struct Assets {
-    // Sprite TextSprites[42]; Todos los posibles caracteres del juego, sacar un spritesheet de ellos y asignarlos TODO
 };
 
 Game g_game = {};
@@ -79,7 +76,7 @@ void FrameWait(double last_time) {
     double current_time;
     do{
         current_time = esat::Time();
-    }while(current_time-last_time<=1000.0/kFps);
+    } while(current_time - last_time <= 1000.0 / kTargetFps);
 }
 
 /** @brief Bucle principal del juego, hasta que se cierra la ventana */
@@ -100,7 +97,7 @@ void GameLoop() {
 }
 
 int esat::main(int argc, char **argv) {
-    esat::WindowInit(800,600);
+    esat::WindowInit(kWindowSize.x, kWindowSize.y);
     WindowSetMouseVisibility(true);
 
     GameInit();

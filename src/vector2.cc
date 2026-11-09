@@ -12,6 +12,10 @@ namespace vector2 {
 
   const Type kZero = {0,0};
 
+  bool isZero(Type v) {
+    return v.x == 0 && v.y == 0;
+  }
+
   Type Sum(Type v1, Type v2) {
     return { 
       v1.x + v2.x,
