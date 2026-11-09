@@ -5,10 +5,10 @@
 
 
 #include <stdio.h>
-#include <sprite.h>
-#include <assert.h>
+#include <esat/sprite.h>
+//#include <assert.h>
 
-#include <vector2.cc>
+#include "vector2.cc"
 
 
 namespace mask {
@@ -19,12 +19,12 @@ namespace mask {
   };
 
 
-  unsigned int GetWordIndex(Type *mask, unsigned int x, unsigned int y) {
-    return x / 8 + y * mask->size.x / 8;
-  }
+  unsigned char GetPosition(Type *mask, unsigned int x, unsigned int, y) {
+    assert(x < (unsigned int)mask->size.x);
+    assert(y < (unsigned int)mask->size.y);
+    assert((y * mask->size.x + x) / 8 < MASK_WORD_COUNT);
 
-  unsigned char GetBitIndex(Type *mask, unsigned int x, unsigned int y) {
-    return x + y * mask->size.x;
+    return y * mask->size.x + x;
   }
 
 
@@ -42,21 +42,63 @@ namespace mask {
     }
   }
 
-
   unsigned char ReadBit(Type *mask, unsigned int x, unsigned int y) {
+    unsigned int pos = GetPosition(mask, x,y);
     return ReadBitFromWord(
-      mask->matrix[ GetWordIndex(mask, x,y) ],
-      GetBitIndex(mask, x,y) % 8
+      mask->matrix[ pos / 8 ],
+      pos % 8
     );
   }
 
   void WriteBit(Type *mask, unsigned int x, unsigned int y, unsigned int v) {
-    unsigned char word = mask->matrix[x + y * 8];
+    unsigned int pos = GetPosition(mask, x,y);
 
-    WriteBitToWord(&word, x%8);
+    WriteBitToWord(word,
+      GetBitIndex(mask, x,y) % 8,
+      v
+    );
   }
 
+  /**  @brief Crea una mask dado el path de un sprite
+    Opcionalmente se le puede dar una sub posicion y un sub tamaño,
+    entonces utilizará el sub Sprite dado por esas dimensiones
+  */
+  void FromFile(Type *mask, const char *path, 
+    vector2::Type sub_position = {0,0},
+    vector2::Type sub_size = {0,0}
+  ) {
+    esat::SpriteHandle sprite = esat::SpriteFromFile(path);
 
+    if (!vector2::isZero(sub_size)) {
+      esat::SpriteHandle aux = esat::SubSprite(sprite, 
+        sub_position.x, sub_position.y, 
+        sub_size.x, sub_size.y
+      );
+
+      east::SpriteRelease(sprite);
+
+      sprite = aux;
+    }
+
+    unsigned char RGBA[4] = {0};
+
+    int mx = esat::SpriteWidth(sprite);
+    int my = esat::SpriteHeight(sprite);
+
+    for (int y = 0; y < my; y++) {
+      for (int x = 0; x < mx; x++) {
+
+        esat::SpriteGetPixel(x,y, RGBA);
+
+        if (RGBA[3] == 255) { // El pixel es opaco
+          WriteBit(mask, x,y,1);
+        }
+
+      }
+    }
+
+    east::SpriteRelease(sprite);
+  }
 }
 
 #endif //GAME_MASK_CC
