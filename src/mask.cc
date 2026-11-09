@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include <esat/sprite.h>
-//#include <assert.h>
+#include <assert.h>
 
 #include "vector2.cc"
 
@@ -99,6 +99,7 @@ namespace mask {
 
     east::SpriteRelease(sprite);
   }
+
 }
 
 #endif //GAME_MASK_CC
