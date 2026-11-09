@@ -1,3 +1,7 @@
+# Others
+*.bat
+.idea
+
 # Prerequisites
 *.d
 
