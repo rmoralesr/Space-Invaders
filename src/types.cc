@@ -14,11 +14,17 @@
 // LOS TIPOS ESPECIFICOS PARA UN MODULO SE DECLARAN EN EL NAMESPACE DEL MODULO,
 // PERO NO SE DEBERÍAN USAR EN NINGÚN OTRO ENTONCES
 
+enum GameState {
+    kGameState_Playing,
+    kGameState_Menu
+};
+
 const unsigned char kTargetFps = 25; //Control de frames por segundo
 const Vector2_t kWindowSize = {800, 600};
 
 struct Game {
     // TODO
+    GameState game_state;
     Input input;
 };
 
