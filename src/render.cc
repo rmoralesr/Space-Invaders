@@ -1,7 +1,7 @@
 #ifndef RENDER_CC
 #define RENDER_CC 1
 
-#include <types.cc>
+#include "types.cc"
 
 // FUNCIONES DE RENDERIZADO
 

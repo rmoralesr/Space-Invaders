@@ -7,12 +7,12 @@
 
 // LOS INCLUDES DEBEN ESTAR EN ORDEN, LOS QUE NECESITAN OTROS QUE SE PONGAN DEBAJO DE ELLOS
 #include "cirno.cc"
+#include "types.cc"
 #include "mask.cc"
 #include "body.cc"
 #include "ui.cc"
 #include "update.cc"
 #include "render.cc"
-
 
 /** @brief Inicializa las variables necesarias para el juego */
 void GameInit(Game *game) {
