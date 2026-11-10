@@ -15,7 +15,6 @@
 
 const unsigned char kTargetFps = 25; //Control de frames por segundo
 const vector2::Type kWindowSize = {800, 600};
-const int kCharacterWidth = 5;
 
 struct Game {
     // TODO
