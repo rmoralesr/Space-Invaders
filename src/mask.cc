@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <esat/sprite.h>
-#include <assert.h>
+#include <assert.h> // Borrar en release
 
 #include "cirno.cc"
 
@@ -124,6 +124,22 @@ namespace mask {
           WriteBit(A, offset.x + x, offset.y + y);
 
       }
+    }
+
+  }
+
+  void print(Type *mask) {
+    unsigned char c = 0;
+
+    printf("size: "); vector2::print(mask->size);
+
+    for (int y = 0; y < mask->size.y; y++) {
+      for (int x = 0; x < mask->size.x; x++) {
+        c = ReadBit(mask, x,y);
+        if (c) printf("#");
+        else printf(" ");
+      }
+      printf("\n");
     }
 
   }
