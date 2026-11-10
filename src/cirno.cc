@@ -29,68 +29,66 @@ int pow(int base, int exp){
   return value;
 }
 
-namespace vector2 {
 
-  struct Type {
-    int x,y;
-  };
+struct Vector2_t {
+  int x,y;
+};
 
-  const Type kZero = {0,0};
+const Vector2_t Vector2_kZero = {0,0};
 
-  bool isZero(Type v) {
-    return v.x == 0 && v.y == 0;
-  }
-
-  Type Sum(Type v1, Type v2) {
-    return { 
-      v1.x + v2.x,
-      v1.y + v2.y
-    };
-  }
-
-  Type Sub(Type v1, Type v2) {
-    return { 
-      v1.x - v2.x,
-      v1.y - v2.y
-    };
-  }
-
-  Type Mult(Type v1, Type v2) {
-    return { 
-      v1.x * v2.x,
-      v1.y * v2.y
-    };
-  }
-
-  Type Div(Type v1, Type v2) {
-    return { 
-      v1.x / v2.x,
-      v1.y / v2.y
-    };
-  }
-
-  Type Mult(Type v, int n) {
-    return { 
-      v.x * n,
-      v.y * n
-    };
-  }
-
-  Type Div(Type v, int n) {
-    return { 
-      v.x / n,
-      v.y / n
-    };
-  }
-
-  float Magnitude(Type v) {
-    return sqrt(v.x*v.x + v.y*v.y);
-  }
-
-  void Print(Type v) {
-    printf("{ %d, %d }\n", v.x, v.y);
-  }
-
+bool isZero(Vector2_t v) {
+  return v.x == 0 && v.y == 0;
 }
+
+Vector2_t Sum(Vector2_t v1, Vector2_t v2) {
+  return { 
+    v1.x + v2.x,
+    v1.y + v2.y
+  };
+}
+
+Vector2_t Sub(Vector2_t v1, Vector2_t v2) {
+  return { 
+    v1.x - v2.x,
+    v1.y - v2.y
+  };
+}
+
+Vector2_t Mult(Vector2_t v1, Vector2_t v2) {
+  return { 
+    v1.x * v2.x,
+    v1.y * v2.y
+  };
+}
+
+Vector2_t Div(Vector2_t v1, Vector2_t v2) {
+  return { 
+    v1.x / v2.x,
+    v1.y / v2.y
+  };
+}
+
+Vector2_t Mult(Vector2_t v, int n) {
+  return { 
+    v.x * n,
+    v.y * n
+  };
+}
+
+Vector2_t Div(Vector2_t v, int n) {
+  return { 
+    v.x / n,
+    v.y / n
+  };
+}
+
+float Magnitude(Vector2_t v) {
+  return sqrt(v.x*v.x + v.y*v.y);
+}
+
+void Print(Vector2_t v) {
+  printf("{ %d, %d }\n", v.x, v.y);
+}
+
 
 #endif // CIRNO_PERFECT_MATH_CC
