@@ -1,5 +1,5 @@
-#ifndef UI_CC
-#define UI_CC 1
+#ifndef UI_ELEMENT_CC
+#define UI_ELEMENT_CC 1
 
 #include "cirno.cc"
 #include "body.cc"
@@ -7,28 +7,26 @@
 
 // FUNCIONES PARA LA INTERFAZ DEL JUEGO
 
-namespace character {
-    constexpr unsigned int kNumRegistry = 100; // Profunidad del registro
+namespace ui_element {
 
-    body::Type Registry[kNumRegistry] = {};
-    // struct character (?)
-    // o array (Registro) de characteres character::Registry
+    struct Type {
+        bool alive = false;
+        char c = '0';
+        
+        ::body::Type body = { false };
+    };
 
-    /*
-    ClearBody(body::Type *b){
-        b->can_collide = false;
-        b->position = {0,0};
-        b->mask = {};
-    }
-    */
+    constexpr unsigned int kRegistryCapacity = 100; // Profunidad del registro
+    unsigned int registry_alive_count = 0;
+    Type registry[kNumRegistry] = {0};
 
-    void ClearRegistry(){
-        for (int i = 0; i<kNumRegistry; i++){
-            //ClearBody(&Registry[i]); //FUNCION SIN IMPLEMENTAR
-        }
-    }
+    // Deberiamos seguir este prototipaje/template?
+    Type* Construct(char c, vector2::Type position);
+    void Destruct(char c, vector2::Type position);
+    void Update(); // Llama el update de body
 
-    void Construct(char c, vector2::Type position) {
+
+    Type* Construct(char c, vector2::Type position) {
         if (c >= 'a' && c <= 'z') {
             c -= 'a';
         } else {
@@ -43,23 +41,23 @@ namespace character {
             }
         }
         
+
         // body = GenerateBody(TextSprites[c], position) //FUNCION SIN IMPLEMENTAR
         // Añadir body al registro de "character"
     }
 
-    void Destruct(body::Type *character) {
-        int index = 0;
-        do{
-            if (Registry[index].position.x == character->position.x &&  
-            Registry[index].position.y == character->position.y) {
-                //ClearBody(character); //FUNCION SIN IMPLEMENTAR
-                index = -1;
-            } else {
-                index++;
-            }
-        } while(index != -1 && index < kNumRegistry);
+    void Destruct(Type *character) {
+        character->alive = false;
+        registry_alive_count--;
     }
 
+
+
+
+
+    // -------------------------------------------------------------------- //
+
+    // Esto deberia cambiarse
     void GenerateNumber(int value, int digits, vector2::Type position) {
         if (value > pow(10, digits) - 1) 
             value = pow(10, digits) - 1;
@@ -80,4 +78,4 @@ namespace character {
 
 
 
-#endif // UI_CC
+#endif // UI_ELEMENT_CC
