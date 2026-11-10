@@ -96,8 +96,6 @@ void GameRender(Game *game) {
 
     mask::FromFile(&buddy.mask, "../assets/test.png");
 
-    mask::Print(&buddy.mask);
-
     DrawBody(&buddy);
 
 }
