@@ -14,17 +14,25 @@ void DrawRectangle(vector2::Type position, vector2::Type size, unsigned char RGB
     esat::DrawSetFillColor(RGBA[0], RGBA[1], RGBA[2]);
     esat::DrawSetStrokeColor(RGBA[0], RGBA[1], RGBA[2]);
 
-    float points[10];
-    points[0] = position.x;
-    points[1] = position.y;
-    points[2] = position.x+size.x;
-    points[3] = position.y;
-    points[4] = position.x+size.x;
-    points[5] = position.y+size.y;
-    points[6] = position.x;
-    points[7] = position.y+size.y;
-    points[8] = position.x;
-    points[9] = position.y;
+    float points[10] = {
+
+        float(position.x), 
+        float(position.y),
+
+        float(position.x + size.x),
+        float(position.y),
+
+        float(position.x + size.x),
+        float(position.y + size.y),
+
+        float(position.x),
+        float(position.y + size.y),
+
+        float(position.x), 
+        float(position.y),
+
+    };
+
     esat::DrawSolidPath(points, 5);
 }
 
@@ -45,7 +53,7 @@ void DrawBody(body::Type *b){
     for (int y = 0; y < b->mask.size.y; y++){
         for (int x = 0; x < b->mask.size.x; x++){
 
-            if ( ReadBit(&b->mask, x, y) ) {
+            if ( mask::ReadBit(&b->mask, x, y) ) {
                 if (c == 0)
                     ox = x;
                 c++;
@@ -85,6 +93,8 @@ void GameRender(Game *game) {
     };
 
     mask::FromFile(&buddy.mask, "../assets/test.png");
+
+    mask::Print(&buddy.mask);
 
     DrawBody(&buddy);
 

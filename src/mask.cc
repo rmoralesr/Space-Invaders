@@ -17,6 +17,8 @@ namespace mask {
     unsigned char matrix[kWordCount] = {0}; // Uso unsigned char porque no necesitamos el signo y el size de char NO varia entre compiladores
   };
 
+  void Print(Type *mask);
+
   bool IsValidPosition(Type *mask, unsigned int x, unsigned int y) {
     return (
       x < (unsigned int)mask->size.x
@@ -90,6 +92,8 @@ namespace mask {
 
     int mx = esat::SpriteWidth(sprite);
     int my = esat::SpriteHeight(sprite);
+
+    mask->size = {mx, my};
 
     for (int y = 0; y < my; y++) {
       for (int x = 0; x < mx; x++) {
