@@ -36,7 +36,9 @@ void GameLoop(Game *game) {
 
         esat::DrawBegin();
         esat::DrawClear(0,0,0);
+
         GameRender(game);
+        
         esat::DrawEnd();
 
         FrameWait(last_time);
