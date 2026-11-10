@@ -4,36 +4,33 @@
 #include <esat/draw.h>
 
 #include "types.cc"
-<<<<<<< HEAD
-#include "body.cc"
-=======
 #include "cirno.cc"
 #include "body.cc"
 #include "mask.cc"
->>>>>>> 3707b18842528840ade2524d195b538ef64c698a
 
 // FUNCIONES DE RENDERIZADO
 
+unsigned int kPixelScale = 4;
+
 void DrawRectangle(vector2::Type position, vector2::Type size, unsigned char RGBA[4]){
     esat::DrawSetFillColor(RGBA[0], RGBA[1], RGBA[2]);
-    esat::DrawSetStrokeColor(RGBA[0], RGBA[1], RGBA[2]);
 
     float points[10] = {
 
-        float(position.x), 
-        float(position.y),
+        float(position.x) * kPixelScale, 
+        float(position.y) * kPixelScale,
 
-        float(position.x + size.x),
-        float(position.y),
+        float(position.x + size.x) * kPixelScale,
+        float(position.y) * kPixelScale,
 
-        float(position.x + size.x),
-        float(position.y + size.y),
+        float(position.x + size.x) * kPixelScale,
+        float(position.y + size.y) * kPixelScale,
 
-        float(position.x),
-        float(position.y + size.y),
+        float(position.x) * kPixelScale,
+        float(position.y + size.y) * kPixelScale,
 
-        float(position.x), 
-        float(position.y),
+        float(position.x) * kPixelScale, 
+        float(position.y) * kPixelScale,
 
     };
 
@@ -89,6 +86,7 @@ void DrawBody(body::Type *b){
 
 /** @brief Dibuja el juego en la ventana */
 void GameRender(Game *game) {
+    esat::DrawSetStrokeColor(0,0,0,0);
     // TODO
 
     body::Type buddy = {
