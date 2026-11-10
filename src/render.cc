@@ -10,9 +10,9 @@
 
 // FUNCIONES DE RENDERIZADO
 
-unsigned int kPixelScale = 4;
+const unsigned int kPixelScale = 4;
 
-void DrawRectangle(vector2::Type position, vector2::Type size, unsigned char RGBA[4]){
+void DrawRectangle(Vector2_t position, Vector2_t size, unsigned char RGBA[4]){
     esat::DrawSetFillColor(RGBA[0], RGBA[1], RGBA[2]);
 
     float points[10] = {
@@ -37,67 +37,22 @@ void DrawRectangle(vector2::Type position, vector2::Type size, unsigned char RGB
     esat::DrawSolidPath(points, 5);
 }
 
-/* En desuso
-void DrawPixel(vector2::Type position, int pixel_size){
-    esat::DrawSetFillColor(255,255,255);
-    esat::DrawSetStrokeColor(255,255,255);
-    //TODO : cambiar color dependiendo de la mascara de color de la pantalla
-    DrawRectangle(position, {pixel_size-1,pixel_size-1});
-}*/
+void GetPositionColor(unsigned char RGBA[4], unsigned int x, unsigned int y) {
+    
+    // TODO, cuando tengamos las color mask
 
-void DrawBody(body::Type *b){
-    int c = 0; // Contamos cuantos bits de una row podemos dibujar en una sola call (parecido a greedy meshing)
-    int ox = 0;
-
-    unsigned char RGBA[4] = {255, 255, 255, 255};
-
-    for (int y = 0; y < b->mask.size.y; y++){
-        for (int x = 0; x < b->mask.size.x; x++){
-
-            if ( mask::ReadBit(&b->mask, x, y) ) {
-                if (c == 0)
-                    ox = x;
-                c++;
-            } else {
-                if (c > 0) DrawRectangle(
-                    {
-                        b->position.x + ox,
-                        b->position.y + y
-                    },
-                    { c, 1 },
-                    RGBA
-                );
-                c = 0;
-            }
-
-        }
-
-        if (c > 0) DrawRectangle(
-            {
-                b->position.x + ox,
-                b->position.y + y
-            },
-            { c, 1 },
-            RGBA
-        );
-        c = 0;
-    }
+    RGBA[0] = 255;
+    RGBA[1] = 255;
+    RGBA[2] = 255;
+    RGBA[3] = 255;
 }
 
-/** @brief Dibuja el juego en la ventana */
-void GameRender(Game *game) {
-    esat::DrawSetStrokeColor(0,0,0,0);
-    // TODO
-
-    body::Type buddy = {
-        true,
-        {20,20}, {}
-    };
-
-    mask::FromFile(&buddy.mask, "../assets/test.png");
-
-    DrawBody(&buddy);
-
+void SetToBlack(unsigned char RGBA[4]) {
+    RGBA[0] = 0;
+    RGBA[1] = 0;
+    RGBA[2] = 0;
+    RGBA[3] = 0;
 }
+
 
 #endif // RENDER_CC

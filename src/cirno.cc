@@ -82,9 +82,9 @@ Vector2_t Div(Vector2_t v, int n) {
   };
 }
 
-float Magnitude(Vector2_t v) {
-  return sqrt(v.x*v.x + v.y*v.y);
-}
+// float Magnitude(Vector2_t v) {
+//   return sqrt(v.x*v.x + v.y*v.y);
+// }
 
 void Print(Vector2_t v) {
   printf("{ %d, %d }\n", v.x, v.y);

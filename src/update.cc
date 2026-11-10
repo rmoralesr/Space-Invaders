@@ -1,13 +1,33 @@
 #ifndef UPDATE_CC
 #define UPDATE_CC 1
 
+#include <esat/draw.h>
+#include "input.cc"
 #include "types.cc"
+#include "body.cc"
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
+/** @brief Actualiza ciertos aspectos que pueden ser computados sin encadenar un redibujado */
+void LogicUpdate(Game *game) {
+	InputUpdate(&game->input);
+}
+
+
+
 /** @brief Actualiza los datos del juego */
 void GameUpdate(Game *game) {
-    // TODO
+    
+	// TODO
+
+	Body_t buddy = {
+		true,
+		{20,20}, {}
+	};
+
+	FromFile(&buddy.mask, "../assets/test.png");
+
+	Draw(&buddy);
 }
 
 #endif // UPDATE_CC

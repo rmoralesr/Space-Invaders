@@ -5,161 +5,254 @@
 
 #include "cirno.cc"
 #include "mask.cc"
-
-namespace body {
-
-  // Los tipos body no necesitan un registro puesto que todos los body tienen un padre (un struct que los contenga)
-
-  struct Type {
-    bool can_collide = true;
-    ::vector2::Type position = {0, 0};
-    ::mask::Type mask = {};
-  };
+#include "render.cc"
 
 
-  vector2::Type GetOverlap(Type *A, Type *B) {
-    // min(aMax, bMax) - max(aMin, bMin)
+// Los tipos body no necesitan un registro puesto que todos los body tienen un padre (un struct que los contenga)
 
-    return {
-      min(A->position.x + A->mask.size.x, B->position.x + B->mask.size.x) 
-      - max(A->position.x, B->position.x),
+struct Body_t {
+  bool can_collide = true;
+  Vector2_t position = {0, 0};
+  Mask_t mask = {};
+};
 
-      min(A->position.y + A->mask.size.y, B->position.y + B->mask.size.y) 
-      - max(A->position.y, B->position.y)
-    };
-  }
-  
-  /** @brief Retorna si dos bodies estan tocandose */
-  bool QuickCollide(Type *A, Type *B) {
+// Prototipaje
 
-    vector2::Type overlap = GetOverlap(A, B);
+void MoveTo(Body_t* self, Vector2_t pos);
+void Move(Body_t* self, Vector2_t pos);
 
-    if (overlap.x > 0 && overlap.y > 0) {
+void Draw(Body_t* self, bool erase = false);
 
-      vector2::Type corner = {
-        max(A->position.x, B->position.x),
-        max(A->position.y, B->position.y)
-      };
 
-      vector2::Type local_corner_A = vector2::Sub(corner, A->position);
-      vector2::Type local_corner_B = vector2::Sub(corner, B->position);
+Vector2_t GetOverlap(Body_t *A, Body_t *B);
+/** @brief Retorna si dos bodies estan tocandose */
+bool QuickCollide(Body_t *A, Body_t *B);
+/** @brief Retorna la cantidad de pixeles que se tocan entre dos bodies 
+  Admite el pointer a un body dummy al que se le escribe informacion sobre la colision
+*/
+unsigned int Collide(Body_t *A, Body_t *B,
+  Body_t *out_body = nullptr
+);
 
-      vector2::Type local_pos_A; // En release refactorizar todo esto porque será basicamente innecesario
-      vector2::Type local_pos_B;
+// Definiciones
 
-      for (int y = 0; y < overlap.y; y++) {
+void MoveTo(Body_t* self, Vector2_t pos) {
+  Draw(self, true);
 
-        local_pos_A.y = local_corner_A.y + y;
-        local_pos_B.y = local_corner_B.y + y;
+  self->position = pos;
 
-        for (int x = 0; x < overlap.x; x++) {
+  Draw(self);
+}
 
-          local_pos_A.x = local_corner_A.x + x;
-          local_pos_B.x = local_corner_B.x + x;
+void Move(Body_t* self, Vector2_t pos) {
+  MoveTo(self, 
+    Sum(
+      self->position, 
+      pos
+    )
+  );
+}
 
-          if ( // Borrar en release
-            mask::IsValidPosition(&A->mask,
-              local_pos_A.x, local_pos_A.y
-            )
-            && mask::IsValidPosition(&B->mask, 
-              local_pos_B.x, local_pos_B.y
-            )
-          ) {
 
-            if (mask::ReadBit(&A->mask, local_pos_A.x, local_pos_A.y) // And bitwise operator
-            & mask::ReadBit(&B->mask, local_pos_B.x, local_pos_B.y) ) {
+static bool ShouldPaint(Body_t* self,
+  unsigned int x, unsigned y,
+  unsigned char RGBA[4], bool erase
+) {
 
-              return true; // Retornamos directamente
+  if (!ReadBit(&self->mask, x,y)) return false; // No hay pixel
 
-            }
+  if (erase) return true; // Siempre
 
-          } else {
-            printf("La cosa que no deberia pasar ha pasado");
-          }
+  unsigned char new_RGBA[4];
+  GetPositionColor(new_RGBA, self->position.x + x, self->position.y + y);
 
-        }
-      }
+  return (
+    new_RGBA[0] == RGBA[0]
+    && new_RGBA[1] == RGBA[1]
+    && new_RGBA[2] == RGBA[2]
+    && new_RGBA[3] == RGBA[3]
+  );
+}
 
-      return false;
 
-    } else 
-      return false;
+void Draw(Body_t* self, bool erase) {
+
+  unsigned char RGBA[4] = {255,255,255,255};
+  if (erase) SetToBlack(RGBA);
+
+  int ox = 0; // Origin x
+  int length = 0;
+
+  for (int y = 0; y < self->mask.size.y; y++) {
     
-  }
+    // x == size.x es lo que cierra
+    for (int x = 0; x <= self->mask.size.x; x++) {
 
-  /** @brief Retorna la cantidad de pixeles que se tocan entre dos bodies 
-    Admite el pointer a un body dummy al que se le escribe informacion sobre la colision
-  */
-  unsigned int Collide(Type *A, Type *B,
-    Type *out_body = NULL
-  ) {
+      if (
+        (x < self->mask.size.x) // Si x == size.x, estamos fuera, por lo que hay que cerrar y pintar si queda length
+        && ShouldPaint(self, x,y, RGBA, erase)
+      ) {
 
-    vector2::Type overlap = GetOverlap(A, B);
+        if (length == 0) ox = x;
+        length++;
 
-    if (overlap.x > 0 && overlap.y > 0) {
+      } else if (length > 0) {
 
-      unsigned int count = 0;
+        DrawRectangle(
+          { self->position.x + ox, self->position.y + y },
+          { length, 1 },
+          RGBA
+        );
+        length = 0;
 
-      vector2::Type corner = {
-        max(A->position.x, B->position.x),
-        max(A->position.y, B->position.y)
-      };
-
-      if (out_body != NULL) {
-        out_body->position = corner;
-        out_body->mask.size = overlap;
       }
 
-      vector2::Type local_corner_A = Sub(corner, A->position);
-      vector2::Type local_corner_B = Sub(corner, B->position);
-
-      vector2::Type local_pos_A; // En release refactorizar todo esto porque será basicamente innecesario
-      vector2::Type local_pos_B;
-
-      for (int y = 0; y < overlap.y; y++) {
-
-        local_pos_A.y = local_corner_A.y + y;
-        local_pos_B.y = local_corner_B.y + y;
-
-        for (int x = 0; x < overlap.x; x++) {
-
-          local_pos_A.x = local_corner_A.x + x;
-          local_pos_B.x = local_corner_B.x + x;
-
-          if ( // Borrar en release
-            mask::IsValidPosition(&A->mask,
-              local_pos_A.x, local_pos_A.y
-            )
-            && mask::IsValidPosition(&B->mask, 
-              local_pos_B.x, local_pos_B.y
-            )
-          ) {
-
-            if (mask::ReadBit(&A->mask, local_pos_A.x, local_pos_A.y) // And bitwise operator
-            & mask::ReadBit(&B->mask, local_pos_B.x, local_pos_B.y) ) {
-
-              if (out_body != NULL)
-                mask::WriteBit(&out_body->mask, x,y, 1);
-
-              count++;
-
-            }
-
-          } else {
-            printf("La cosa que no deberia pasar ha pasado");
-          }
-
-        }
-      }
-
-      return count;
-
-    } else {
-      return 0;
     }
 
   }
 
 }
+
+
+
+
+
+Vector2_t GetOverlap(Body_t *A, Body_t *B) {
+  // min(aMax, bMax) - max(aMin, bMin)
+
+  return {
+    min(A->position.x + A->mask.size.x, B->position.x + B->mask.size.x) 
+    - max(A->position.x, B->position.x),
+
+    min(A->position.y + A->mask.size.y, B->position.y + B->mask.size.y) 
+    - max(A->position.y, B->position.y)
+  };
+}
+
+bool QuickCollide(Body_t *A, Body_t *B) {
+
+  Vector2_t overlap = GetOverlap(A, B);
+
+  if (overlap.x > 0 && overlap.y > 0) {
+
+    Vector2_t corner = {
+      max(A->position.x, B->position.x),
+      max(A->position.y, B->position.y)
+    };
+
+    Vector2_t local_corner_A = Sub(corner, A->position);
+    Vector2_t local_corner_B = Sub(corner, B->position);
+
+    Vector2_t local_pos_A; // En release refactorizar todo esto porque será basicamente innecesario
+    Vector2_t local_pos_B;
+
+    for (int y = 0; y < overlap.y; y++) {
+
+      local_pos_A.y = local_corner_A.y + y;
+      local_pos_B.y = local_corner_B.y + y;
+
+      for (int x = 0; x < overlap.x; x++) {
+
+        local_pos_A.x = local_corner_A.x + x;
+        local_pos_B.x = local_corner_B.x + x;
+
+        if ( // Borrar en release
+          IsValidPosition(&A->mask,
+            local_pos_A.x, local_pos_A.y
+          )
+          && IsValidPosition(&B->mask, 
+            local_pos_B.x, local_pos_B.y
+          )
+        ) {
+
+          if (ReadBit(&A->mask, local_pos_A.x, local_pos_A.y) // And bitwise operator
+          & ReadBit(&B->mask, local_pos_B.x, local_pos_B.y) ) {
+
+            return true; // Retornamos directamente
+
+          }
+
+        } else {
+          printf("La cosa que no deberia pasar ha pasado");
+        }
+
+      }
+    }
+
+    return false;
+
+  } else 
+    return false;
+  
+}
+
+unsigned int Collide(Body_t *A, Body_t *B, Body_t *out_body) {
+
+  Vector2_t overlap = GetOverlap(A, B);
+
+  if (overlap.x > 0 && overlap.y > 0) {
+
+    unsigned int count = 0;
+
+    Vector2_t corner = {
+      max(A->position.x, B->position.x),
+      max(A->position.y, B->position.y)
+    };
+
+    if (out_body != nullptr) {
+      out_body->position = corner;
+      out_body->mask.size = overlap;
+    }
+
+    Vector2_t local_corner_A = Sub(corner, A->position);
+    Vector2_t local_corner_B = Sub(corner, B->position);
+
+    Vector2_t local_pos_A; // En release refactorizar todo esto porque será basicamente innecesario
+    Vector2_t local_pos_B;
+
+    for (int y = 0; y < overlap.y; y++) {
+
+      local_pos_A.y = local_corner_A.y + y;
+      local_pos_B.y = local_corner_B.y + y;
+
+      for (int x = 0; x < overlap.x; x++) {
+
+        local_pos_A.x = local_corner_A.x + x;
+        local_pos_B.x = local_corner_B.x + x;
+
+        if ( // Borrar en release
+          IsValidPosition(&A->mask,
+            local_pos_A.x, local_pos_A.y
+          )
+          && IsValidPosition(&B->mask, 
+            local_pos_B.x, local_pos_B.y
+          )
+        ) {
+
+          if (ReadBit(&A->mask, local_pos_A.x, local_pos_A.y) // And bitwise operator
+          & ReadBit(&B->mask, local_pos_B.x, local_pos_B.y) ) {
+
+            if (out_body != nullptr)
+              WriteBit(&out_body->mask, x,y, 1);
+
+            count++;
+
+          }
+
+        } else {
+          printf("La cosa que no deberia pasar ha pasado");
+        }
+
+      }
+    }
+
+    return count;
+
+  } else {
+    return 0;
+  }
+
+}
+
 
 #endif //BODY_CC
