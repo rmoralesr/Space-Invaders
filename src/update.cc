@@ -2,14 +2,18 @@
 #define UPDATE_CC 1
 
 #include <esat/draw.h>
+#include "input.cc"
 #include "types.cc"
 #include "body.cc"
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
+
+
+
 /** @brief Actualiza los datos del juego */
 void GameUpdate(Game *game) {
-    esat::DrawSetStrokeColor(0,0,0,0);
+    InputUpdate(&game->input);
     // TODO
 
     Body_t buddy = {
@@ -19,7 +23,7 @@ void GameUpdate(Game *game) {
 
     FromFile(&buddy.mask, "../assets/test.png");
 
-    DrawBody(&buddy);
+    Draw(&buddy);
 }
 
 #endif // UPDATE_CC
