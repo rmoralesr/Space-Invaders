@@ -47,6 +47,7 @@ void GameLoop(Game *game) {
 int esat::main(int argc, char **argv) {
     esat::WindowInit(kWindowSize.x, kWindowSize.y);
     WindowSetMouseVisibility(true);
+    
     Game game = {};
 
     GameInit(&game);
