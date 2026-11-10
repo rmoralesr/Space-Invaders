@@ -9,6 +9,9 @@
 // FUNCIONES PARA LA INTERFAZ DEL JUEGO
 
 namespace character {
+    unsigned int kNumRegistry = 100; // Profunidad del registro
+    unsigned int kCharacterWidth = 5; // Leer del sprite
+    unsigned int kCharacterHeight = 8; // Leer del sprite
 
     // struct character (?)
     // o array (Registro) de characteres character::Registry

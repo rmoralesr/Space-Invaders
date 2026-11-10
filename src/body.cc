@@ -41,8 +41,8 @@ namespace body {
         max(A->position.y, B->position.y)
       };
 
-      vector2::Type local_corner_A = Sub(corner, A->position);
-      vector2::Type local_corner_B = Sub(corner, B->position);
+      vector2::Type local_corner_A = vector2::Sub(corner, A->position);
+      vector2::Type local_corner_B = vector2::Sub(corner, B->position);
 
       vector2::Type local_pos_A; // En release refactorizar todo esto porque será basicamente innecesario
       vector2::Type local_pos_B;
@@ -85,7 +85,6 @@ namespace body {
     } else 
       return false;
     
-
   }
 
   /** @brief Retorna la cantidad de pixeles que se tocan entre dos bodies 

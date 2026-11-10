@@ -1,8 +1,6 @@
 #ifndef GAME_MASK_CC
 #define GAME_MASK_CC 1
 
-#define MASK_WORD_COUNT 100
-
 
 #include <stdio.h>
 #include <esat/sprite.h>
@@ -10,8 +8,9 @@
 
 #include "cirno.cc"
 
-
 namespace mask {
+
+  constexp unsigned int kWordCount = 100;
 
   struct Type {
     Vector2_t size = {0,0};
