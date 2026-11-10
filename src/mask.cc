@@ -13,7 +13,7 @@ namespace mask {
   constexpr unsigned int kWordCount = 100;
 
   struct Type {
-    vector::Type size = {0,0};
+    ::vector2::Type size = {0,0};
     unsigned char matrix[kWordCount] = {0}; // Uso unsigned char porque no necesitamos el signo y el size de char NO varia entre compiladores
   };
 
@@ -121,17 +121,17 @@ namespace mask {
       for (int x = 0; x < overlap.x; x++) {
 
         if (ReadBit(B, x,y))
-          WriteBit(A, offset.x + x, offset.y + y);
+          WriteBit(A, offset.x + x, offset.y + y, 0);
 
       }
     }
 
   }
 
-  void print(Type *mask) {
+  void Print(Type *mask) {
     unsigned char c = 0;
 
-    printf("size: "); vector2::print(mask->size);
+    printf("size: "); vector2::Print(mask->size);
 
     for (int y = 0; y < mask->size.y; y++) {
       for (int x = 0; x < mask->size.x; x++) {

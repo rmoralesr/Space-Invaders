@@ -12,8 +12,8 @@ namespace body {
 
   struct Type {
     bool can_collide = true;
-    vector2::Type position = {0, 0};
-    mask::Type mask = {};
+    ::vector2::Type position = {0, 0};
+    ::mask::Type mask = {};
   };
 
 
