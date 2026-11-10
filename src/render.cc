@@ -4,9 +4,13 @@
 #include <esat/draw.h>
 
 #include "types.cc"
+<<<<<<< HEAD
+#include "body.cc"
+=======
 #include "cirno.cc"
 #include "body.cc"
 #include "mask.cc"
+>>>>>>> 3707b18842528840ade2524d195b538ef64c698a
 
 // FUNCIONES DE RENDERIZADO
 
