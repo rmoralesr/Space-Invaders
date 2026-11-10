@@ -16,7 +16,7 @@ struct Body_t {
 };
 
 
-Vector2_t GetOverlap(Type *A, Type *B) {
+Vector2_t GetOverlap(Body_t *A, Body_t *B) {
   // min(aMax, bMax) - max(aMin, bMin)
 
   return {
@@ -29,7 +29,7 @@ Vector2_t GetOverlap(Type *A, Type *B) {
 }
 
 /** @brief Retorna si dos bodies estan tocandose */
-bool QuickCollide(Type *A, Type *B) {
+bool QuickCollide(Body_t *A, Body_t *B) {
 
   Vector2_t overlap = GetOverlap(A, B);
 
@@ -89,8 +89,8 @@ bool QuickCollide(Type *A, Type *B) {
 /** @brief Retorna la cantidad de pixeles que se tocan entre dos bodies 
   Admite el pointer a un body dummy al que se le escribe informacion sobre la colision
 */
-unsigned int Collide(Type *A, Type *B,
-  Type *out_body = NULL
+unsigned int Collide(Body_t *A, Body_t *B,
+  Body_t *out_body = nullptr
 ) {
 
   Vector2_t overlap = GetOverlap(A, B);
@@ -104,7 +104,7 @@ unsigned int Collide(Type *A, Type *B,
       max(A->position.y, B->position.y)
     };
 
-    if (out_body != NULL) {
+    if (out_body != nullptr) {
       out_body->position = corner;
       out_body->mask.size = overlap;
     }
@@ -137,7 +137,7 @@ unsigned int Collide(Type *A, Type *B,
           if (ReadBit(&A->mask, local_pos_A.x, local_pos_A.y) // And bitwise operator
           & ReadBit(&B->mask, local_pos_B.x, local_pos_B.y) ) {
 
-            if (out_body != NULL)
+            if (out_body != nullptr)
               WriteBit(&out_body->mask, x,y, 1);
 
             count++;

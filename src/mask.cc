@@ -9,11 +9,11 @@
 #include "cirno.cc"
 
 
-constexpr unsigned int Mask_kWordCount = 100;
+constexpr unsigned int kMask_WordCount = 100;
 
 struct Mask_t {
   Vector2_t size = {0,0};
-  unsigned char matrix[kMaskWordCount] = {0}; // Uso unsigned char porque no necesitamos el signo y el size de char NO varia entre compiladores
+  unsigned char matrix[kMask_WordCount] = {0}; // Uso unsigned char porque no necesitamos el signo y el size de char NO varia entre compiladores
 };
 
 void Print(Mask_t *mask);
@@ -22,7 +22,7 @@ bool IsValidPosition(Mask_t *mask, unsigned int x, unsigned int y) {
   return (
     x < (unsigned int)mask->size.x
     && y < (unsigned int)mask->size.y
-    && (y * mask->size.x + x) / 8 < kMaskWordCount
+    && (y * mask->size.x + x) / 8 < kMask_WordCount
   );
 }
 
@@ -76,7 +76,7 @@ void FromFile(Mask_t *mask, const char *path,
 ) {
   esat::SpriteHandle sprite = esat::SpriteFromFile(path);
 
-  if (!vector2::isZero(sub_size)) {
+  if (!isZero(sub_size)) {
     esat::SpriteHandle aux = esat::SubSprite(sprite, 
       sub_position.x, sub_position.y, 
       sub_size.x, sub_size.y
