@@ -16,7 +16,8 @@
 
 enum GameState {
     kGameState_Playing,
-    kGameState_Menu
+    kGameState_Previewing,
+    kGameState_ChoosingPlayers
 };
 
 const unsigned char kTargetFps = 25; //Control de frames por segundo

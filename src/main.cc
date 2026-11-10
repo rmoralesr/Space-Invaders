@@ -22,6 +22,7 @@ void FrameWait(double last_time);
 /** @brief Inicializa las variables necesarias para el juego */
 void GameInit(Game *game) {
     // TODO
+    game->game_state = kGameState_Previewing;
 
     LoadAssets();
 }
@@ -38,8 +39,6 @@ int esat::main(int argc, char **argv) {
 
     while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
         double last_time = esat::Time();
-
-        LogicUpdate(&game);
 
         esat::DrawBegin();
         esat::DrawSetStrokeColor(0,0,0,0);
