@@ -5,6 +5,7 @@
 
 #include "cirno.cc"
 #include "mask.cc"
+#include "render.cc"
 
 
 // Los tipos body no necesitan un registro puesto que todos los body tienen un padre (un struct que los contenga)
@@ -14,6 +15,131 @@ struct Body_t {
   Vector2_t position = {0, 0};
   Mask_t mask = {};
 };
+
+// Prototipaje
+
+void MoveTo(Body_t* self, Vector2_t pos);
+void Move(Body_t* self, Vector2_t pos);
+
+void Draw(Body_t* self, bool erase = false);
+
+
+Vector2_t GetOverlap(Body_t *A, Body_t *B);
+/** @brief Retorna si dos bodies estan tocandose */
+bool QuickCollide(Body_t *A, Body_t *B);
+/** @brief Retorna la cantidad de pixeles que se tocan entre dos bodies 
+  Admite el pointer a un body dummy al que se le escribe informacion sobre la colision
+*/
+unsigned int Collide(Body_t *A, Body_t *B,
+  Body_t *out_body = nullptr
+)
+
+// Definiciones
+
+void MoveTo(Body_t* self, Vector2_t pos) {
+  Draw(self, true);
+
+  self->position = pos;
+
+  Draw(self);
+}
+
+void Move(Body_t* self, Vector2_t pos) {
+  MoveTo(self, 
+    Sum(
+      self->position, 
+      pos
+    )
+  );
+}
+
+
+
+void Draw(Body_t* self, bool erase = false) {
+
+  int c = 0; // Contamos cuantos bits de una row podemos dibujar en una sola call (parecido a greedy meshing)
+  int ox = 0;
+
+  unsigned char RGBA[4] = {2055, 255, 255, 255};
+
+  if (erase) {
+
+    SetToBlack(RGBA);
+
+    for (int y = 0; y < self->mask.size.y; y++) {
+      for (int x = 0; x < self->mask.size.x; x++) {
+
+        if ( ReadBit(&self->mask, x, y) ) { // Hay pixel
+
+          if (c == 0)
+              ox = x;
+          c++;
+
+        } else { // No hay pixel
+
+            if (c > 0) DrawRectangle(
+                {
+                    self->position.x + ox,
+                    self->position.y + y
+                },
+                { c, 1 },
+                RGBA
+            );
+            c = 0;
+
+        }
+
+      }
+    }
+
+
+  } else {
+
+    unsigned char lRGBA[4] = {255, 255, 255, 255};
+
+    if (erase) SetToBlack(RGBA);
+
+    for (int y = 0; y < self->mask.size.y; y++){
+        for (int x = 0; x < self->mask.size.x; x++){
+
+            if ( ReadBit(&self->mask, x, y) ) { // Hay pixel
+
+                if (c == 0)
+                    ox = x;
+                c++;
+
+            } else { // No hay pixel
+
+                if (c > 0) DrawRectangle(
+                    {
+                        self->position.x + ox,
+                        self->position.y + y
+                    },
+                    { c, 1 },
+                    RGBA
+                );
+                c = 0;
+
+            }
+
+        }
+
+        if (c > 0) DrawRectangle(
+            {
+                b->position.x + ox,
+                b->position.y + y
+            },
+            { c, 1 },
+            RGBA
+        );
+        c = 0;
+    }
+  }
+
+}
+
+
+
 
 
 Vector2_t GetOverlap(Body_t *A, Body_t *B) {
@@ -28,7 +154,6 @@ Vector2_t GetOverlap(Body_t *A, Body_t *B) {
   };
 }
 
-/** @brief Retorna si dos bodies estan tocandose */
 bool QuickCollide(Body_t *A, Body_t *B) {
 
   Vector2_t overlap = GetOverlap(A, B);
@@ -86,9 +211,6 @@ bool QuickCollide(Body_t *A, Body_t *B) {
   
 }
 
-/** @brief Retorna la cantidad de pixeles que se tocan entre dos bodies 
-  Admite el pointer a un body dummy al que se le escribe informacion sobre la colision
-*/
 unsigned int Collide(Body_t *A, Body_t *B,
   Body_t *out_body = nullptr
 ) {

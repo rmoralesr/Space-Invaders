@@ -32,6 +32,8 @@ void Move(Bullet_t* self, Vector2_t pos);
 
 void Tick(Bullet_t* self); // Actualiza toda la logica. Se mueve hacia adelante y/o intenta colisionar (por ver), en este caso.
 
+void Draw(Bullet_t* self, bool erase = false);
+
 // Definiciones
 
 Bullet_t* Bullet_Construct() {
