@@ -33,7 +33,7 @@ void GameLoop(Game *game) {
         double last_time = esat::Time();
 
         esat::DrawBegin();
-        esat::DrawClear(0,0,0);
+        //esat::DrawClear(0,0,0);
 
         GameUpdate(game);
 
