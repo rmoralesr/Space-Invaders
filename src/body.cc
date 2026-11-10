@@ -15,6 +15,92 @@ struct Body_t {
   Mask_t mask = {};
 };
 
+// Prototipaje
+
+void MoveTo(Body_t* self, Vector2_t pos);
+void Move(Body_t* self, Vector2_t pos);
+
+void Draw(Body_t* self, bool erase = false);
+
+
+Vector2_t GetOverlap(Body_t *A, Body_t *B);
+/** @brief Retorna si dos bodies estan tocandose */
+bool QuickCollide(Body_t *A, Body_t *B);
+/** @brief Retorna la cantidad de pixeles que se tocan entre dos bodies 
+  Admite el pointer a un body dummy al que se le escribe informacion sobre la colision
+*/
+unsigned int Collide(Body_t *A, Body_t *B,
+  Body_t *out_body = nullptr
+)
+
+// Definiciones
+
+void MoveTo(Body_t* self, Vector2_t pos) {
+  Draw(self, true);
+
+  self->position = pos;
+
+  Draw(self);
+}
+
+void Move(Body_t* self, Vector2_t pos) {
+  MoveTo(self, 
+    Sum(
+      self->position, 
+      pos
+    )
+  );
+}
+
+
+
+void Draw(Body_t* self, bool erase = false) {
+
+  // TODO
+
+  int c = 0; // Contamos cuantos bits de una row podemos dibujar en una sola call (parecido a greedy meshing)
+  int ox = 0;
+
+  unsigned char RGBA[4] = {255, 255, 255, 255};
+
+  for (int y = 0; y < b->mask.size.y; y++){
+      for (int x = 0; x < b->mask.size.x; x++){
+
+          if ( ReadBit(&b->mask, x, y) ) {
+              if (c == 0)
+                  ox = x;
+              c++;
+          } else {
+              if (c > 0) DrawRectangle(
+                  {
+                      b->position.x + ox,
+                      b->position.y + y
+                  },
+                  { c, 1 },
+                  RGBA
+              );
+              c = 0;
+          }
+
+      }
+
+      if (c > 0) DrawRectangle(
+          {
+              b->position.x + ox,
+              b->position.y + y
+          },
+          { c, 1 },
+          RGBA
+      );
+      c = 0;
+  }
+
+
+}
+
+
+
+
 
 Vector2_t GetOverlap(Body_t *A, Body_t *B) {
   // min(aMax, bMax) - max(aMin, bMin)
@@ -28,7 +114,6 @@ Vector2_t GetOverlap(Body_t *A, Body_t *B) {
   };
 }
 
-/** @brief Retorna si dos bodies estan tocandose */
 bool QuickCollide(Body_t *A, Body_t *B) {
 
   Vector2_t overlap = GetOverlap(A, B);
@@ -86,9 +171,6 @@ bool QuickCollide(Body_t *A, Body_t *B) {
   
 }
 
-/** @brief Retorna la cantidad de pixeles que se tocan entre dos bodies 
-  Admite el pointer a un body dummy al que se le escribe informacion sobre la colision
-*/
 unsigned int Collide(Body_t *A, Body_t *B,
   Body_t *out_body = nullptr
 ) {

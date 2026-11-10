@@ -37,67 +37,7 @@ void DrawRectangle(Vector2_t position, Vector2_t size, unsigned char RGBA[4]){
     esat::DrawSolidPath(points, 5);
 }
 
-/* En desuso
-void DrawPixel(Vector2_t position, int pixel_size){
-    esat::DrawSetFillColor(255,255,255);
-    esat::DrawSetStrokeColor(255,255,255);
-    //TODO : cambiar color dependiendo de la mascara de color de la pantalla
-    DrawRectangle(position, {pixel_size-1,pixel_size-1});
-}*/
 
-void DrawBody(Body_t *b){
-    int c = 0; // Contamos cuantos bits de una row podemos dibujar en una sola call (parecido a greedy meshing)
-    int ox = 0;
 
-    unsigned char RGBA[4] = {255, 255, 255, 255};
-
-    for (int y = 0; y < b->mask.size.y; y++){
-        for (int x = 0; x < b->mask.size.x; x++){
-
-            if ( ReadBit(&b->mask, x, y) ) {
-                if (c == 0)
-                    ox = x;
-                c++;
-            } else {
-                if (c > 0) DrawRectangle(
-                    {
-                        b->position.x + ox,
-                        b->position.y + y
-                    },
-                    { c, 1 },
-                    RGBA
-                );
-                c = 0;
-            }
-
-        }
-
-        if (c > 0) DrawRectangle(
-            {
-                b->position.x + ox,
-                b->position.y + y
-            },
-            { c, 1 },
-            RGBA
-        );
-        c = 0;
-    }
-}
-
-/** @brief Dibuja el juego en la ventana */
-void GameRender(Game *game) {
-    esat::DrawSetStrokeColor(0,0,0,0);
-    // TODO
-
-    Body_t buddy = {
-        true,
-        {20,20}, {}
-    };
-
-    FromFile(&buddy.mask, "../assets/test.png");
-
-    DrawBody(&buddy);
-
-}
 
 #endif // RENDER_CC
