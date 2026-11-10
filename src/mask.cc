@@ -107,6 +107,28 @@ namespace mask {
     esat::SpriteRelease(sprite);
   }
 
+  /** @brief Substrae mask B de mask A */
+  void Substract(Type *A, Type *B, vector2::Type offset = {0,0}) {
+
+    // min(aMax, bMax) - max(0, bMin)
+    vector2::Type overlap = {
+      min(A->size.x, B->size.x + offset.x) - offset.x,
+      min(A->size.y, B->size.y + offset.y) - offset.y
+    };
+
+    if (overlap.x <= 0 && overlap.y <= 0) return; // Nada que hacer
+
+    for (int y = 0; y < overlap.y; y++) { // x,y son locales de B
+      for (int x = 0; x < overlap.x; x++) {
+
+        if (ReadBit(B, x,y))
+          WriteBit(A, offset.x + x, offset.y + y);
+
+      }
+    }
+
+  }
+
 }
 
 #endif //GAME_MASK_CC

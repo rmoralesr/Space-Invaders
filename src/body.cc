@@ -67,7 +67,7 @@ namespace body {
           ) {
 
             if (mask::ReadBit(&A->mask, local_pos_A.x, local_pos_A.y) // And bitwise operator
-            & mask::ReadBit(&B->mask, local_pos_B.x, local_pos_B.y); ) {
+            & mask::ReadBit(&B->mask, local_pos_B.x, local_pos_B.y) ) {
 
               return true; // Retornamos directamente
 
@@ -137,7 +137,7 @@ namespace body {
           ) {
 
             if (mask::ReadBit(&A->mask, local_pos_A.x, local_pos_A.y) // And bitwise operator
-            & mask::ReadBit(&B->mask, local_pos_B.x, local_pos_B.y); ) {
+            & mask::ReadBit(&B->mask, local_pos_B.x, local_pos_B.y) ) {
 
               if (out_body != NULL)
                 mask::WriteBit(&out_body->mask, x,y, 1);
