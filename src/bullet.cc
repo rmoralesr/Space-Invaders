@@ -20,7 +20,7 @@ struct Bullet_t {
 
 constexpr unsigned int Bullet_kRegistryCapacity = 20;
 unsigned int Bullet_registry_active_count = 0;
-Bullet_t Bullet_registry[kNumRegistry] = {0};
+Bullet_t Bullet_registry[Bullet_kRegistryCapacity] = {0};
 
 // Prototipaje
 
