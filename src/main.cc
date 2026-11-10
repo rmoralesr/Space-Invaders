@@ -5,69 +5,17 @@
 #include <esat/time.h>
 #include <stdio.h>
 
-#include "cirno.cc"
-
-// ---------------------------------------------------------------------------------------------------------------------
-// CONSTANTS -----------------------------------------------------------------------------------------------------------
-// ---------------------------------------------------------------------------------------------------------------------
-
-const unsigned char kTargetFps = 25; //Control de frames por segundo
-const vector2::Type kWindowSize = {800, 600};
-const int kPossibleCharacters = 42;
-const int kCharacterWidth = 5;
-
-// ---------------------------------------------------------------------------------------------------------------------
-// TYPES ---------------------------------------------------------------------------------------------------------------
-// ---------------------------------------------------------------------------------------------------------------------
-
-struct Game {
-    // TODO
-};
-
-Game g_game = {};
-Assets g_assets = {};
-
-// ---------------------------------------------------------------------------------------------------------------------
-// TEXT FUNCTIONS ------------------------------------------------------------------------------------------------------
-// ---------------------------------------------------------------------------------------------------------------------
-
-void GenerateCharacter(unsigned char c, vector2:Vector2_t position){
-    if (c >= '0' && c <= '9') {
-        c -= '0';
-    } else {
-        if (c >= 'a' && c <= 'z') c -= 'a';
-    }
-    // body = GenerateBody(TextSprites[c], position) //FUNCION SIN IMPLEMENTAR
-    // Añadir body a la array de objetos "character"
-    }
-
-void GenerateNumberCharacters(int value, int digits, vector2:Vector2_t position){
-    if (value > pow(10, digits)-1) value = pow(10, digits)-1;
-    for (int i = 0; i<digits; i++){
-        int number = value/pow(10, digits-1-i);
-        GenerateCharacter('0'+number, position);
-        position.x += kCharacterWidth;
-        value %= pow(10,digits-1-i);
-    }
-    }
-
-
-// ---------------------------------------------------------------------------------------------------------------------
-// MAIN FUNCTIONS ------------------------------------------------------------------------------------------------------
-// ---------------------------------------------------------------------------------------------------------------------
+// LOS INCLUDES DEBEN ESTAR EN ORDEN, LOS QUE NECESITAN OTROS QUE SE PONGAN DEBAJO DE ELLOS
+#include <cirno.cc>
+#include <mask.cc>
+#include <body.cc>
+#include <types.cc>
+#include <ui.cc>
+#include <update.cc>
+#include <render.cc>
 
 /** @brief Inicializa las variables necesarias para el juego */
-void GameInit() {
-    // TODO
-}
-
-/** @brief Actualiza los datos del juego */
-void GameUpdate() {
-    // TODO
-}
-
-/** @brief Dibuja el juego en la ventana */
-void GameRender() {
+void GameInit(Game *game) {
     // TODO
 }
 
@@ -80,15 +28,15 @@ void FrameWait(double last_time) {
 }
 
 /** @brief Bucle principal del juego, hasta que se cierra la ventana */
-void GameLoop() {
+void GameLoop(Game *game) {
     while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
         double last_time = esat::Time();
 
-        GameUpdate();
+        GameUpdate(game);
 
         esat::DrawBegin();
         esat::DrawClear(0,0,0);
-        GameRender();
+        GameRender(game);
         esat::DrawEnd();
 
         FrameWait(last_time);
@@ -99,10 +47,11 @@ void GameLoop() {
 int esat::main(int argc, char **argv) {
     esat::WindowInit(kWindowSize.x, kWindowSize.y);
     WindowSetMouseVisibility(true);
+    Game game = {};
 
-    GameInit();
+    GameInit(&game);
 
-    GameLoop();
+    GameLoop(&game);
 
     esat::WindowDestroy();
     return 0;
