@@ -12,10 +12,8 @@ struct Input {
 
 void InputUpdate(Input *input) {
     input->add_credit = esat::IsSpecialKeyDown(esat::kSpecialKey_Enter);
-    input->left_button = esat::IsSpecialKeyPressed(esat::kSpecialKey_Left);
-    input->left_button = esat::IsKeyPressed('A');
-    input->right_button = esat::IsSpecialKeyPressed(esat::kSpecialKey_Right);
-    input->right_button = esat::IsKeyPressed('D');
+    input->left_button = esat::IsSpecialKeyPressed(esat::kSpecialKey_Left) || esat::IsKeyPressed('A');
+    input->right_button = esat::IsSpecialKeyPressed(esat::kSpecialKey_Right) || esat::IsKeyPressed('D');
     input->action_button = esat::IsSpecialKeyPressed(esat::kSpecialKey_Space);
 }
 
