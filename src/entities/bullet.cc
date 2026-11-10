@@ -1,8 +1,8 @@
 #ifndef BULLET_CC
 #define BULLET_CC 1
 
-#include "cirno.cc"
-#include "mask.cc"
+#include "../core/cirno.cc"
+#include "../core/mask.cc"
 #include "body.cc"
 
 enum BulletType {

@@ -1,8 +1,8 @@
 #ifndef UI_ELEMENT_CC
 #define UI_ELEMENT_CC 1
 
-#include "cirno.cc"
-#include "body.cc"
+#include "../core/cirno.cc"
+#include "../entities/body.cc"
 #include "asset-loader.cc"
 
 // FUNCIONES PARA LA INTERFAZ DEL JUEGO

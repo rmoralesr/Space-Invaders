@@ -5,7 +5,7 @@
 
 #include "types.cc"
 #include "cirno.cc"
-#include "body.cc"
+#include "../entities/body.cc"
 #include "mask.cc"
 
 // FUNCIONES DE RENDERIZADO

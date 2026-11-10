@@ -1,7 +1,7 @@
 #ifndef TYPES_CC
 #define TYPES_CC 1
 
-#include "input.cc"
+#include "../tools/input.cc"
 #include "cirno.cc"
 
 // AQUÍ ESTÁN TODOS LOS TIPOS DE DATOS GENERALES QUE SE VAN A USAR EN EL JUEGO

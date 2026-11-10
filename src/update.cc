@@ -2,9 +2,9 @@
 #define UPDATE_CC 1
 
 #include <esat/draw.h>
-#include "input.cc"
-#include "types.cc"
-#include "body.cc"
+#include "tools/input.cc"
+#include "core/types.cc"
+#include "entities/body.cc"
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 

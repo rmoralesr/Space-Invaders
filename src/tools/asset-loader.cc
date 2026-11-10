@@ -1,8 +1,8 @@
 #ifndef ASSET_LOADER_CC
 #define ASSET_LOADER_CC 1
 
-#include "cirno.cc"
-#include "mask.cc"
+#include "../core/cirno.cc"
+#include "../core/mask.cc"
 
 
 constexpr unsigned int kNumCharacters = 36; // Numero de caracteres en la fuente

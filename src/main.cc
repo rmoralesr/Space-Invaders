@@ -6,13 +6,13 @@
 #include <stdio.h>
 
 // LOS INCLUDES DEBEN ESTAR EN ORDEN, LOS QUE NECESITAN OTROS QUE SE PONGAN DEBAJO DE ELLOS
-#include "cirno.cc"
-#include "types.cc"
-#include "mask.cc"
-#include "body.cc"
-#include "ui-element.cc"
+#include "core/cirno.cc"
+#include "core/types.cc"
+#include "core/mask.cc"
+#include "entities/body.cc"
+#include "tools/ui-element.cc"
 #include "update.cc"
-#include "render.cc"
+#include "core/render.cc"
 
 
 /** @brief Controla el maximo de frames por segundo */
