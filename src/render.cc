@@ -84,20 +84,4 @@ void DrawBody(Body_t *b){
     }
 }
 
-/** @brief Dibuja el juego en la ventana */
-void GameRender(Game *game) {
-    esat::DrawSetStrokeColor(0,0,0,0);
-    // TODO
-
-    Body_t buddy = {
-        true,
-        {20,20}, {}
-    };
-
-    FromFile(&buddy.mask, "../assets/test.png");
-
-    DrawBody(&buddy);
-
-}
-
 #endif // RENDER_CC
