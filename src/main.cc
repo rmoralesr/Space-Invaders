@@ -39,12 +39,12 @@ int esat::main(int argc, char **argv) {
     while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
         double last_time = esat::Time();
 
-        LogicUpdate(game);
+        LogicUpdate(&game);
 
         esat::DrawBegin();
         esat::DrawSetStrokeColor(0,0,0,0);
 
-        GameUpdate(game);
+        GameUpdate(&game);
 
         esat::DrawEnd();
         esat::WindowFrame();
