@@ -14,8 +14,6 @@
 /** @brief Actualiza los datos del juego */
 void GameUpdate(Game *game) {
     InputUpdate(&game->input);
-
-    esat::DrawSetStrokeColor(0,0,0,0);
     // TODO
 
     Body_t buddy = {
@@ -25,7 +23,7 @@ void GameUpdate(Game *game) {
 
     FromFile(&buddy.mask, "../assets/test.png");
 
-    DrawBody(&buddy);
+    Draw(&buddy);
 }
 
 #endif // UPDATE_CC

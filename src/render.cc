@@ -37,7 +37,7 @@ void DrawRectangle(Vector2_t position, Vector2_t size, unsigned char RGBA[4]){
     esat::DrawSolidPath(points, 5);
 }
 
-void GetPositionColor(unsigned int RGBA[4], unsigned int x, unsigned int y) {
+void GetPositionColor(unsigned char RGBA[4], unsigned int x, unsigned int y) {
     
     // TODO, cuando tengamos las color mask
 
@@ -47,7 +47,7 @@ void GetPositionColor(unsigned int RGBA[4], unsigned int x, unsigned int y) {
     RGBA[3] = 255;
 }
 
-void SetToBlack(unsigned int RGBA[4]) {
+void SetToBlack(unsigned char RGBA[4]) {
     RGBA[0] = 0;
     RGBA[1] = 0;
     RGBA[2] = 0;

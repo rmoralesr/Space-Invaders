@@ -32,7 +32,7 @@ bool QuickCollide(Body_t *A, Body_t *B);
 */
 unsigned int Collide(Body_t *A, Body_t *B,
   Body_t *out_body = nullptr
-)
+);
 
 // Definiciones
 
@@ -55,12 +55,14 @@ void Move(Body_t* self, Vector2_t pos) {
 
 
 
-void Draw(Body_t* self, bool erase = false) {
+void Draw(Body_t* self, bool erase) {
+
+  // Lo estoy trabajando en mi branch
 
   int c = 0; // Contamos cuantos bits de una row podemos dibujar en una sola call (parecido a greedy meshing)
   int ox = 0;
 
-  unsigned char RGBA[4] = {2055, 255, 255, 255};
+  unsigned char RGBA[4] = {255, 255, 255, 255};
 
   if (erase) {
 
@@ -126,8 +128,8 @@ void Draw(Body_t* self, bool erase = false) {
 
         if (c > 0) DrawRectangle(
             {
-                b->position.x + ox,
-                b->position.y + y
+                self->position.x + ox,
+                self->position.y + y
             },
             { c, 1 },
             RGBA
@@ -211,9 +213,7 @@ bool QuickCollide(Body_t *A, Body_t *B) {
   
 }
 
-unsigned int Collide(Body_t *A, Body_t *B,
-  Body_t *out_body = nullptr
-) {
+unsigned int Collide(Body_t *A, Body_t *B, Body_t *out_body) {
 
   Vector2_t overlap = GetOverlap(A, B);
 
