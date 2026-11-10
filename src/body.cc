@@ -5,6 +5,7 @@
 
 #include "cirno.cc"
 #include "mask.cc"
+#include "render.cc"
 
 
 // Los tipos body no necesitan un registro puesto que todos los body tienen un padre (un struct que los contenga)
@@ -56,45 +57,84 @@ void Move(Body_t* self, Vector2_t pos) {
 
 void Draw(Body_t* self, bool erase = false) {
 
-  // TODO
-
   int c = 0; // Contamos cuantos bits de una row podemos dibujar en una sola call (parecido a greedy meshing)
   int ox = 0;
 
-  unsigned char RGBA[4] = {255, 255, 255, 255};
+  unsigned char RGBA[4] = {2055, 255, 255, 255};
 
-  for (int y = 0; y < b->mask.size.y; y++){
-      for (int x = 0; x < b->mask.size.x; x++){
+  if (erase) {
 
-          if ( ReadBit(&b->mask, x, y) ) {
-              if (c == 0)
-                  ox = x;
-              c++;
-          } else {
-              if (c > 0) DrawRectangle(
-                  {
-                      b->position.x + ox,
-                      b->position.y + y
-                  },
-                  { c, 1 },
-                  RGBA
-              );
-              c = 0;
-          }
+    SetToBlack(RGBA);
+
+    for (int y = 0; y < self->mask.size.y; y++) {
+      for (int x = 0; x < self->mask.size.x; x++) {
+
+        if ( ReadBit(&self->mask, x, y) ) { // Hay pixel
+
+          if (c == 0)
+              ox = x;
+          c++;
+
+        } else { // No hay pixel
+
+            if (c > 0) DrawRectangle(
+                {
+                    self->position.x + ox,
+                    self->position.y + y
+                },
+                { c, 1 },
+                RGBA
+            );
+            c = 0;
+
+        }
 
       }
+    }
 
-      if (c > 0) DrawRectangle(
-          {
-              b->position.x + ox,
-              b->position.y + y
-          },
-          { c, 1 },
-          RGBA
-      );
-      c = 0;
+
+  } else {
+
+    unsigned char lRGBA[4] = {255, 255, 255, 255};
+
+    if (erase) SetToBlack(RGBA);
+
+    for (int y = 0; y < self->mask.size.y; y++){
+        for (int x = 0; x < self->mask.size.x; x++){
+
+            if ( ReadBit(&self->mask, x, y) ) { // Hay pixel
+
+                if (c == 0)
+                    ox = x;
+                c++;
+
+            } else { // No hay pixel
+
+                if (c > 0) DrawRectangle(
+                    {
+                        self->position.x + ox,
+                        self->position.y + y
+                    },
+                    { c, 1 },
+                    RGBA
+                );
+                c = 0;
+
+            }
+
+        }
+
+        if (c > 0) DrawRectangle(
+            {
+                b->position.x + ox,
+                b->position.y + y
+            },
+            { c, 1 },
+            RGBA
+        );
+        c = 0;
+    }
   }
-
 
 }
 
