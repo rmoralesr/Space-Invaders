@@ -32,11 +32,11 @@ void GameLoop(Game *game) {
     while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
         double last_time = esat::Time();
 
-        GameUpdate(game);
-
         esat::DrawBegin();
         esat::DrawClear(0,0,0);
-        GameRender(game);
+
+        GameUpdate(game);
+
         esat::DrawEnd();
 
         FrameWait(last_time);
