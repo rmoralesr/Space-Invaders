@@ -1,6 +1,7 @@
 # Others
 *.bat
 .idea
+*.ini
 
 # Prerequisites
 *.d
