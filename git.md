@@ -1,32 +1,81 @@
-## El apartado de Git dentro del vscode es este icono en la barra lateral
-![alt text](image-1.png)
+# Guía rápida de Git en VS Code
 
-## En la barra inferior del vscode nos indica la rama en la que estamos
-> [!Caution]
-> Comprobad **SIEMPRE** que estéis en vuestra rama
-> ![alt text](image.png)
+## Flujo de trabajo (resumen)
 
-## Bajarnos cambios de los compañeros (merge)
-Los cambios siempre se suben a nuestras ramas personales. Vamos a intentar siempre hacer una única tarea a la vez, y cuando finalicemos esa tarea, compilemos y comprobemos que funcione, la subiremos a la rama features. La rama features es la rama donde convergen todos nuestros cambios, ya sean los propios o los de un compañero, por lo que tendremos que tener cuidado con lo que subimos para no romper nada. Cuando un compañero suba un cambio, deberá de notificar al resto de esta subida, y el resto tendrá que realizar los siguientes pasos para bajarse los cambios: fetch -> merge
-![alt text](image-3.png)
+**Antes de empezar**
 
-Y siempre hay que elegir la opción de la nube. Es importante diferenciar las opciones al elegir rama. Las que tienen el mismo icono que usa vscode (el icono de ramas) indica que esa rama tiene tus cambios locales. En cambio, el icono de la nube indica que es el código que hay alojado en Git (GitHub), que es el que tendrá el desarrollo del compañero.
+1. Abrir el apartado de Git y comprobar que estamos en **nuestra rama**.
+2. Compilar y comprobar que funciona.
+3. **Commit** con un mensaje detallado.
+4. **Sync Changes** para subirlo a nuestra rama.
+5. Avisar al resto del equipo de que hemos subido algo.
+6. **Fetch**: descargar la información de la nube.
+7. **Merge**: elegir la rama de la nube (icono de nube) y fusionarla con la nuestra.
+8. Comprobar que aparece *Outgoing Changes* en el grafo.
+9. **Push**: subir el resultado a nuestra rama.
 
-![alt text](image-2.png)
+---
 
-Para comprobar que se nos han bajado los cambios de nuestro compañero, en la vista de las ramas abajo de la zona de commit, veremos un nuevo cambio con el circulo de la rama punteado. Esto indica que tenemos cambios commiteados por subir (los cambios que nos hemos mergeado del compañero)
+## 1. Dónde está Git en VS Code
 
-![alt text](image-4.png)
+El apartado de Git es este icono de la barra lateral:
 
-Para subir estos cambios y ya tenerlos en nuestra rama, faltaría hacer un push, que lo que hace es subir el código que tenemos commiteado a la nube
+![Icono de Source Control en la barra lateral de VS Code](image-1.png)
 
-![alt text](image-7.png)
+## 2. Comprobar la rama actual
 
-## Subir nuestros cambios a nuestra rama (Commit)
-En el bloque superior de la pestaña aparecerá esta ventana. Aquí ponemos el mensaje con los cambios realizados. Si puede ser lo más detallado posible para ver el historial y trazas de los cambios realizados. De esta forma será más sencillo y legible tanto para nosotros como para nuestros compañeros, y será más fácil volver a ver commits por si se ha subido un bug o un error
+En la barra inferior de VS Code se indica la rama en la que estamos:
 
-![alt text](image-5.png)
+![Barra inferior de VS Code mostrando la rama features-raul](image.png)
 
-Una vez puesto el mensaje y habiendole dado al commit, habrá que darle al Sync Changes para que se suba a la nube
+> **CUIDADO:** comprobad **SIEMPRE** que estáis en **vuestra rama** antes de tocar nada.
 
-![alt text](image-6.png)
+## 3. Subir nuestros cambios a nuestra rama (Commit)
+
+Los cambios siempre se suben primero a **nuestra rama personal**. Cuando terminemos una tarea, compilemos y comprobemos que funciona, la subiremos a la rama `features`.
+
+> **Nota:** `features` es la rama donde convergen todos los cambios (los propios y los de los compañeros), así que hay que tener cuidado con lo que se sube para no romper nada.
+
+**Paso 1: Commit.** En el bloque superior de la pestaña de Git escribimos el mensaje y pulsamos **Commit**. El mensaje debe ser **lo más detallado posible**: así el historial es legible para todos y es más fácil localizar el commit donde se coló un bug o un error.
+
+![Cuadro de mensaje de commit y botón Commit](image-5.png)
+
+**Paso 2: Sync Changes.** Una vez hecho el commit, pulsamos **Sync Changes** para subirlo a la nube.
+
+![Botón Sync Changes](image-6.png)
+
+## 4. Bajarnos cambios de los compañeros (Fetch → Merge → Push)
+
+Cuando un compañero suba un cambio, **avisará al resto**. Entonces cada uno debe seguir estos pasos:
+
+### 4.1. Fetch y Merge
+
+Desde el menú `...` de la pestaña de Git:
+
+1. **Fetch**: descarga la información de lo que hay en la nube.
+2. **Branch → Merge...**: fusiona esos cambios con nuestra rama.
+
+![Menú de Git con las opciones Fetch y Branch > Merge](image-3.png)
+
+### 4.2. Elegir la rama correcta (la de la nube)
+
+Al elegir rama para el merge, hay que **elegir siempre la opción con el icono de la nube**. Es importante diferenciarlas:
+
+| Icono | Significado |
+|---|---|
+| Rama (el mismo icono que usa VS Code) | Rama **local**: contiene nuestros cambios en nuestro equipo. |
+| Nube | Rama **remota** (GitHub): contiene el desarrollo subido por el compañero. |
+
+![Lista de ramas locales y remotas con sus iconos](image-2.png)
+
+### 4.3. Comprobar que se han bajado los cambios
+
+En la vista del grafo de ramas (debajo de la zona de commit) aparecerá un nuevo cambio con el círculo de la rama **punteado** (*Outgoing Changes*). Significa que tenemos commits pendientes de subir: los que acabamos de mergear del compañero.
+
+![Grafo de ramas con Outgoing Changes](image-4.png)
+
+### 4.4. Push
+
+Para dejar esos cambios en nuestra rama, hacemos **Push**, que sube a la nube el código que tenemos commiteado.
+
+![Menú de Git con la opción Push](image-7.png)
