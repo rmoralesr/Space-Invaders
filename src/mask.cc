@@ -10,18 +10,18 @@
 
 namespace mask {
 
-  constexp unsigned int kWordCount = 100;
+  constexpr unsigned int kWordCount = 100;
 
   struct Type {
     Vector2_t size = {0,0};
-    unsigned char matrix[MASK_WORD_COUNT] = {0}; // Uso unsigned char porque no necesitamos el signo y el size de char NO varia entre compiladores
+    unsigned char matrix[kWordCount] = {0}; // Uso unsigned char porque no necesitamos el signo y el size de char NO varia entre compiladores
   };
 
   bool IsValidPosition(Type *mask, unsigned int x, unsigned int y) {
     return (
       x < (unsigned int)mask->size.x
       && y < (unsigned int)mask->size.y
-      && (y * mask->size.x + x) / 8 < MASK_WORD_COUNT
+      && (y * mask->size.x + x) / 8 < kWordCount
     );
   }
 

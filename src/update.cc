@@ -1,7 +1,7 @@
 #ifndef UPDATE_CC
 #define UPDATE_CC 1
 
-#include <types.cc>
+#include "types.cc"
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 

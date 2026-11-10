@@ -1,8 +1,6 @@
 #ifndef UI_CC
 #define UI_CC 1
 
-#include <math.h>
-
 #include "cirno.cc"
 #include "body.cc"
 

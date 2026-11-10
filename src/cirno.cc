@@ -23,6 +23,11 @@ int sign(int x) {
   return x < 0 ? -1 : 1;
 }
 
+int pow(int base, int exp){
+  int value = 1;
+  for (int i = 0; i<exp; i++) value *= base;
+  return value;
+}
 
 namespace vector2 {
 
