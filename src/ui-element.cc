@@ -27,10 +27,10 @@ void Move(Character_t* self, Vector2_t pos);
 // Definiciones
 
 char TranslateCharToIndex(char c){
-    if (c >= 'a' && c <= 'z') {
-        c -= 'a';
+    if (c >= '0' && c <= '9') {
+        c -= '0';
     } else {
-        if (c >= '0' && c <= '9') c -= '0' - 26;
+        if (c >= 'a' && c <= 'z') c -= 'a' - 10;
         else switch(c){
             case '<' : c = 10+26 + 0; break;
             case '>' : c = 10+26 + 1; break;
@@ -66,13 +66,7 @@ Character_t* Character_Construct(char c) {
 
 void Destruct(Character_t* self) {
   self->active = false;
-
   Character_registry_active_count--;
-}
-
-void Destruct(Character_t *character, unsigned int *registry_active_count) {
-    character->active = false;
-    (*registry_active_count)--;
 }
 
 void GenerateNumber(int value, int digits, Vector2_t position) {
