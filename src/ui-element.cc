@@ -7,74 +7,69 @@
 
 // FUNCIONES PARA LA INTERFAZ DEL JUEGO
 
-namespace ui_element {
+struct Character_t {
+    bool active = false;
+    Body_t body = { false };
+};
 
-    struct Type {
-        bool alive = false;
-        char c = '0';
-        
-        ::body::Type body = { false };
-    };
+constexpr unsigned int Character_kRegistryCapacity = 100; // Profunidad del registro
+unsigned int Character_registry_active_count = 0;
+Character_t Character_registry[kNumRegistry] = {0};
 
-    constexpr unsigned int kRegistryCapacity = 100; // Profunidad del registro
-    unsigned int registry_alive_count = 0;
-    Type registry[kNumRegistry] = {0};
-
-    // Deberiamos seguir este prototipaje/template?
-    Type* Construct(char c, vector2::Type position);
-    void Destruct(char c, vector2::Type position);
-    void Update(); // Llama el update de body
+// Deberiamos seguir este prototipaje/template?
+Character_t* Construct(char c, Vector2_t position);
+void Destruct(char c, Vector2_t position);
+void Update(); // Llama el update de body
 
 
-    Type* Construct(char c, vector2::Type position) {
-        if (c >= 'a' && c <= 'z') {
-            c -= 'a';
-        } else {
-            if (c >= '0' && c <= '9') c -= '0' - 26;
-            else switch(c){
-                case '<' : c = 10+26 + 0; break;
-                case '>' : c = 10+26 + 1; break;
-                case '=' : c = 10+26 + 2; break;
-                case '*' : c = 10+26 + 3; break;
-                case '?' : c = 10+26 + 4; break;
-                case '-' : c = 10+26 + 5; break;
-            }
-        }
-        
-
-        // body = GenerateBody(TextSprites[c], position) //FUNCION SIN IMPLEMENTAR
-        // Añadir body al registro de "character"
-    }
-
-    void Destruct(Type *character) {
-        character->alive = false;
-        registry_alive_count--;
-    }
-
-
-
-
-
-    // -------------------------------------------------------------------- //
-
-    // Esto deberia cambiarse
-    void GenerateNumber(int value, int digits, vector2::Type position) {
-        if (value > pow(10, digits) - 1) 
-            value = pow(10, digits) - 1;
-
-        int number;
-        for (int i = 0; i < digits; i++) {
-            number = value / pow(10, digits - 1 - i);
-
-            Construct('0' + number, position);
-
-            position.x += assets::kCharacterWidth;
-
-            value %= pow(10, digits - 1 - i);
+Character_t* Construct(char c, Vector2_t position) {
+    if (c >= 'a' && c <= 'z') {
+        c -= 'a';
+    } else {
+        if (c >= '0' && c <= '9') c -= '0' - 26;
+        else switch(c){
+            case '<' : c = 10+26 + 0; break;
+            case '>' : c = 10+26 + 1; break;
+            case '=' : c = 10+26 + 2; break;
+            case '*' : c = 10+26 + 3; break;
+            case '?' : c = 10+26 + 4; break;
+            case '-' : c = 10+26 + 5; break;
         }
     }
+    
 
+    // body = GenerateBody(TextSprites[c], position) //FUNCION SIN IMPLEMENTAR
+    // Añadir body al registro de "character"
 }
+
+void Destruct(Character_t *character) {
+    character->alive = false;
+    registry_alive_count--;
+}
+
+
+
+
+
+// -------------------------------------------------------------------- //
+
+// Esto deberia cambiarse
+void GenerateNumber(int value, int digits, Vector2_t position) {
+    if (value > pow(10, digits) - 1) 
+        value = pow(10, digits) - 1;
+
+    int number;
+    for (int i = 0; i < digits; i++) {
+        number = value / pow(10, digits - 1 - i);
+
+        Construct('0' + number, position);
+
+        position.x += kCharacterWidth;
+
+        value %= pow(10, digits - 1 - i);
+    }
+}
+
 
 
 
