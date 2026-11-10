@@ -54,88 +54,61 @@ void Move(Body_t* self, Vector2_t pos) {
 }
 
 
+static bool ShouldPaint(Body_t* self,
+  unsigned int x, unsigned y,
+  unsigned char RGBA[4], bool erase
+) {
+
+  if (!ReadBit(&self->mask, x,y)) return false; // No hay pixel
+
+  if (erase) return true; // Siempre
+
+  unsigned char new_RGBA[4];
+  GetPositionColor(new_RGBA, self->position.x + x, self->position.y + y);
+
+  return (
+    new_RGBA[0] == RGBA[0]
+    && new_RGBA[1] == RGBA[1]
+    && new_RGBA[2] == RGBA[2]
+    && new_RGBA[3] == RGBA[3]
+  );
+}
+
 
 void Draw(Body_t* self, bool erase) {
 
-  // Lo estoy trabajando en mi branch
+  unsigned char RGBA[4] = {255,255,255,255};
+  if (erase) SetToBlack(RGBA);
 
-  int c = 0; // Contamos cuantos bits de una row podemos dibujar en una sola call (parecido a greedy meshing)
-  int ox = 0;
+  int ox = 0; // Origin x
+  int length = 0;
 
-  unsigned char RGBA[4] = {255, 255, 255, 255};
+  for (int y = 0; y < self->mask.size.y; y++) {
+    
+    // x == size.x es lo que cierra
+    for (int x = 0; x <= self->mask.size.x; x++) {
 
-  if (erase) {
+      if (
+        (x < self->mask.size.x) // Si x == size.x, estamos fuera, por lo que hay que cerrar y pintar si queda length
+        && ShouldPaint(self, x,y, RGBA, erase)
+      ) {
 
-    SetToBlack(RGBA);
+        if (length == 0) ox = x;
+        length++;
 
-    for (int y = 0; y < self->mask.size.y; y++) {
-      for (int x = 0; x < self->mask.size.x; x++) {
+      } else if (length > 0) {
 
-        if ( ReadBit(&self->mask, x, y) ) { // Hay pixel
-
-          if (c == 0)
-              ox = x;
-          c++;
-
-        } else { // No hay pixel
-
-            if (c > 0) DrawRectangle(
-                {
-                    self->position.x + ox,
-                    self->position.y + y
-                },
-                { c, 1 },
-                RGBA
-            );
-            c = 0;
-
-        }
+        DrawRectangle(
+          { self->position.x + ox, self->position.y + y },
+          { length, 1 },
+          RGBA
+        );
+        length = 0;
 
       }
+
     }
 
-
-  } else {
-
-    unsigned char lRGBA[4] = {255, 255, 255, 255};
-
-    if (erase) SetToBlack(RGBA);
-
-    for (int y = 0; y < self->mask.size.y; y++){
-        for (int x = 0; x < self->mask.size.x; x++){
-
-            if ( ReadBit(&self->mask, x, y) ) { // Hay pixel
-
-                if (c == 0)
-                    ox = x;
-                c++;
-
-            } else { // No hay pixel
-
-                if (c > 0) DrawRectangle(
-                    {
-                        self->position.x + ox,
-                        self->position.y + y
-                    },
-                    { c, 1 },
-                    RGBA
-                );
-                c = 0;
-
-            }
-
-        }
-
-        if (c > 0) DrawRectangle(
-            {
-                self->position.x + ox,
-                self->position.y + y
-            },
-            { c, 1 },
-            RGBA
-        );
-        c = 0;
-    }
   }
 
 }
