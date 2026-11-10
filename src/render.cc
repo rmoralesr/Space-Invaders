@@ -4,7 +4,13 @@
 #include <esat/draw.h>
 
 #include "types.cc"
+<<<<<<< HEAD
 #include "body.cc"
+=======
+#include "cirno.cc"
+#include "body.cc"
+#include "mask.cc"
+>>>>>>> 3707b18842528840ade2524d195b538ef64c698a
 
 // FUNCIONES DE RENDERIZADO
 
@@ -76,13 +82,16 @@ void DrawBody(body::Type *b){
 /** @brief Dibuja el juego en la ventana */
 void GameRender(Game *game) {
     // TODO
-    mask::Type m;
-    mask::FromFile(&m,"./assets/test.png");
-    body::Type b;
-    b.can_collide = true;
-    b.position = {0, 0};
-    b.mask = m;
-    DrawBody(&b);
+
+    body::Type buddy = {
+        true,
+        {20,20}, {}
+    };
+
+    mask::FromFile(&buddy.mask, "../assets/test.png");
+
+    DrawBody(&buddy);
+
 }
 
 #endif // RENDER_CC
