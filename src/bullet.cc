@@ -24,7 +24,7 @@ Bullet_t Bullet_registry[kNumRegistry] = {0};
 
 // Prototipaje
 
-Bullet_t* Bullet_Constructor();
+Bullet_t* Bullet_Construct();
 void Destruct(Bullet_t* self);
 
 void MoveTo(Bullet_t* self, Vector2_t pos);
@@ -34,6 +34,33 @@ void Tick(Bullet_t* self); // Actualiza toda la logica. Se mueve hacia adelante 
 
 // Definiciones
 
+Bullet_t* Bullet_Construct() {
+  int n = -1;
+  for (int i = 0; i < Bullet_kRegistryCapacity; i++) {
+    if (!Bullet_registry[i].active) {
+      n = i;
+      break;
+    }
+  }
+
+  Bullet_t *self = nullptr;
+
+  if (n != -1) { 
+    Bullet_registry[n] = {};
+    self = &Bullet_registry[n];
+    self->active = true;
+
+    Bullet_registry_active_count++;
+  }
+
+  return self;
+}
+
+void Destruct(Bullet_t* self) {
+  self->active = false;
+
+  Bullet_registry_active_count--;
+}
 
 
 #endif // BULLET_CC
