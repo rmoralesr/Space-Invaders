@@ -1,5 +1,6 @@
 # ORGANIZACIÓN (POR CONFIRMAR)
 
+- Siempre se compila desde el archivo `main.cc`.
 - Se trabaja por archivos separados.
 - Cada persona trabaja en su propia rama.
 - La rama main no se debe tocar a menos que se sepa que todo lo que está hecho funciona y compila sin errores, y no está a medias.
