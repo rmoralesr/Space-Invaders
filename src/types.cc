@@ -1,6 +1,7 @@
 #ifndef TYPES_CC
 #define TYPES_CC 1
 
+#include "input.cc"
 #include "cirno.cc"
 
 // AQUÍ ESTÁN TODOS LOS TIPOS DE DATOS GENERALES QUE SE VAN A USAR EN EL JUEGO
@@ -18,6 +19,7 @@ const Vector2_t kWindowSize = {800, 600};
 
 struct Game {
     // TODO
+    Input input;
 };
 
 #endif // TYPES_CC

@@ -2,13 +2,19 @@
 #define UPDATE_CC 1
 
 #include <esat/draw.h>
+#include "input.cc"
 #include "types.cc"
 #include "body.cc"
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
+
+
+
 /** @brief Actualiza los datos del juego */
 void GameUpdate(Game *game) {
+    InputUpdate(&game->input);
+
     esat::DrawSetStrokeColor(0,0,0,0);
     // TODO
 

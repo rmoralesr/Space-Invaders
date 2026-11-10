@@ -5,7 +5,7 @@
 #include "mask.cc"
 #include "body.cc"
 
-enum kBulletType {
+enum BulletType {
   kBulletType_Player
 };
 
@@ -13,14 +13,14 @@ struct Bullet_t {
   bool active = false;
   bool dying = false;
 
-  kBulletType type = 0;
+  BulletType type = kBulletType_Player;
 
   Body_t body;
 }; 
 
 constexpr unsigned int Bullet_kRegistryCapacity = 20;
 unsigned int Bullet_registry_active_count = 0;
-Bullet_t Bullet_registry[kNumRegistry] = {0};
+Bullet_t Bullet_registry[Bullet_kRegistryCapacity] = {0};
 
 // Prototipaje
 
