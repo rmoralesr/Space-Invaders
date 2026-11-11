@@ -8,22 +8,26 @@
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
+/** @brief Actualiza ciertos aspectos que pueden ser computados sin encadenar un redibujado */
+void LogicUpdate(Game *game) {
+	InputUpdate(&game->input);
+}
 
 
 
 /** @brief Actualiza los datos del juego */
 void GameUpdate(Game *game) {
-    InputUpdate(&game->input);
-    // TODO
+    
+	// TODO
 
-    Body_t buddy = {
-        true,
-        {20,20}, {}
-    };
+	Body_t buddy = {
+		true,
+		{20,20}, {}
+	};
 
-    FromFile(&buddy.mask, "../assets/test.png");
+	FromFile(&buddy.mask, "../assets/test.png");
 
-    Draw(&buddy);
+	Draw(&buddy);
 }
 
 #endif // UPDATE_CC
