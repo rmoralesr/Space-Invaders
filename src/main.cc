@@ -23,6 +23,7 @@ void FrameWait(double last_time);
 void GameInit(Game *game) {
     // TODO
     game->game_state = kGameState_Previewing;
+    game->credits = 0;
 
     LoadAssets();
 }
