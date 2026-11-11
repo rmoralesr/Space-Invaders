@@ -37,11 +37,20 @@ void GameUpdate(Game *game) {
 		}
 		case kGameState_ChoosingPlayers: {
 			if (game->input.one_player_button || game->input.two_player_button) { // TODO por ahora así, luego cambiar
+				game->player = Player_Construct();
 				game->game_state = kGameState_Playing;
 			}
 			break;
 		}
 		case kGameState_Playing: {
+			if (game->input.left_button) {
+				Move(game->player, {-1, 0});
+  				Draw(&game->player->body);
+			}
+			if (game->input.right_button) {
+				Move(game->player, {+1, 0});
+				Draw(&game->player->body);
+			}
 			break;
 		}
 	}
