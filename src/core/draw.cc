@@ -3,9 +3,10 @@
 
 #include <esat/draw.h>
 
-#include "types.cc"
 #include "../entities/body.cc"
 #include "cirno.cc"
+
+const unsigned int kPixelScale = 3;
 
 void DrawRectangle(Vector2_t position, Vector2_t size, unsigned char RGBA[4]){
     esat::DrawSetFillColor(RGBA[0], RGBA[1], RGBA[2]);

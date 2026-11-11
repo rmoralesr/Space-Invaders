@@ -3,6 +3,7 @@
 
 #include "../core/cirno.cc"
 #include "../core/mask.cc"
+#include "../core/draw.cc"
 #include "body.cc"
 
 struct Player_t {
