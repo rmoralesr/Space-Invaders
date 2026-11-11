@@ -21,8 +21,13 @@ void PreviewUpdate(Game *game) {
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
 void GameUpdate(Game *game) {
+
+	// Player Inputs
+
 	InputUpdate(&game->input);
 	if (game->input.insert_credit) game->credits++;
+
+	// 
 
 	switch (game->game_state) {
 		case kGameState_Previewing: {
