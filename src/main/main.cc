@@ -3,16 +3,15 @@
 #include <esat/input.h>
 #include <esat/sprite.h>
 #include <esat/time.h>
-#include <stdio.h>
 
 // LOS INCLUDES DEBEN ESTAR EN ORDEN, LOS QUE NECESITAN OTROS QUE SE PONGAN DEBAJO DE ELLOS
-#include "core/cirno.cc"
-#include "core/types.cc"
-#include "core/mask.cc"
-#include "entities/body.cc"
-#include "tools/ui-element.cc"
+#include "../core/cirno.cc"
+#include "../core/types.cc"
+#include "../core/mask.cc"
+#include "../entities/body.cc"
+#include "../tools/ui-element.cc"
 #include "update.cc"
-#include "core/render.cc"
+#include "render.cc"
 
 
 /** @brief Controla el maximo de frames por segundo */
@@ -26,6 +25,8 @@ void GameInit(Game *game) {
     game->credits = 0;
 
     LoadAssets();
+    GenerateText("score<1> hi-score score<2>", 26, {10,10});
+    PreviewingInit();
 }
 
 
@@ -41,10 +42,13 @@ int esat::main(int argc, char **argv) {
     while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
         double last_time = esat::Time();
 
+        GameUpdate(&game);
+
         esat::DrawBegin();
+        esat::DrawClear(0,0,0);
         esat::DrawSetStrokeColor(0,0,0,0);
 
-        GameUpdate(&game);
+        GameRender(&game);
 
         esat::DrawEnd();
         esat::WindowFrame();
