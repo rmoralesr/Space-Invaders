@@ -68,7 +68,7 @@ static bool ShouldPaint(Body_t* self,
     );
 }
 
-void Draw(Body_t* self, bool erase) {
+void Draw(Body_t* self, bool erase = false) {
 
     unsigned char RGBA[4] = {255,255,255,255};
     if (erase) SetToBlack(RGBA);
