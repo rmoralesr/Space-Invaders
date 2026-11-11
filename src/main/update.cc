@@ -2,21 +2,14 @@
 #define UPDATE_CC 1
 
 #include <esat/draw.h>
-#include "tools/input.cc"
-#include "core/types.cc"
-#include "entities/body.cc"
+#include "../tools/input.cc"
+#include "../core/types.cc"
+#include "../entities/body.cc"
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
 void PreviewUpdate(Game *game) {
-	Body_t buddy = {
-		true,
-		{20,20}, {}
-	};
 
-	FromFile(&buddy.mask, "../assets/test.png");
-
-	Draw(&buddy);
 }
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
