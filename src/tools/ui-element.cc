@@ -12,7 +12,7 @@ struct Character_t {
     Body_t body = { false };
 };
 
-constexpr unsigned int Character_kRegistryCapacity = 20;
+constexpr unsigned int Character_kRegistryCapacity = 100;
 unsigned int Character_registry_active_count = 0;
 Character_t Character_registry[Character_kRegistryCapacity] = {0};
 
@@ -27,10 +27,10 @@ void Move(Character_t* self, Vector2_t pos);
 // Definiciones
 
 char TranslateCharToIndex(char c){
-    if (c >= '0' && c <= '9') {
-        c -= '0';
+    if (c >= 'a' && c <= 'z') {
+        c -= 'a';
     } else {
-        if (c >= 'a' && c <= 'z') c -= 'a' - 10;
+        if (c >= '0' && c <= '9') c -= '0' - 26;
         else switch(c){
             case '<' : c = 10+26 + 0; break;
             case '>' : c = 10+26 + 1; break;
@@ -57,7 +57,7 @@ Character_t* Character_Construct(char c) {
         Character_registry[n] = {};
         self = &Character_registry[n];
         self->active = true;
-
+        self->body.mask = g_assets.CharacterMasks[TranslateCharToIndex(c)];
         Character_registry_active_count++;
     }
 
@@ -79,19 +79,20 @@ void GenerateNumber(int value, int digits, Vector2_t position) {
         Character_t *new_c = Character_Construct('0' + number);
         new_c->body.position.y = position.y;
         new_c->body.position.x = position.x;
-        position.x += kCharacterWidth;
+        position.x += kCharacterWidth + 3;
         value %= pow(10, digits - 1 - i);
     }
 }
 
 void GenerateText(const char *text, int length, Vector2_t position){
     for (int i = 0; i < length; i++){
-        Character_t *new_c = Character_Construct(text[i]);
-        new_c->body.position.y = position.y;
-        new_c->body.position.x = position.x;
-        position.x += kCharacterWidth;
+        if (text[i] != ' '){
+            Character_t *new_c = Character_Construct(text[i]);
+            new_c->body.position.y = position.y;
+            new_c->body.position.x = position.x;
+        }
+        position.x += kCharacterWidth + 3;
     }
 }
-
 
 #endif // UI_ELEMENT_CC

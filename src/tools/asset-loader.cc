@@ -5,7 +5,7 @@
 #include "../core/mask.cc"
 
 
-constexpr int kNumCharacters = 36; // Numero de caracteres en la fuente
+constexpr int kNumCharacters = 42; // Numero de caracteres en la fuente
 
 constexpr int kCharacterWidth = 5; // Leer del sprite
 constexpr int kCharacterHeight = 7; // Leer del sprite
@@ -22,7 +22,7 @@ void LoadAssets() {
     for (int i = 0; i < 6; i++){
         for (int j = 0; j < 8; j++){
             if (i*8+j < kNumCharacters) FromFile(
-                &CharacterMasks[i*8+j],"../assets/caracteres.png", 
+                &g_assets.CharacterMasks[i*8+j],"../../assets/caracteres.png", 
                 {2+(5+kCharacterWidth)*j, 3+(3+kCharacterHeight)*i},
                 {kCharacterWidth,kCharacterHeight}
                 );

@@ -12,20 +12,23 @@
 // FUNCIONES DE RENDERIZADO
 
 void PreviewRender() {
-    Body_t buddy = {
+    /*Body_t buddy = {
         true,
-        {20,20}, {}
+        {0,0}, {}
     };
-
     FromFile(&buddy.mask, "../../assets/test.png");
-
-    Draw(&buddy, false);
+    Draw(&buddy);*/
 }
 
 void GameRender(const Game *game) {
-    PreviewRender();
+
+    for (int i = 0; i < Character_kRegistryCapacity; i++){
+        Draw(&Character_registry[i].body);
+    }
+
     switch (game->game_state) {
         case kGameState_Previewing: {
+            PreviewRender();
             break;
         }
         case kGameState_ChoosingPlayers: {
