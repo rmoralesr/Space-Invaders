@@ -21,7 +21,8 @@ enum GameState {
 };
 
 const unsigned char kTargetFps = 25; //Control de frames por segundo
-const Vector2_t kWindowSize = {800, 600};
+const unsigned int kPixelScale = 4;
+const Vector2_t kWindowSize = {224, 256};
 
 struct Game {
     // TODO
