@@ -79,7 +79,7 @@ void GenerateNumber(int value, int digits, Vector2_t position) {
         Character_t *new_c = Character_Construct('0' + number);
         new_c->body.position.y = position.y;
         new_c->body.position.x = position.x;
-        position.x += kCharacterWidth; //Acceder a la constante de CharacterWidth
+        position.x += kCharacterWidth;
         value %= pow(10, digits - 1 - i);
     }
 }
@@ -89,7 +89,7 @@ void GenerateText(const char *text, int length, Vector2_t position){
         Character_t *new_c = Character_Construct(text[i]);
         new_c->body.position.y = position.y;
         new_c->body.position.x = position.x;
-        position.x += kCharacterWidth; //Acceder a la constante de CharacterWidth
+        position.x += kCharacterWidth;
     }
 }
 
