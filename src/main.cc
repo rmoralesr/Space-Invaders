@@ -6,13 +6,13 @@
 #include <stdio.h>
 
 // LOS INCLUDES DEBEN ESTAR EN ORDEN, LOS QUE NECESITAN OTROS QUE SE PONGAN DEBAJO DE ELLOS
-#include "cirno.cc"
-#include "types.cc"
-#include "mask.cc"
-#include "body.cc"
-#include "ui-element.cc"
+#include "core/cirno.cc"
+#include "core/types.cc"
+#include "core/mask.cc"
+#include "entities/body.cc"
+#include "tools/ui-element.cc"
 #include "update.cc"
-#include "render.cc"
+#include "core/render.cc"
 
 
 /** @brief Controla el maximo de frames por segundo */
@@ -22,13 +22,14 @@ void FrameWait(double last_time);
 /** @brief Inicializa las variables necesarias para el juego */
 void GameInit(Game *game) {
     // TODO
+    game->game_state = kGameState_Previewing;
 
     LoadAssets();
 }
 
 
 int esat::main(int argc, char **argv) {
-    esat::WindowInit(kWindowSize.x, kWindowSize.y);
+    esat::WindowInit(kWindowSize.x*kPixelScale, kWindowSize.y*kPixelScale);
     WindowSetMouseVisibility(true);
 
     Game game = {};
@@ -38,8 +39,6 @@ int esat::main(int argc, char **argv) {
 
     while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
         double last_time = esat::Time();
-
-        LogicUpdate(&game);
 
         esat::DrawBegin();
         esat::DrawSetStrokeColor(0,0,0,0);

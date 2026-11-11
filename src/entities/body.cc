@@ -3,9 +3,9 @@
 
 #include <math.h>
 
-#include "cirno.cc"
-#include "mask.cc"
-#include "render.cc"
+#include "../core/cirno.cc"
+#include "../core/mask.cc"
+#include "../core/render.cc"
 
 
 // Los tipos body no necesitan un registro puesto que todos los body tienen un padre (un struct que los contenga)
