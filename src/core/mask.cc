@@ -110,7 +110,7 @@ void FromFile(Mask_t *mask, const char *path,
 }
 
 /** @brief Substrae mask B de mask A */
-void Substract(Mask_t *A, Mask_t *B, Vector2_t offset = {0,0}) {
+void Sub(Mask_t *A, Mask_t *B, Vector2_t offset = {0,0}) {
 
   // min(aMax, bMax) - max(0, bMin)
   Vector2_t overlap = {

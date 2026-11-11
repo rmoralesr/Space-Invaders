@@ -28,6 +28,7 @@ struct Game {
     // TODO
     GameState game_state;
     Input input;
+    int credits;
 };
 
 #endif // TYPES_CC
