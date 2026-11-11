@@ -26,6 +26,7 @@ void GameInit(Game *game) {
 
     LoadAssets();
     GenerateText("score<1> hi-score score<2>", 26, {10,10});
+    PreviewingInit();
 }
 
 
