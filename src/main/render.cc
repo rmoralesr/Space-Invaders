@@ -23,7 +23,8 @@ void PreviewRender() {
 void GameRender(const Game *game) {
 
     for (int i = 0; i < Character_kRegistryCapacity; i++){
-        Draw(&Character_registry[i].body);
+        if ( !Character_registry[i].flashing || g_tick%4 > 1) 
+            Draw(&Character_registry[i].body);
     }
 
     switch (game->game_state) {

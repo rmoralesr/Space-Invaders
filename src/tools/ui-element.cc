@@ -8,7 +8,7 @@
 // FUNCIONES PARA LA INTERFAZ DEL JUEGO
 
 struct Character_t {
-    bool active = false;
+    bool active = false, flashing = false;
     Body_t body = { false };
 };
 struct QueuedCharacter_t {
@@ -68,36 +68,32 @@ Character_t* Character_Construct(char c) {
     }
     return self;
 }
-
 void Destruct(Character_t* self) {
   self->active = false;
   Character_registry_active_count--;
 }
 
-void GenerateNumber(int value, int digits, Vector2_t position) {
-    if (value > pow(10, digits) - 1) 
-        value = pow(10, digits) - 1;
-
-    int number;
-    for (int i = 0; i < digits; i++) {
-        number = value / pow(10, digits - 1 - i);
-        Character_t *new_c = Character_Construct('0' + number);
-        new_c->body.position.y = position.y;
-        new_c->body.position.x = position.x;
-        position.x += kCharacterWidth + 3;
-        value %= pow(10, digits - 1 - i);
-    }
-}
-
-void GenerateCharacter(char c, Vector2_t position){
+void GenerateCharacter(char c, Vector2_t position, bool flashing = false){
     Character_t *new_c = Character_Construct(c);
     new_c->body.mask = g_assets.CharacterMasks[TranslateCharToIndex(c)];
     new_c->body.position.y = position.y;
     new_c->body.position.x = position.x;
+    new_c->flashing = flashing;
 }
-void GenerateText(const char *text, int length, Vector2_t position){
+void GenerateNumber(int value, int digits, Vector2_t position, bool flashing = false) {
+    if (value > pow(10, digits) - 1) 
+        value = pow(10, digits) - 1;
+    int number;
+    for (int i = 0; i < digits; i++) {
+        number = value / pow(10, digits - 1 - i);
+        GenerateCharacter('0' + number, position, flashing);
+        position.x += kCharacterWidth + 3;
+        value %= pow(10, digits - 1 - i);
+    }
+}
+void GenerateText(const char *text, int length, Vector2_t position, bool flashing = false){
     for (int i = 0; i < length; i++){
-        if (text[i] != ' ') GenerateCharacter(text[i], position);
+        if (text[i] != ' ') GenerateCharacter(text[i], position, flashing);
         position.x += kCharacterWidth + 3;
     }
 }
