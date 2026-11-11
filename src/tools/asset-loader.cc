@@ -10,7 +10,13 @@ constexpr int kNumCharacters = 36; // Numero de caracteres en la fuente
 constexpr int kCharacterWidth = 5; // Leer del sprite
 constexpr int kCharacterHeight = 7; // Leer del sprite
 
-Mask_t CharacterMasks[kNumCharacters] = {};
+
+struct Assets {
+    Mask_t CharacterMasks[kNumCharacters] = {};
+    Mask_t AlienMasks[3][2] = {}; // 3 tipos de alien y 2 sprites de cada uno
+};
+
+Assets g_assets;
 
 void LoadAssets() {
     for (int i = 0; i < 6; i++){

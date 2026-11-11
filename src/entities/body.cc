@@ -44,11 +44,11 @@ void MoveTo(Body_t* self, Vector2_t pos) {
   Draw(self);
 }
 
-void Move(Body_t* self, Vector2_t pos) {
+void Move(Body_t* self, Vector2_t delta) {
   MoveTo(self, 
     Sum(
       self->position, 
-      pos
+      delta
     )
   );
 }
