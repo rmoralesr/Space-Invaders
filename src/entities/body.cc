@@ -5,8 +5,6 @@
 
 #include "../core/cirno.cc"
 #include "../core/mask.cc"
-#include "../core/render.cc"
-
 
 // Los tipos body no necesitan un registro puesto que todos los body tienen un padre (un struct que los contenga)
 
@@ -21,8 +19,6 @@ struct Body_t {
 void MoveTo(Body_t* self, Vector2_t pos);
 void Move(Body_t* self, Vector2_t pos);
 
-void Draw(Body_t* self, bool erase = false);
-
 
 Vector2_t GetOverlap(Body_t *A, Body_t *B);
 /** @brief Retorna si dos bodies estan tocandose */
@@ -36,7 +32,7 @@ unsigned int Collide(Body_t *A, Body_t *B,
 
 // Definiciones
 
-void MoveTo(Body_t* self, Vector2_t pos) {
+/*void MoveTo(Body_t* self, Vector2_t pos) {
   Draw(self, true);
 
   self->position = pos;
@@ -51,70 +47,7 @@ void Move(Body_t* self, Vector2_t delta) {
       delta
     )
   );
-}
-
-
-static bool ShouldPaint(Body_t* self,
-  unsigned int x, unsigned y,
-  unsigned char RGBA[4], bool erase
-) {
-
-  if (!ReadBit(&self->mask, x,y)) return false; // No hay pixel
-
-  if (erase) return true; // Siempre
-
-  unsigned char new_RGBA[4];
-  GetPositionColor(new_RGBA, self->position.x + x, self->position.y + y);
-
-  return (
-    new_RGBA[0] == RGBA[0]
-    && new_RGBA[1] == RGBA[1]
-    && new_RGBA[2] == RGBA[2]
-    && new_RGBA[3] == RGBA[3]
-  );
-}
-
-
-void Draw(Body_t* self, bool erase) {
-
-  unsigned char RGBA[4] = {255,255,255,255};
-  if (erase) SetToBlack(RGBA);
-
-  int ox = 0; // Origin x
-  int length = 0;
-
-  for (int y = 0; y < self->mask.size.y; y++) {
-    
-    // x == size.x es lo que cierra
-    for (int x = 0; x <= self->mask.size.x; x++) {
-
-      if (
-        (x < self->mask.size.x) // Si x == size.x, estamos fuera, por lo que hay que cerrar y pintar si queda length
-        && ShouldPaint(self, x,y, RGBA, erase)
-      ) {
-
-        if (length == 0) ox = x;
-        length++;
-
-      } else if (length > 0) {
-
-        DrawRectangle(
-          { self->position.x + ox, self->position.y + y },
-          { length, 1 },
-          RGBA
-        );
-        length = 0;
-
-      }
-
-    }
-
-  }
-
-}
-
-
-
+}*/
 
 
 Vector2_t GetOverlap(Body_t *A, Body_t *B) {
