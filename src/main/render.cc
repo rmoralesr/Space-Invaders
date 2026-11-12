@@ -13,12 +13,12 @@
 // FUNCIONES DE RENDERIZADO
 
 void PreviewRender() {
-	/*Body_t buddy = {
-		true,
-		{0,0}, {}
-	};
-	FromFile(&buddy.mask, "../../assets/test.png");
-	Draw(&buddy);*/
+    /*Body_t buddy = {
+        true,
+        {0,0}, {}
+    };
+    FromFile(&buddy.mask, "../../assets/test.png");
+    Draw(&buddy);*/
 }
 
 void GameRender(const Game_t *game) {
@@ -36,27 +36,18 @@ void GameRender(const Game_t *game) {
         );
     }
 
-		if (elem.active) {
-			if (elem.reveal_tick <= g_tick) {
-				if (!elem.flashing || g_tick%4 > 1) 
-					Draw(&elem.body);
-			}
-		}
-		
-	}
-
-	switch (game->game_state) {
-		case kGameState_Previewing: {
-			PreviewRender();
-			break;
-		}
-		case kGameState_ChoosingPlayers: {
-			break;
-		}
-		case kGameState_Playing: {
-			break;
-		}
-	}
+    switch (game->game_state) {
+        case kGameState_Previewing: {
+            PreviewRender();
+            break;
+        }
+        case kGameState_ChoosingPlayers: {
+            break;
+        }
+        case kGameState_Playing: {
+            break;
+        }
+    }
 }
 
 #endif // RENDER_CC
