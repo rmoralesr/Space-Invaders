@@ -7,31 +7,30 @@
 
 // FUNCIONES PARA LA INTERFAZ DEL JUEGO
 
-struct Character_t {
+struct UIElement_t {
     bool active = false, flashing = false;
     Body_t body = { false };
 };
-struct QueuedCharacter_t {
-    bool active = false, flashing = false;
-    char character;
-    Vector2_t position;
+struct QueuedUIElement_t {
+    bool active = false;
+    UIElement_t element;
     long long int queued_tick;
 };
 
-const unsigned int Character_kRegistryCapacity = 100;
-unsigned int Character_registry_active_count = 0;
-Character_t Character_registry[Character_kRegistryCapacity] = {0};
+const unsigned int UIElement_kRegistryCapacity = 100;
+unsigned int UIElement_registry_active_count = 0;
+UIElement_t UIElement_registry[UIElement_kRegistryCapacity] = {0};
 
-const unsigned int Character_kGenerateQueueCapacity = 100;
-QueuedCharacter_t Character_GenerateQueue[Character_kGenerateQueueCapacity] = {0};
+const unsigned int UIElement_kGenerateQueueCapacity = 100;
+QueuedUIElement_t UIElement_GenerateQueue[UIElement_kGenerateQueueCapacity] = {0};
 
 // Prototipaje
 
-Character_t* Character_Construct();
-void Destruct(Character_t* self);
+UIElement_t* UIElement_Construct();
+void Destruct(UIElement_t* self);
 
-void MoveTo(Character_t* self, Vector2_t pos);
-void Move(Character_t* self, Vector2_t pos);
+void MoveTo(UIElement_t* self, Vector2_t pos);
+void Move(UIElement_t* self, Vector2_t pos);
 
 // Definiciones
 
@@ -51,71 +50,76 @@ char TranslateCharToIndex(char c){
     }
     return c;
 }
+Mask_t CharMask(char c){
+    return g_assets.CharacterMasks[TranslateCharToIndex(c)];
+}
 
-Character_t* Character_Construct(char c) {
+UIElement_t* UIElement_Construct() {
     int n = 0;
     bool free_space = false;
-    while(n < Character_kRegistryCapacity && !free_space){
-        if (!Character_registry[n].active) free_space = true;
+    while(n < UIElement_kRegistryCapacity && !free_space){
+        if (!UIElement_registry[n].active) free_space = true;
         else n++;
     }
-    Character_t *self = nullptr;
+    UIElement_t *self = nullptr;
     if (free_space) { 
-        Character_registry[n] = {};
-        self = &Character_registry[n];
+        UIElement_registry[n] = {};
+        self = &UIElement_registry[n];
         self->active = true;
-        Character_registry_active_count++;
+        UIElement_registry_active_count++;
     }
     return self;
 }
-void Destruct(Character_t* self) {
+void Destruct(UIElement_t* self) {
   self->active = false;
-  Character_registry_active_count--;
+  UIElement_registry_active_count--;
 }
 
-void GenerateCharacter(char c, Vector2_t position, bool flashing = false){
-    Character_t *new_c = Character_Construct(c);
-    new_c->body.mask = g_assets.CharacterMasks[TranslateCharToIndex(c)];
-    new_c->body.position.y = position.y;
-    new_c->body.position.x = position.x;
+void GenerateUIElement(Body_t b, bool flashing = false){
+    UIElement_t *new_c = UIElement_Construct();
+    new_c->body = b;
     new_c->flashing = flashing;
 }
-void GenerateQueuedCharacter(QueuedCharacter_t *qc){
-    GenerateCharacter(qc->character, qc->position, qc->flashing);
+void GenerateQueuedUIElement(QueuedUIElement_t *qc){
+    GenerateUIElement(qc->element.body, qc->element.flashing);
     qc->active = false;
 }
-void ClearCharacterGenerateQueue(){
-    for (int i = 0; i < Character_kGenerateQueueCapacity; i++){
-        Character_GenerateQueue[i].active = false;
+void ClearUIElementGenerateQueue(){
+    for (int i = 0; i < UIElement_kGenerateQueueCapacity; i++){
+        UIElement_GenerateQueue[i].active = false;
     }
 }
-void QueuedCharactersUpdate(){
-	for (int i = 0; i < Character_kGenerateQueueCapacity; i++){
-		if ( Character_GenerateQueue[i].active && g_tick == Character_GenerateQueue[i].queued_tick ) 
-            GenerateQueuedCharacter(&Character_GenerateQueue[i]);
+void QueuedUIElementsUpdate(){
+	for (int i = 0; i < UIElement_kGenerateQueueCapacity; i++){
+		if ( UIElement_GenerateQueue[i].active && g_tick == UIElement_GenerateQueue[i].queued_tick ) 
+            GenerateQueuedUIElement(&UIElement_GenerateQueue[i]);
 	}
 }
-void QueueCharacter(char c, Vector2_t position, long long int queue_tick = 0, bool flashing = false){
+void QueueUIElement(Body_t b, long long int queue_tick = 0, bool flashing = false){
     int n = 0;
     bool free_space = false;
-    while(n < Character_kGenerateQueueCapacity && !free_space){
-        if (!Character_GenerateQueue[n].active) free_space = true;
+    while(n < UIElement_kGenerateQueueCapacity && !free_space){
+        if (!UIElement_GenerateQueue[n].active) free_space = true;
         else n++;
     }
     if (free_space) {
-        Character_GenerateQueue[n].active = true;
-        Character_GenerateQueue[n].character = c;
-        Character_GenerateQueue[n].flashing = flashing;
-        Character_GenerateQueue[n].position = position;
-        Character_GenerateQueue[n].queued_tick = queue_tick;
+        UIElement_GenerateQueue[n].active = true;
+        UIElement_GenerateQueue[n].queued_tick = queue_tick;
+
+        UIElement_GenerateQueue[n].element.active = true;
+        UIElement_GenerateQueue[n].element.flashing = flashing;
+        UIElement_GenerateQueue[n].element.body = b;
     }
 }
 
+// Texto
 void GenerateText(const char *text, int length, Vector2_t position, int delay = 0, bool flashing = false){
     for (int i = 0; i < length; i++){
         if (text[i] != ' ') {
-            if (delay == 0) GenerateCharacter(text[i], position, flashing);
-            else QueueCharacter(text[i], position, g_tick+delay, flashing);
+
+            Body_t b = {false, position, CharMask(text[i])};
+            if (delay == 0) GenerateUIElement(b, flashing);
+            else QueueUIElement(b, g_tick+delay, flashing);
         }
         position.x += kCharacterWidth + 3;
     }
@@ -125,12 +129,13 @@ void GenerateProgressiveText(const char *text, int length, Vector2_t position,
     long long int queue_tick = g_tick + wait_rate*initial_wait;
     for (int i = 0; i < length; i++){
         if (text[i] != ' ') {
-            QueueCharacter(text[i], position, queue_tick, flashing);
+            Body_t b = {false, position, CharMask(text[i])};
+            QueueUIElement(b, queue_tick, flashing);
         }
         queue_tick += wait_rate;
         position.x += kCharacterWidth + 3;
     }
-    if (initial_wait == 0) QueuedCharactersUpdate();
+    if (initial_wait == 0) QueuedUIElementsUpdate();
 }
 void GenerateNumber(int value, int digits, Vector2_t position, int delay = 0, bool flashing = false) {
     if (value > pow(10, digits) - 1) 
@@ -138,8 +143,11 @@ void GenerateNumber(int value, int digits, Vector2_t position, int delay = 0, bo
     int number;
     for (int i = 0; i < digits; i++) {
         number = value / pow(10, digits - 1 - i);
-        if (delay == 0) GenerateCharacter('0' + number, position, flashing);
-        else QueueCharacter('0' + number, position, flashing);
+
+        Body_t b = {false, position, CharMask('0'+number)};
+        if (delay == 0) GenerateUIElement(b, flashing);
+        else QueueUIElement(b, g_tick+delay, flashing);
+
         position.x += kCharacterWidth + 3;
         value %= pow(10, digits - 1 - i);
     }

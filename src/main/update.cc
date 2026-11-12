@@ -15,9 +15,15 @@ void PreviewUpdate(Game *game) {
 }
 
 void PreviewingInit(){
-	ClearCharacterGenerateQueue();
+	ClearUIElementGenerateQueue();
 	GenerateProgressiveText("play",4,{100,80}, 0);
 	GenerateProgressiveText("space  invaders",15,{50,100}, 4);
+    Body_t buddy = {
+        true,
+        {0,0}, {}
+    };
+    FromFile(&buddy.mask, "../../assets/test.png");
+	QueueUIElement(buddy, 10);
 }
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
@@ -30,7 +36,7 @@ void GameUpdate(Game *game) {
 	if (game->input.insert_credit) game->credits++;
 
 	// Text
-	QueuedCharactersUpdate();
+	QueuedUIElementsUpdate();
 
 	switch (game->game_state) {
 		case kGameState_Previewing: {
