@@ -31,6 +31,9 @@ struct Game {
     Input input;
     Player_t* player;
     int credits;
+    int score1;
+    int score2;
+    int hiscore;
 };
 
 #endif // TYPES_CC

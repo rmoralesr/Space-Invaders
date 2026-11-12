@@ -27,6 +27,14 @@ void GameRender(const Game *game) {
         if ( !UIElement_registry[i].flashing || g_tick%4 > 1) 
             Draw(&UIElement_registry[i].body);
     }
+    if (g_wipe_screen.current_step != -1){
+        unsigned char RGBA[4] = {0,0,0,255};
+        DrawRectangle(
+            g_wipe_screen.position, 
+            {g_wipe_screen.current_step*g_wipe_screen.step_size,g_wipe_screen.size.y},
+            RGBA
+        );
+    }
 
     switch (game->game_state) {
         case kGameState_Previewing: {
