@@ -19,10 +19,11 @@
 enum kGameState {
     kGameState_Playing,
     kGameState_Previewing,
-    kGameState_ChoosingPlayers
+    kGameState_ChoosingPlayers,
+    kGameState_AboutToPlay
 };
 
-const unsigned char kTargetFps = 25; //Control de frames por segundo
+const unsigned char kTargetFps = 60; //Control de frames por segundo
 const Vector2_t kWindowSize = {224, 256};
 long long int g_tick = 0;
 

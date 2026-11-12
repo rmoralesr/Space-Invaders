@@ -24,6 +24,7 @@ unsigned int UIElement_registry_active_count = 0;
 UIElement_t UIElement_registry[UIElement_kRegistryCapacity] = {0};
 
 const unsigned int ProgressiveTextTickRate = 6;
+const Vector2_t kCreditsNumberPosition = {200,240};
 
 WipeScreen g_wipe_screen;
 
@@ -131,6 +132,10 @@ void AdvanceWipeScreen(WipeScreen *wp){
 void WipeScreenToContent(WipeScreen *wp){
     wp->position = {0,33};
     wp->size = {kWindowSize.x, 207};
+}
+void WipeScreenToFull(WipeScreen *wp){
+    wp->position = {0,0};
+    wp->size = {kWindowSize.x, kWindowSize.y};
 }
 
 #endif // UI_ELEMENT_CC
