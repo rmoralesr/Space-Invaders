@@ -45,10 +45,17 @@ void Player_Construct(Player_t *self) {
   }
 }
 
-void Die(Player_t *self) {
+void Dead(Player_t *self) {
   if (self->active) {
     self->dying = true;
     self->lives--;
+  }
+}
+
+void Instant_Dead(Player_t *self) {
+  if (self->active) {
+    self->dying = true;
+    self->lives = 0;
   }
 }
 
