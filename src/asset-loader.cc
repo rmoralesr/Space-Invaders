@@ -10,7 +10,7 @@ namespace assets {
   constexpr unsigned int kCharacterWidth = 5; // Leer del sprite
   constexpr unsigned int kCharacterHeight = 8; // Leer del sprite
 
-  mask::Type CharacterMasks[kNumCharacters] = {};
+  Mask_t CharacterMasks[kNumCharacters] = {};
 
   void Load() {
 
