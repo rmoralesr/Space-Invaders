@@ -111,8 +111,14 @@ void LoadAssets() {
 
     //cargar los 2 sprites del UFO
 
-    
-    
+    for (int i = 0; i < 2; i++){
+       FromFile(&g_assets.UFOMasks[i],
+       "../assets/UFO.png",
+       {kUFOMarginLeft (kUFOWidth + kUFOSeparation) * i,
+        kUFOMarginTop},
+       {kUFOWidth, kUFOHeight}
+       );
+    }
 
     //cargar el sprite del Shield
 
