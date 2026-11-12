@@ -89,7 +89,7 @@ void ChoosingPlayerInit(Game_t *game){
 void AboutToPlayInit(Game_t *game){
 	ClearUIContent();
 	GenerateText("play player<1>",{59,120});
-	GenerateNumber(game->score1,4, kScore1NumberPosition, 0, true);
+	GenerateNumber(game->player[0].score,4, kScore1NumberPosition, 0, true);
 	EraseText(kScore2NumberPosition, 4);
 	WipeScreenToContent(&g_wipe_screen);
 	g_wipe_screen.queued_tick = g_tick + 120;
@@ -107,8 +107,8 @@ void InsertCoinInit(){
 
 void PlayingInit(Game_t *game){
 	GenerateNumber(game->player[0].score,4, kScore1NumberPosition);
-	Player_Construct(&game->player);
-	AlienArmy_Init(&game->alien_army);
+	Player_Construct(&game->player[0]);
+	AlienArmy_Init(&game->player[0].alien_army);
 }
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */

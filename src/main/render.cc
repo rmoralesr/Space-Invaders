@@ -40,7 +40,6 @@ void GameRender(Game_t *game) {
             PreviewRender();
             break;
         }
-        case kGameState_AboutToPlay: break;
         case kGameState_ChoosingPlayers: {
             break;
         }
