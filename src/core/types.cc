@@ -15,7 +15,7 @@
 // LOS TIPOS ESPECIFICOS PARA UN MODULO SE DECLARAN EN EL NAMESPACE DEL MODULO,
 // PERO NO SE DEBERÍAN USAR EN NINGÚN OTRO ENTONCES
 
-enum GameState {
+enum kGameState {
     kGameState_Playing,
     kGameState_Previewing,
     kGameState_ChoosingPlayers
@@ -25,12 +25,15 @@ const unsigned char kTargetFps = 25; //Control de frames por segundo
 const Vector2_t kWindowSize = {224, 256};
 long long int g_tick = 0;
 
-struct Game {
+struct Game_t {
     // TODO
-    GameState game_state;
+    kGameState game_state;
     Input input;
     Player_t* player;
     int credits;
+    int score1;
+    int score2;
+    int hiscore;
 };
 
 #endif // TYPES_CC

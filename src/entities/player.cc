@@ -69,8 +69,8 @@ void Move(Player_t* self, Vector2_t delta) {
   Move(&self->body, delta);
 }
 
-void Draw(Player_t* self, bool erase) {
-  Draw(&self->body, erase);
+void Draw(Player_t* self) {
+  Draw(&self->body);
 }
 
 #endif // PLAYER_CC

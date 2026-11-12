@@ -23,12 +23,20 @@ int sign(int x) {
   return x < 0 ? -1 : 1;
 }
 
-int pow(int base, int exp){
+int pow(int base, int exp) {
   int value = 1;
   for (int i = 0; i<exp; i++) value *= base;
   return value;
 }
 
+int log(unsigned int n, int exp = 2) {
+  int c = 0;
+  while (n > 0) {
+    n /= exp;
+  }
+
+  return c;
+}
 
 struct Vector2_t {
   int x,y;
