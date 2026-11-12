@@ -17,7 +17,7 @@ struct QueuedUpdate{
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
-void PreviewUpdate(Game *game) {
+void PreviewUpdate(Game_t *game) {
 
 }
 
@@ -52,7 +52,7 @@ void InsertCoinInit(){
 }
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
-void GameUpdate(Game *game) {
+void GameUpdate(Game_t *game) {
 
 	g_tick++;
 

@@ -60,9 +60,10 @@ Bullet_t* Bullet_Construct() {
 }
 
 void Destruct(Bullet_t* self) {
-  self->active = false;
-
-  Bullet_registry_active_count--;
+  if (self->active) {
+    self->active = false;
+    Bullet_registry_active_count--;
+  }
 }
 
 

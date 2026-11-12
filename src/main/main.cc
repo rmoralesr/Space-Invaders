@@ -19,7 +19,7 @@ void FrameWait(double last_time);
 
 
 /** @brief Inicializa las variables necesarias para el juego */
-void GameInit(Game *game) {
+void GameInit(Game_t *game) {
     // TODO
     game->game_state = kGameState_Previewing;
     game->credits = 0;
@@ -40,7 +40,7 @@ int esat::main(int argc, char **argv) {
     esat::WindowInit(kWindowSize.x*kPixelScale, kWindowSize.y*kPixelScale);
     WindowSetMouseVisibility(true);
 
-    Game game = {};
+    Game_t game = {};
 
     GameInit(&game);
 
