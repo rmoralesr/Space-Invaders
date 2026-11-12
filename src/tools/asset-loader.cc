@@ -64,8 +64,63 @@ Assets g_assets;
 //cargar los primeros 36 caracteres 
 
 void LoadAssets() {
+    for (int i = 0; i < 6; i++){
+        for (int j = 0; j < 8; j++){
+            if (i*8+j < kNumCharacters) FromFile(
+                &g_assets.CharacterMasks[i * 8 + j],"../assets/caracteres.png", 
+                {2+(5+kCharacterWidth)*j, 3+(3+kCharacterHeight)*i},
+                {kCharacterWidth,kCharacterHeight}
+                );
+        }
+    }
+
+    //cargar los 6 caracteres adicionales 
+
+    for (int i = 0; i < kNumExtraCharacters; i++){
+        FromFile(&g_assets.ExtraCharacterMasks[i],
+        "../assets/caracteres.png",
+        {2 +(5 + kCharacterWidth)*i,
+        3 +(3 + kCharacterHeight)*6},
+        {kCharacterWidth, kCharacterHeight}
+        );
+    }
+
+    //cargar 3 tipos de Aliens
+
+   for (int i = 0; i < kNumAlienTypes; i++) {
+        for (int j = 0; j < kAliensPerType; j++) {
+
+            FromFile(
+                &g_assets.AlienMasks[i][j],
+                "../assets/Aliens.png",
+                {2 + (kAlienWidth + kAlienSeparationX) * j,
+                 2 + (kAlienHeight + kAlienSeparationY) * i},
+                {kAlienWidth, kAlienHeight}
+            );
+        }
+    }
+
+    //cargar los 2 sprites del UFO
+
+    for (int i = 0; i < 2; i++){
+       FromFile(&g_assets.UFOMasks[i],
+       "../assets/UFO.png",
+       {kUFOMarginLeft (kUFOWidth + kUFOSeparation) * i,
+        kUFOMarginTop},
+       {kUFOWidth, kUFOHeight}
+       );
+    }
+
+    //cargar el sprite del escudo
+
+    for (int i = 0; i < 2; i++){
+        FromFile(&g_assets.escudosMasks[i],
+        "../assets/escudos.png",
+        {kEscudosMarginLeft + (kEscudosWidth + kEscudosSeparation) * i,
+        kEscudos}
+    }
+
 
 }
-
 
 #endif // ASSET_LOADER_CC
