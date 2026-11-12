@@ -16,6 +16,10 @@
 // LOS TIPOS ESPECIFICOS PARA UN MODULO SE DECLARAN EN EL NAMESPACE DEL MODULO,
 // PERO NO SE DEBERÍAN USAR EN NINGÚN OTRO ENTONCES
 
+const unsigned char kTargetFps = 60; //Control de frames por segundo
+const Vector2_t kWindowSize = {224, 256};
+long long int g_tick = 0;
+
 enum AlienType {
     kAlienType_octopus,
     kAlienType_crab,
@@ -61,10 +65,6 @@ enum GameState {
     kGameState_ChoosingPlayers,
     kGameState_AboutToPlay
 };
-
-const unsigned char kTargetFps = 60; //Control de frames por segundo
-const Vector2_t kWindowSize = {224, 256};
-long long int g_tick = 0;
 
 struct Game_t {
     // TODO
