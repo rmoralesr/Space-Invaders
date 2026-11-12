@@ -11,10 +11,10 @@ enum AlienType {
     kAlienType_octopus
 };
 
-struct Alien {
-    Body_t body;
+struct Alien { // Hay que cambiar esto por Alien_t
     bool active;
     AlienType type;
+    Body_t body;
 };
 
 struct AlienArmy {
