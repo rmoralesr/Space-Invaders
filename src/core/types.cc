@@ -2,7 +2,8 @@
 #define TYPES_CC 1
 
 #include "../tools/input.cc"
-#include "../entities/player.cc"
+#include "../entities/body.cc"
+#include "../entities/bullet.cc"
 #include "cirno.cc"
 
 // AQUÍ ESTÁN TODOS LOS TIPOS DE DATOS GENERALES QUE SE VAN A USAR EN EL JUEGO
@@ -15,16 +16,21 @@
 // LOS TIPOS ESPECIFICOS PARA UN MODULO SE DECLARAN EN EL NAMESPACE DEL MODULO,
 // PERO NO SE DEBERÍAN USAR EN NINGÚN OTRO ENTONCES
 
+const unsigned char kTargetFps = 60; //Control de frames por segundo
+const Vector2_t kWindowSize = {224, 256};
+long long int g_tick = 0;
+
 enum AlienType {
     kAlienType_octopus,
     kAlienType_crab,
     kAlienType_squid
 };
 
-enum DescendingState {
-    kDescendingState_false,
-    kDescendingState_waiting,
-    kDescendingState_true
+enum AlienArmyState {
+    kAlienArmyState_generating,
+    kAlienArmyState_descendingFalse,
+    kAlienArmyState_descendingWaiting,
+    kAlienArmyState_descendingTrue
 };
 
 struct Alien_t {
@@ -41,7 +47,18 @@ struct AlienArmy_t {
     int alien_explosion_tick;
     int last_alien_moved;
     int direction;
-    DescendingState descending;
+    AlienArmyState descending;
+};
+
+struct Player_t {
+    bool active = false;
+    bool dying;
+    int score;
+    int lives;
+
+    Body_t body;
+    Bullet_t bullet;
+    AlienArmy_t alien_army;
 };
 
 enum GameState {
@@ -51,19 +68,11 @@ enum GameState {
     kGameState_AboutToPlay
 };
 
-const unsigned char kTargetFps = 60; //Control de frames por segundo
-const Vector2_t kWindowSize = {224, 256};
-long long int g_tick = 0;
-
 struct Game_t {
-    // TODO
     GameState game_state;
     Input input;
-    Player_t player;
-    AlienArmy_t alien_army;
+    Player_t player[2];
     int credits;
-    int score1;
-    int score2;
     int hiscore;
 };
 
