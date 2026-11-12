@@ -13,8 +13,7 @@ enum AlienType {
 
 struct Alien { // Hay que cambiar esto por Alien_t
     bool active;
-    AlienType type = 0;
-
+    AlienType type;
     Body_t body;
 };
 

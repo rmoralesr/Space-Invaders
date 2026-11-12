@@ -38,7 +38,7 @@ void QueueUpdate(int id, long long int tick){
 	}
 }
 
-void PreviewUpdate(Game *game) {
+void PreviewUpdate(Game_t *game) {
 
 }
 
