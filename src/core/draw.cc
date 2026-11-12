@@ -51,12 +51,10 @@ void SetToBlack(unsigned char RGBA[4]) {
 
 static bool ShouldPaint(Body_t* self,
   unsigned int x, unsigned y,
-  unsigned char RGBA[4], bool erase
+  unsigned char RGBA[4]
 ) {
 
     if (!ReadBit(&self->mask, x,y)) return false; // No hay pixel
-
-    if (erase) return true; // Siempre
 
     unsigned char new_RGBA[4];
     GetPositionColor(new_RGBA, self->position.x + x, self->position.y + y);
@@ -69,10 +67,9 @@ static bool ShouldPaint(Body_t* self,
     );
 }
 
-void Draw(Body_t* self, bool erase = false) {
+void Draw(Body_t* self) {
 
     unsigned char RGBA[4] = {255,255,255,255};
-    if (erase) SetToBlack(RGBA);
 
     int ox = 0; // Origin x
     int length = 0;
@@ -84,7 +81,7 @@ void Draw(Body_t* self, bool erase = false) {
 
             if (
               (x < self->mask.size.x) // Si x == size.x, estamos fuera, por lo que hay que cerrar y pintar si queda length
-              && ShouldPaint(self, x,y, RGBA, erase)
+              && ShouldPaint(self, x,y, RGBA)
             ) {
 
                 if (length == 0) ox = x;

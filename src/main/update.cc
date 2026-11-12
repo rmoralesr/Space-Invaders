@@ -10,14 +10,25 @@
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
-void PreviewUpdate(Game *game) {
+void PreviewUpdate(Game_t *game) {
 
 }
 
 void PreviewingInit(){
-	ClearUIElementGenerateQueue();
-	GenerateProgressiveText("play",4,{100,80}, 0);
-	GenerateProgressiveText("space  invaders",15,{50,100}, 4);
+	ClearText();
+
+	GenerateProgressiveText(
+		"play", 
+		{ 100, 80 }, 
+		0
+	);
+
+	GenerateProgressiveText(
+		"space  invaders",
+		{ 50, 100 },
+		4*6
+	);
+
     /*Body_t buddy = {
         true,
         {0,0}, {}
@@ -34,9 +45,6 @@ void GameUpdate(Game_t *game) {
 
 	InputUpdate(&game->input);
 	if (game->input.insert_credit) game->credits++;
-
-	// Text
-	QueuedUIElementsUpdate();
 
 	switch (game->game_state) {
 		case kGameState_Previewing: {
