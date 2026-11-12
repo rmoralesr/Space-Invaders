@@ -30,12 +30,10 @@ constexpr int kAlienSeparationY = 1; // Separacion entre sprites
 
 //  UFO
 
-//Dimensiones del UFO (jefe)
-// constexpr int kAlienSeparationY = 16; // Medida sin margenes
-// constexpr int kAlienSeparationY = 7; // Medida sin margenes
+constexpr int kUFOSeparation = 3;
 
-//Separaciones
-// constexpr int kAlienSeparationY = 1; // Separacion del margen
+constexpr int kUFOMarginTop = 2;
+constexpr int kUFOMarginLeft = 1;
 
 //  Shield
 
