@@ -27,7 +27,7 @@ void PreviewingInit(){
 }
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
-void GameUpdate(Game *game) {
+void GameUpdate(Game_t *game) {
 
 	g_tick++;
 	// Player Inputs

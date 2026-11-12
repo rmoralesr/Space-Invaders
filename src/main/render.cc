@@ -21,7 +21,7 @@ void PreviewRender() {
     Draw(&buddy);*/
 }
 
-void GameRender(const Game *game) {
+void GameRender(const Game_t *game) {
 
     for (int i = 0; i < UIElement_kRegistryCapacity; i++){
         if ( !UIElement_registry[i].flashing || g_tick%4 > 1) 
