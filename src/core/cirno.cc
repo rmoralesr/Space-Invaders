@@ -90,6 +90,10 @@ Vector2_t Div(Vector2_t v, int n) {
   };
 }
 
+Vector2_t Neg(Vector2_t v) {
+  return {-v.x, -v.y};
+}
+
 // float Magnitude(Vector2_t v) {
 //   return sqrt(v.x*v.x + v.y*v.y);
 // }
