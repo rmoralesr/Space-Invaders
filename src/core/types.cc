@@ -57,7 +57,8 @@ struct Player_t {
 enum GameState {
     kGameState_Playing,
     kGameState_Previewing,
-    kGameState_ChoosingPlayers
+    kGameState_ChoosingPlayers,
+    kGameState_AboutToPlay
 };
 
 const unsigned char kTargetFps = 60; //Control de frames por segundo

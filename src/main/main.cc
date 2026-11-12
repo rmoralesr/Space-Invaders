@@ -30,7 +30,7 @@ void GameInit(Game_t *game) {
     GenerateNumber(game->score2,4, {10 + 8*20, 9 + 8*2});
     GenerateNumber(game->hiscore,4,{10 + 8*10, 9 + 8*2});
     GenerateText("credit", {140,240});
-    GenerateNumber(game->credits,2, {200,240});
+    GenerateNumber(game->credits,2, kCreditsNumberPosition);
 
     PreviewingInit();
 }
