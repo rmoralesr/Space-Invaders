@@ -40,13 +40,13 @@ const unsigned int ProgressiveTextTickRate = 2;
 WipeScreen g_wipe_screen;
 
 // Prototipaje
-
+/*
 UIElement_t* UIElement_Construct(bool flashing = false);
 void Destruct(UIElement_t* self);
 
 char CharToMaskIndex(char c);
 Mask_t GetCharMask(char c);
-
+*/
 // Texto
 
 /** @brief elimina todo lo que sea texto de la pantalla */
@@ -86,6 +86,7 @@ void GenerateNumber(
 UIElement_t* UIElement_Construct(bool flashing) {
 	int n = 0;
 	bool free_space = false;
+}
 
 UIElement_t* UIElement_Construct() {
     int n = 0;
@@ -131,8 +132,10 @@ void QueuedUIElementsUpdate(){
 		if ( UIElement_GenerateQueue[i].active && g_tick == UIElement_GenerateQueue[i].queued_tick ) 
             GenerateQueuedUIElement(&UIElement_GenerateQueue[i]);
 	}
+}
 
-	UIElement_t *self = nullptr;
+QueuedUIElement_t QueueUIElement(){
+	QueuedUIElement_t *self = nullptr;
 	
 	if (free_space) { 
 		UIElement_registry_active_count++;
@@ -148,7 +151,7 @@ void QueuedUIElementsUpdate(){
 }
 
 // Overloaded
-UIElement_t* UIElement_Construct(long long int reveal_tick, bool flashing){
+/*UIElement_t* UIElement_Construct(long long int reveal_tick, bool flashing){
 	UIElement_t *self = UIElement_Construct(flashing);
 
 	self->reveal_tick = reveal_tick;
@@ -161,7 +164,7 @@ void Destruct(UIElement_t* self) {
 		self->active = false;
   	UIElement_registry_active_count--;
 	}
-}
+}*/
 
 // Clear
 void ClearUIContent(){
