@@ -40,12 +40,13 @@ void GameRender(Game_t *game) {
             PreviewRender();
             break;
         }
+        case kGameState_AboutToPlay: break;
         case kGameState_ChoosingPlayers: {
             break;
         }
         case kGameState_Playing: {
-            AliensRender(&game->alien_army);
-            Draw(&game->player);
+            AliensRender(&game->player[0].alien_army);
+            Draw(&game->player[0]);
             break;
         }
     }

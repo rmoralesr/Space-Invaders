@@ -52,11 +52,13 @@ struct AlienArmy_t {
 
 struct Player_t {
     bool active = false;
-    bool dying = false;
+    bool dying;
+    int score;
+    int lives;
 
     Body_t body;
     Bullet_t bullet;
-    AlienArmy_t army;
+    AlienArmy_t alien_army;
 };
 
 enum GameState {
@@ -67,14 +69,10 @@ enum GameState {
 };
 
 struct Game_t {
-    // TODO
     GameState game_state;
     Input input;
-    Player_t player;
-    AlienArmy_t alien_army;
+    Player_t player[2];
     int credits;
-    int score1;
-    int score2;
     int hiscore;
 };
 

@@ -30,6 +30,9 @@ void Draw(Player_t* self);
 void Player_Construct(Player_t *self) {
   if (!Player_registry.active) {
     self->active = true;
+    self->score = 0;
+    self->lives = 3;
+    self->dying = false;
 
     self->body = {
         true,

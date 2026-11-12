@@ -145,8 +145,8 @@ void GameUpdate(Game_t *game) {
 					g_wipe_screen.current_step = -1;
 					ClearUIContent();
 					game->game_state = kGameState_Playing;
-					Player_Construct(&game->player);
-					AlienArmy_Init(&game->alien_army);
+					Player_Construct(&game->player[0]);
+					AlienArmy_Init(&game->player[0].alien_army);
 					break;
 			}
 		}
@@ -174,17 +174,15 @@ void GameUpdate(Game_t *game) {
 			}
 			break;
 		}
-		case kGameState_AboutToPlay:{
-			break;
-		}
+		case kGameState_AboutToPlay: break;
 		case kGameState_Playing: {
-			AlienArmy_Control(&game->alien_army);
-			if (game->input.insert_credit) MatarAlien(&game->alien_army); //TODO Quitar
+			AlienArmy_Control(&game->player[0].alien_army);
+			if (game->input.insert_credit) MatarAlien(&game->player[0].alien_army); //TODO Quitar
 
 			if (game->input.left_button) {
-				Move(&game->player, {-2, 0});
+				Move(&game->player[0], {-2, 0});
 			} else if (game->input.right_button) {
-				Move(&game->player, {+2, 0});
+				Move(&game->player[0], {+2, 0});
 			}
 			break;
 		}
