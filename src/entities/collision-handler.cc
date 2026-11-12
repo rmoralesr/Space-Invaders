@@ -178,9 +178,12 @@ bool Collide(Bullet_t *A, Bullet_t *B) {
       // <- Actualizar Sprite de B AQUI
       Sub(&B->body.mask, &g_dummy_mask, Neg(delta)); 
 
-    }
+      return true;
 
+    }
   }
+
+  return false;
 }
 
 
