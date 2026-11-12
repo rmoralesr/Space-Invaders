@@ -79,17 +79,18 @@ void ChoosingPlayerInit(Game_t *game){
 	ClearUIContent();
 	if (game->credits > 1){
 		GenerateText("push",{98,91});
-		GenerateText("1 or 2players button",{30,123});
+		GenerateText("1 or 2players button",{33,123});
 	} else {
 		GenerateText("push",{98,91});
-		GenerateText("only 1 player button",{30,123});
+		GenerateText("only 1 player button",{33,123});
 	}
 }
 
 void AboutToPlayInit(Game_t *game){
 	ClearUIContent();
 	GenerateText("play player<1>",{59,120});
-
+	GenerateNumber(game->score1,4, kScore1NumberPosition, 0, true);
+	EraseText(kScore2NumberPosition, 4);
 	WipeScreenToContent(&g_wipe_screen);
 	g_wipe_screen.queued_tick = g_tick + 120;
 	
@@ -102,6 +103,12 @@ void InsertCoinInit(){
 	GenerateText("<1 or 2 players>",{49,143}, 0, ProgressiveTextTickRate);
 	GenerateText("*1 player  1 coin",{49,169}, 16*ProgressiveTextTickRate, ProgressiveTextTickRate);
 	GenerateText("*2 players 2 coins",{49,195}, (16+17)*ProgressiveTextTickRate, ProgressiveTextTickRate);
+}
+
+void PlayingInit(Game_t *game){
+	GenerateNumber(game->score1,4, kScore1NumberPosition);
+	Player_Construct(&game->player);
+	AlienArmy_Init(&game->alien_army);
 }
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
@@ -145,8 +152,7 @@ void GameUpdate(Game_t *game) {
 					g_wipe_screen.current_step = -1;
 					ClearUIContent();
 					game->game_state = kGameState_Playing;
-					Player_Construct(&game->player);
-					AlienArmy_Init(&game->alien_army);
+					PlayingInit(game);
 					break;
 			}
 		}

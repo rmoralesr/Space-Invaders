@@ -20,7 +20,7 @@ void PreviewRender() {
 void GameRender(Game_t *game) {
 
     for (int i = 0; i < UIElement_kRegistryCapacity; i++){
-        if ( !UIElement_registry[i].flashing || g_tick%4 > 1) 
+        if ( !UIElement_registry[i].flashing || g_tick%8 > 3) 
             if (UIElement_registry[i].active && UIElement_registry[i].queued_tick <= g_tick) 
                 Draw(&UIElement_registry[i].body);
     }
@@ -40,6 +40,9 @@ void GameRender(Game_t *game) {
             break;
         }
         case kGameState_ChoosingPlayers: {
+            break;
+        }
+        case kGameState_AboutToPlay: {
             break;
         }
         case kGameState_Playing: {

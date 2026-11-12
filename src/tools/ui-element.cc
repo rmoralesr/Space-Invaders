@@ -25,7 +25,11 @@ unsigned int UIElement_registry_active_count = 0;
 UIElement_t UIElement_registry[UIElement_kRegistryCapacity] = {0};
 
 const unsigned int ProgressiveTextTickRate = 6;
+
 const Vector2_t kCreditsNumberPosition = {200,240};
+const Vector2_t kScore1NumberPosition = {10 + 8*2 , 9 + 8*2};
+const Vector2_t kScore2NumberPosition = {10 + 8*20, 9 + 8*2};
+const Vector2_t kHiScoreNumberPosition = {10 + 8*10, 9 + 8*2};
 
 WipeScreen g_wipe_screen;
 
@@ -90,6 +94,16 @@ void ClearUIContent(){
     for (int i = 0; i < UIElement_kRegistryCapacity; i++){
         if (UIElement_registry[i].body.position.y > 33 &&
         UIElement_registry[i].body.position.y < 33+207) Destruct(&UIElement_registry[i]);
+    }
+}
+
+void EraseText(Vector2_t position, int length){
+    for (int i = 0; i < length; i++){
+        for (int j = 0; j < UIElement_kRegistryCapacity; j++){
+            if (UIElement_registry[j].body.position.x == position.x &&
+            UIElement_registry[j].body.position.y == position.y) Destruct(&UIElement_registry[j]);
+        }
+        position.x += kCharactersWidth + 3;
     }
 }
 
