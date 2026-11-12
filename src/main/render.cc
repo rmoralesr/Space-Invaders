@@ -24,7 +24,7 @@ void GameRender(const Game *game) {
 
     for (int i = 0; i < UIElement_kRegistryCapacity; i++){
         if ( !UIElement_registry[i].flashing || g_tick%4 > 1) 
-            Draw(&UIElement_registry[i].body);
+            if (UIElement_registry[i].active) Draw(&UIElement_registry[i].body);
     }
     if (g_wipe_screen.current_step != -1){
         unsigned char RGBA[4] = {0,0,0,255};

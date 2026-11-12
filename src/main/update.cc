@@ -15,7 +15,24 @@ struct QueuedUpdate{
 	long long int queued_tick;
 };
 
+const unsigned int Update_kQueueCapacity = 10;
+QueuedUpdate Update_queue[Update_kQueueCapacity] = {0};
+
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
+
+void QueueUpdate(int id, long long int tick){
+    int n = 0;
+    bool free_space = false;
+    while(n < Update_kQueueCapacity && !free_space){
+        if (!Update_queue[n].active) free_space = true;
+        else n++;
+    }
+	if (free_space){
+		Update_queue[n].active = true;
+		Update_queue[n].id = id;
+		Update_queue[n].queued_tick = tick;
+	}
+}
 
 void PreviewUpdate(Game *game) {
 
@@ -39,6 +56,8 @@ void PreviewingInit(){
 
 	WipeScreenToContent(&g_wipe_screen);
 	g_wipe_screen.queued_tick = g_tick + (4+4+15+40)*ProgressiveTextTickRate + 8;
+
+	QueueUpdate(0, g_tick + (4+4+15+40)*ProgressiveTextTickRate + 20);
 }
 
 void InsertCoinInit(){
@@ -66,6 +85,17 @@ void GameUpdate(Game *game) {
 	AdvanceWipeScreen(&g_wipe_screen);
 
 	// Queued Updates
+	for (int i = 0; i < Update_kQueueCapacity; i++){
+		if (Update_queue[i].active && Update_queue[i].queued_tick == g_tick){
+			Update_queue[i].active = false;
+			switch(Update_queue[i].id){
+				case 0 : 
+					ClearUIContent();
+					InsertCoinInit();
+					break;
+			}
+		}
+	}
 
 	switch (game->game_state) {
 		case kGameState_Previewing: {
