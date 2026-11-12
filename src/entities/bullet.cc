@@ -75,8 +75,8 @@ void Move(Bullet_t* self, Vector2_t delta) {
   Move(&self->body, delta);
 }
 
-void Draw(Bullet_t* self, bool erase) {
-  Draw(&self->body, erase);
+void Draw(Bullet_t* self) {
+  Draw(&self->body);
 }
 
 #endif // BULLET_CC
