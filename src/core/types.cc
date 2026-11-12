@@ -16,7 +16,9 @@
 // PERO NO SE DEBERÍAN USAR EN NINGÚN OTRO ENTONCES
 
 const unsigned char kTargetFps = 25; //Control de frames por segundo
+const unsigned int kPixelScale = 4;
 const Vector2_t kWindowSize = {224, 256};
+long long int g_tick = 0;
 
 enum GameState {
     kGameState_Playing,

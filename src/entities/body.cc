@@ -16,9 +16,6 @@ struct Body_t {
 
 // Prototipaje
 
-void MoveTo(Body_t* self, Vector2_t pos);
-void Move(Body_t* self, Vector2_t pos);
-
 
 Vector2_t GetOverlap(Body_t *A, Body_t *B);
 /** @brief Retorna si dos bodies estan tocandose */
@@ -32,22 +29,18 @@ unsigned int Collide(Body_t *A, Body_t *B,
 
 // Definiciones
 
-/*void MoveTo(Body_t* self, Vector2_t pos) {
-  Draw(self, true);
-
+void MoveTo(Body_t* self, Vector2_t pos) {
   self->position = pos;
-
-  Draw(self);
 }
 
 void Move(Body_t* self, Vector2_t delta) {
-  MoveTo(self, 
+  MoveTo(self,
     Sum(
-      self->position, 
+      self->position,
       delta
     )
   );
-}*/
+}
 
 
 Vector2_t GetOverlap(Body_t *A, Body_t *B) {

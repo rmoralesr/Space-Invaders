@@ -8,19 +8,23 @@
 #include "../core/mask.cc"
 #include "../entities/body.cc"
 #include "../core/draw.cc"
+#include "../entities/aliens_army.cc"
+#include "../tools/ui-element.cc"
 
 // FUNCIONES DE RENDERIZADO
 
-void PreviewRender() {
-    /*Body_t buddy = {
-        true,
-        {0,0}, {}
-    };
-    FromFile(&buddy.mask, "../../assets/test.png");
-    Draw(&buddy);*/
+void AliensRender(AlienArmy *alien_army) {
+    for (int i = 0; i < 55; i++) {
+        if (alien_army->aliens[i].active) Draw(&alien_army->aliens[i].body, false);
+    }
+    if (alien_army->alien_explosion_tick > 0) Draw(&alien_army->aliens[alien_army->alien_died].body, false);
 }
 
-void GameRender(const Game *game) {
+void PreviewRender() {
+
+}
+
+void GameRender(Game *game) {
 
     for (int i = 0; i < Character_kRegistryCapacity; i++){
         Draw(&Character_registry[i].body);
@@ -35,6 +39,7 @@ void GameRender(const Game *game) {
             break;
         }
         case kGameState_Playing: {
+            AliensRender(&game->alien_army);
             break;
         }
     }
