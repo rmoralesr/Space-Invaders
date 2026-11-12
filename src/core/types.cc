@@ -44,7 +44,7 @@ struct AlienArmy_t {
     DescendingState descending;
 };
 
-enum kGameState {
+enum GameState {
     kGameState_Playing,
     kGameState_Previewing,
     kGameState_ChoosingPlayers
@@ -56,7 +56,7 @@ long long int g_tick = 0;
 
 struct Game_t {
     // TODO
-    kGameState game_state;
+    GameState game_state;
     Input input;
     Player_t player;
     AlienArmy_t alien_army;
