@@ -61,7 +61,18 @@ void Destruct(UIElement_t* self) {
   self->active = false;
   UIElement_registry_active_count--;
 }
+
 void GenerateUIElement(Body_t b, long long int tick = 0, bool flashing = false){
+    for (int i = 0; i < UIElement_kRegistryCapacity; i++){
+        if (UIElement_registry[i].body.position.x == b.position.x &&
+        UIElement_registry[i].body.position.y == b.position.y) Destruct(&UIElement_registry[i]);
+    }
+    UIElement_t *new_c = UIElement_Construct();
+    new_c->body = b;
+    new_c->flashing = flashing;
+}
+
+/*void GenerateUIElement(Body_t b, long long int tick = 0, bool flashing = false){
     int n = -1;
     bool free_space = false;
 
@@ -93,7 +104,7 @@ void GenerateUIElement(Body_t b, long long int tick = 0, bool flashing = false){
         else UIElement_registry[n].queued_tick = 0;
         UIElement_registry_active_count++;
     }
-}
+}*/
 
 // Clear
 void ClearUIContent(){
