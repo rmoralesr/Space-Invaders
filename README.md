@@ -26,3 +26,5 @@
 - Todos los tipos y constantes que se usen en más de un módulo del juego deben estar declarados en `types.cc`.
 - Si un tipo o constante no se va a usar en más de un módulo, puede declararse dentro del archivo de ese módulo.
 - No deben haber variables globales, las funciones obtienen lo que necesitan por parámetros, de forma jerárquica.
+
+https://archive.org/details/arcade_invaders#

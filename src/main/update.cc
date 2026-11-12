@@ -7,7 +7,7 @@
 #include "../tools/ui-element.cc"
 #include "../tools/asset-loader.cc"
 #include "../tools/input.cc"
-
+#include "../entities/aliens_army.cc"
 
 struct QueuedUpdate{
 	bool active = false;
@@ -20,7 +20,7 @@ QueuedUpdate Update_queue[Update_kQueueCapacity] = {0};
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
-void MatarAlien(AlienArmy *alien_army) { // TODO quitar
+void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
 	Destruct(alien_army, g_tick%55);
 }
 
