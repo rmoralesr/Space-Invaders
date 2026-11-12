@@ -30,16 +30,12 @@ void Move(Player_t* self, Vector2_t delta);
 
 void Tick(Player_t* self); // Actualiza toda la logica. Se mueve hacia adelante y/o intenta colisionar (por ver), en este caso.
 
-void Draw(Player_t* self, bool erase = false);
+void Draw(Player_t* self);
 
 // Definiciones
 
-Player_t* Player_Construct() {
-  Player_t *self = nullptr;
-
-  if (!Player_registry.active) { 
-    Player_registry = {};
-    self = &Player_registry;
+void Player_Construct(Player_t *self) {
+  if (!Player_registry.active) {
     self->active = true;
 
     self->body = {
@@ -52,25 +48,27 @@ Player_t* Player_Construct() {
 
     Print(&self->body.mask);
   }
-
-  return self;
 }
 
-void Destruct(Player_t* self) {
-  self->active = false;
+void Destruct(Player_t *self) {
+  if (self->active) {
+    self->active = false;
+  }
 }
 
 
-void MoveTo(Player_t* self, Vector2_t pos) {
+void MoveTo(Player_t *self, Vector2_t pos) {
   MoveTo(&self->body, pos);
 }
 
-void Move(Player_t* self, Vector2_t delta) {
+void Move(Player_t *self, Vector2_t delta) {
   Move(&self->body, delta);
 }
 
-void Draw(Player_t* self) {
-  Draw(&self->body);
+void Draw(Player_t *self) {
+  if(self->active) {
+    Draw(&self->body);
+  }
 }
 
 #endif // PLAYER_CC

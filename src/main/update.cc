@@ -7,7 +7,7 @@
 #include "../tools/ui-element.cc"
 #include "../tools/asset-loader.cc"
 #include "../tools/input.cc"
-
+#include "../entities/aliens_army.cc"
 
 enum kUpdateID {
     kUpdateID_InsertCoin,
@@ -27,7 +27,7 @@ QueuedUpdate Update_queue[Update_kQueueCapacity] = {0};
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
-void MatarAlien(AlienArmy *alien_army) { // TODO quitar
+void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
 	Destruct(alien_army, g_tick%55);
 }
 
@@ -181,10 +181,9 @@ void GameUpdate(Game_t *game) {
 			if (game->input.insert_credit) MatarAlien(&game->alien_army); //TODO Quitar
 
 			if (game->input.left_button) {
-				Move(game->player, {-2, 0});
-			}
-			if (game->input.right_button) {
-				Move(game->player, {+2, 0});
+				Move(&game->player, {-2, 0});
+			} else if (game->input.right_button) {
+				Move(&game->player, {+2, 0});
 			}
 			break;
 		}

@@ -13,13 +13,6 @@
 
 // FUNCIONES DE RENDERIZADO
 
-void AliensRender(AlienArmy *alien_army) {
-    for (int i = 0; i < 55; i++) {
-        if (alien_army->aliens[i].active) Draw(&alien_army->aliens[i].body);
-    }
-    if (alien_army->alien_explosion_tick > 0) Draw(&alien_army->aliens[alien_army->alien_died].body);
-}
-
 void PreviewRender() {
 
 }
@@ -51,7 +44,7 @@ void GameRender(Game_t *game) {
         }
         case kGameState_Playing: {
             AliensRender(&game->alien_army);
-            Draw(&game->player->body);
+            Draw(&game->player);
             break;
         }
     }

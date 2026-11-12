@@ -5,78 +5,75 @@
 #include "../core/types.cc"
 #include "../tools/asset-loader.cc"
 
-enum AlienType {
-    kAlienType_squid = 1,
-    kAlienType_crab,
-    kAlienType_octopus
-};
-
-struct Alien { // Hay que cambiar esto por Alien_t
-    bool active;
-    AlienType type;
-    Body_t body;
-};
-
-struct AlienArmy {
-    Alien aliens[55];
-    int aliens_alive;
-    int alien_died;
-    int alien_explosion_tick;
-    int last_alien_moved;
-    int direction;
-    int descending;
-};
-
 void AlienArmy_Init();
-void Destruct(Alien* self);
-
-void Tick(Alien* self); // Actualiza toda la logica. Se mueve hacia adelante y/o intenta colisionar (por ver), en este caso.
+void Destruct(Alien_t* self);
 
 // Definiciones
 
-void G(Alien *alien) { // TODO por ahora
-    alien->body.mask = g_assets.CharacterMasks[0];
+void AsignAlienMask(Alien_t *alien) {
+    alien->body.mask = g_assets.AlienMasks[alien->type][alien->sprite_frame];
 }
 
-void AlienArmy_Init(AlienArmy *alien_army) {
+AlienType GetAlienType(int row) {
+    if (row < 2) {
+        return kAlienType_octopus;
+    }
+    if (row < 4) {
+        return kAlienType_crab;
+    }
+    return kAlienType_squid;
+}
+
+void Alien_Init(Alien_t *alien, int row, int col) {
+    alien->type = GetAlienType(row);
+    alien->active = true;
+    alien->body.can_collide = true;
+    alien->body.mask = {};
+    alien->body.position.x = col * 16 + 24;
+    alien->body.position.y = 136 - 8 - row * 16;
+    alien->sprite_frame = 0;
+    AsignAlienMask(alien);
+}
+
+void AlienArmy_Init(AlienArmy_t *alien_army) {
     alien_army->aliens_alive = 55;
     alien_army->last_alien_moved = 54;
     alien_army->alien_died = -1;
     alien_army->alien_explosion_tick = 0;
     alien_army->direction = 1;
-    alien_army->descending = 0;
+    alien_army->descending = kDescendingState_false;
     for (int row = 0; row < 5; row++) {
         for (int col = 0; col < 11; col++) {
-            alien_army->aliens[row * 11 + col].type = kAlienType_crab; // TODO
-            alien_army->aliens[row * 11 + col].active = true;
-            alien_army->aliens[row * 11 + col].body.can_collide = true;
-            alien_army->aliens[row * 11 + col].body.mask = {};
-            alien_army->aliens[row * 11 + col].body.position.x = col * 16 + 24;
-            alien_army->aliens[row * 11 + col].body.position.y = 136 - 8 - row * 16;
-            G(&alien_army->aliens[row*11+col]);
+            Alien_Init(&alien_army->aliens[row*11+col], row, col);
         }
     }
 }
 
-void AlienArmy_Move(AlienArmy *alien_army) {
+void Alien_Move(Alien_t *alien, Vector2_t delta) {
+    Move(&alien->body, delta);
+    alien->sprite_frame = (alien->sprite_frame+1)%2;
+    AsignAlienMask(alien);
+}
+
+void AlienArmy_Move(AlienArmy_t *alien_army) {
     int index = (alien_army->last_alien_moved + 1) % 55;
     bool finished = false;
     do {
-        if (alien_army->descending == 1 && index == 0) {
-            alien_army->descending = 2;
+        if (alien_army->descending == kDescendingState_waiting && index == 0) {
+            alien_army->descending = kDescendingState_true;
             alien_army->direction = alien_army->direction * -1;
         }
         if (alien_army->aliens[index].active) {
-            if (alien_army->descending == 2) {
-                Move(&alien_army->aliens[index].body, {0, 8});
+            if (alien_army->descending == kDescendingState_true) {
+                Alien_Move(&alien_army->aliens[index], {0, 8});
             }
-            Move(&alien_army->aliens[index].body, {alien_army->direction*2, 0});
+            Alien_Move(&alien_army->aliens[index], {alien_army->direction*2, 0});
             if (alien_army->aliens[index].body.position.x <= 8 || alien_army->aliens[index].body.position.x >= 208) {
-                alien_army->descending = 1;
+                alien_army->descending = kDescendingState_waiting;
             }
         }
-        if (alien_army->descending == 2 && index == 54) {
-            alien_army->descending = 0;
+        if (alien_army->descending == kDescendingState_true && index == 54) {
+            alien_army->descending = kDescendingState_false;
         }
         alien_army->last_alien_moved++;
         if (alien_army->aliens[index].active) finished = true;
@@ -84,7 +81,7 @@ void AlienArmy_Move(AlienArmy *alien_army) {
     } while (!finished && alien_army->aliens_alive > 0);
 }
 
-void AlienArmy_Control(AlienArmy *alien_army) {
+void AlienArmy_Control(AlienArmy_t *alien_army) {
     if (alien_army->alien_explosion_tick <= 0) {
         AlienArmy_Move(alien_army);
     } else {
@@ -92,12 +89,20 @@ void AlienArmy_Control(AlienArmy *alien_army) {
     }
 }
 
-void Destruct(AlienArmy* self, int index) {
+void AliensRender(AlienArmy_t *alien_army) {
+    for (int i = 0; i < 55; i++) {
+        if (alien_army->aliens[i].active) Draw(&alien_army->aliens[i].body);
+    }
+    if (alien_army->alien_explosion_tick > 0) Draw(&alien_army->aliens[alien_army->alien_died].body);
+}
+
+void Destruct(AlienArmy_t* self, int index) {
     if (self->aliens[index].active) {
         self->aliens[index].active = false;
         self->aliens_alive--;
         self->alien_explosion_tick = 16;
         self->alien_died = index;
+        self->aliens[index].body.mask = g_assets.CharacterMasks[0];
     }
 }
 
