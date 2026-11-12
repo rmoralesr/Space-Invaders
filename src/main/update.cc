@@ -8,6 +8,7 @@
 #include "../tools/asset-loader.cc"
 #include "../tools/input.cc"
 #include "../entities/aliens_army.cc"
+#include "../entities/player.cc"
 
 enum kUpdateID {
     kUpdateID_InsertCoin,
@@ -144,7 +145,7 @@ void GameUpdate(Game_t *game) {
 					g_wipe_screen.current_step = -1;
 					ClearUIContent();
 					game->game_state = kGameState_Playing;
-					game->player = Player_Construct();
+					Player_Construct(&game->player);
 					AlienArmy_Init(&game->alien_army);
 					break;
 			}
