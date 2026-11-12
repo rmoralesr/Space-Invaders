@@ -2,6 +2,7 @@
 #define TYPES_CC 1
 
 #include "../tools/input.cc"
+#include "../entities/player.cc"
 #include "cirno.cc"
 #include "../entities/aliens_army.cc"
 
@@ -15,23 +16,26 @@
 // LOS TIPOS ESPECIFICOS PARA UN MODULO SE DECLARAN EN EL NAMESPACE DEL MODULO,
 // PERO NO SE DEBERÍAN USAR EN NINGÚN OTRO ENTONCES
 
-const unsigned char kTargetFps = 25; //Control de frames por segundo
-const unsigned int kPixelScale = 4;
-const Vector2_t kWindowSize = {224, 256};
-long long int g_tick = 0;
-
-enum GameState {
+enum kGameState {
     kGameState_Playing,
     kGameState_Previewing,
     kGameState_ChoosingPlayers
 };
 
-struct Game {
+const unsigned char kTargetFps = 25; //Control de frames por segundo
+const Vector2_t kWindowSize = {224, 256};
+long long int g_tick = 0;
+
+struct Game_t {
     // TODO
-    AlienArmy alien_army;
-    GameState game_state;
+    kGameState game_state;
     Input input;
+    Player_t* player;
+    AlienArmy alien_army;
     int credits;
+    int score1;
+    int score2;
+    int hiscore;
 };
 
 #endif // TYPES_CC

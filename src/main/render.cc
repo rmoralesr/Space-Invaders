@@ -6,8 +6,8 @@
 #include "../core/types.cc"
 #include "../core/cirno.cc"
 #include "../core/mask.cc"
-#include "../entities/body.cc"
 #include "../core/draw.cc"
+#include "../entities/body.cc"
 #include "../entities/aliens_army.cc"
 #include "../tools/ui-element.cc"
 
@@ -15,19 +15,28 @@
 
 void AliensRender(AlienArmy *alien_army) {
     for (int i = 0; i < 55; i++) {
-        if (alien_army->aliens[i].active) Draw(&alien_army->aliens[i].body, false);
+        if (alien_army->aliens[i].active) Draw(&alien_army->aliens[i].body);
     }
-    if (alien_army->alien_explosion_tick > 0) Draw(&alien_army->aliens[alien_army->alien_died].body, false);
+    if (alien_army->alien_explosion_tick > 0) Draw(&alien_army->aliens[alien_army->alien_died].body);
 }
 
 void PreviewRender() {
 
 }
 
-void GameRender(Game *game) {
+void GameRender(Game_t *game) {
 
-    for (int i = 0; i < Character_kRegistryCapacity; i++){
-        Draw(&Character_registry[i].body);
+    for (int i = 0; i < UIElement_kRegistryCapacity; i++){
+        if ( !UIElement_registry[i].flashing || g_tick%4 > 1) 
+            Draw(&UIElement_registry[i].body);
+    }
+    if (g_wipe_screen.current_step != -1){
+        unsigned char RGBA[4] = {0,0,0,255};
+        DrawRectangle(
+            g_wipe_screen.position, 
+            {g_wipe_screen.current_step*g_wipe_screen.step_size,g_wipe_screen.size.y},
+            RGBA
+        );
     }
 
     switch (game->game_state) {
@@ -40,6 +49,7 @@ void GameRender(Game *game) {
         }
         case kGameState_Playing: {
             AliensRender(&game->alien_army);
+            Draw(&game->player->body);
             break;
         }
     }

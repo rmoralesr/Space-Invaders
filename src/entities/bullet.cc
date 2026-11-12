@@ -3,6 +3,7 @@
 
 #include "../core/cirno.cc"
 #include "../core/mask.cc"
+#include "../core/draw.cc"
 #include "body.cc"
 
 enum BulletType {
@@ -54,9 +55,23 @@ Bullet_t* Bullet_Construct() {
 }
 
 void Destruct(Bullet_t* self) {
-  self->active = false;
+  if (self->active) {
+    self->active = false;
+    Bullet_registry_active_count--;
+  }
+}
 
-  Bullet_registry_active_count--;
+
+void MoveTo(Bullet_t* self, Vector2_t pos) {
+  MoveTo(&self->body, pos);
+}
+
+void Move(Bullet_t* self, Vector2_t delta) {
+  Move(&self->body, delta);
+}
+
+void Draw(Bullet_t* self) {
+  Draw(&self->body);
 }
 
 #endif // BULLET_CC

@@ -2,6 +2,8 @@
 
 ## Flujo de trabajo (resumen)
 
+//TODO Añadir imagen Carmina conflictos
+
 **Trabajar en nuestra rama**
 
 1. Abrir el apartado de Git y comprobar que estamos en **nuestra rama**.

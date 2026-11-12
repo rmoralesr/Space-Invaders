@@ -320,6 +320,7 @@ La flota nace más abajo en cada oleada, así que la y aumenta.
 | Texto de puntos del UFO | 24 |
 | Mensaje `GAME OVER` | 180 |
 | Mensaje `PLAYER N` | 120 |
+| Texto animado de menu (aparición de letra) | 6 |
 
 ---
 
