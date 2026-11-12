@@ -58,7 +58,7 @@ struct Game_t {
     // TODO
     kGameState game_state;
     Input input;
-    Player_t* player;
+    Player_t player;
     AlienArmy_t alien_army;
     int credits;
     int score1;

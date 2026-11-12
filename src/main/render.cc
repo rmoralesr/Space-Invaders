@@ -44,7 +44,7 @@ void GameRender(Game_t *game) {
         }
         case kGameState_Playing: {
             AliensRender(&game->alien_army);
-            Draw(&game->player->body);
+            Draw(&game->player);
             break;
         }
     }

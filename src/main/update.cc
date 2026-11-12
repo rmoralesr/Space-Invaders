@@ -108,7 +108,7 @@ void GameUpdate(Game_t *game) {
 		}
 		case kGameState_ChoosingPlayers: {
 			if (game->input.one_player_button || game->input.two_player_button) { // TODO por ahora así, luego cambiar
-				game->player = Player_Construct();
+				Player_Construct(&game->player);
 				game->game_state = kGameState_Playing;
 				AlienArmy_Init(&game->alien_army);
 			}
@@ -119,10 +119,9 @@ void GameUpdate(Game_t *game) {
 			if (game->input.insert_credit) MatarAlien(&game->alien_army); //TODO Quitar
 
 			if (game->input.left_button) {
-				Move(game->player, {-2, 0});
-			}
-			if (game->input.right_button) {
-				Move(game->player, {+2, 0});
+				Move(&game->player, {-2, 0});
+			} else if (game->input.right_button) {
+				Move(&game->player, {+2, 0});
 			}
 			break;
 		}
