@@ -39,32 +39,32 @@ void PreviewUpdate(Game *game) {
 }
 
 void PreviewingInit(){
-	GenerateText("play",4,{97,65}, 0, ProgressiveTextTickRate);
-	GenerateText("space  invaders",15,{57,89}, 4*ProgressiveTextTickRate, ProgressiveTextTickRate);
+	GenerateText("play",{97,65}, 0, ProgressiveTextTickRate);
+	GenerateText("space  invaders",{57,89}, 4*ProgressiveTextTickRate, ProgressiveTextTickRate);
 
-	GenerateText("*score advance table*",21,{33,121},(4+4+15)*ProgressiveTextTickRate);
+	GenerateText("*score advance table*",{33,121},(4+4+15)*ProgressiveTextTickRate);
 	GenerateUIElement({false, {64,136}, g_assets.UFOMasks[0]},(4+4+15)*ProgressiveTextTickRate);
 	GenerateUIElement({false, {66,152}, g_assets.AlienMasks[2][0]},(4+4+15)*ProgressiveTextTickRate);
 	GenerateUIElement({false, {66,168}, g_assets.AlienMasks[1][0]},(4+4+15)*ProgressiveTextTickRate);
 	GenerateUIElement({false, {66,184}, g_assets.AlienMasks[0][0]},(4+4+15)*ProgressiveTextTickRate);
 
-	GenerateText("=? mystery",10,{81,137},(4+4+15)*ProgressiveTextTickRate, ProgressiveTextTickRate);
-	GenerateText("=30 points",10,{81,153},(4+4+15+10)*ProgressiveTextTickRate, ProgressiveTextTickRate);
-	GenerateText("=20 points",10,{81,169},(4+4+15+20)*ProgressiveTextTickRate, ProgressiveTextTickRate);
-	GenerateText("=10 points",10,{81,185},(4+4+15+30)*ProgressiveTextTickRate, ProgressiveTextTickRate);
+	GenerateText("=? mystery",{81,137},(4+4+15)*ProgressiveTextTickRate, ProgressiveTextTickRate);
+	GenerateText("=30 points",{81,153},(4+4+15+10)*ProgressiveTextTickRate, ProgressiveTextTickRate);
+	GenerateText("=20 points",{81,169},(4+4+15+20)*ProgressiveTextTickRate, ProgressiveTextTickRate);
+	GenerateText("=10 points",{81,185},(4+4+15+30)*ProgressiveTextTickRate, ProgressiveTextTickRate);
 
 	WipeScreenToContent(&g_wipe_screen);
 	g_wipe_screen.queued_tick = g_tick + (4+4+15+40)*ProgressiveTextTickRate + 8;
-
-	QueueUpdate(0, g_tick + (4+4+15+40)*ProgressiveTextTickRate + 20);
+	
+	QueueUpdate(0, g_tick + (4+4+15+40)*ProgressiveTextTickRate + 22);
 }
 
 void InsertCoinInit(){
-	GenerateText("insert  coin",12,{65,113});
+	GenerateText("insert  coin",{65,113});
 
-	GenerateText("<1 or 2 players>",16,{49,143}, 0, ProgressiveTextTickRate);
-	GenerateText("*1 player  1 coin",17,{49,169}, 16*ProgressiveTextTickRate, ProgressiveTextTickRate);
-	GenerateText("*2 players 2 coins",18,{49,195}, (16+17)*ProgressiveTextTickRate, ProgressiveTextTickRate);
+	GenerateText("<1 or 2 players>",{49,143}, 0, ProgressiveTextTickRate);
+	GenerateText("*1 player  1 coin",{49,169}, 16*ProgressiveTextTickRate, ProgressiveTextTickRate);
+	GenerateText("*2 players 2 coins",{49,195}, (16+17)*ProgressiveTextTickRate, ProgressiveTextTickRate);
 
 }
 
@@ -87,6 +87,7 @@ void GameUpdate(Game *game) {
 			Update_queue[i].active = false;
 			switch(Update_queue[i].id){
 				case 0 : 
+					g_wipe_screen.current_step = -1;
 					ClearUIContent();
 					InsertCoinInit();
 					break;

@@ -24,11 +24,10 @@ void GameRender(const Game *game) {
 
     for (int i = 0; i < UIElement_kRegistryCapacity; i++){
         if ( !UIElement_registry[i].flashing || g_tick%4 > 1) 
-            if (UIElement_registry[i].active)// && UIElement_registry[i].queued_tick <= g_tick) 
+            if (UIElement_registry[i].active && UIElement_registry[i].queued_tick <= g_tick) 
                 Draw(&UIElement_registry[i].body);
     }
 
-    /*
     if (g_wipe_screen.current_step != -1){
         unsigned char RGBA[4] = {0,0,0,255};
         DrawRectangle(
@@ -36,7 +35,7 @@ void GameRender(const Game *game) {
             {g_wipe_screen.current_step*g_wipe_screen.step_size,g_wipe_screen.size.y},
             RGBA
         );
-    }*/
+    }
 
     switch (game->game_state) {
         case kGameState_Previewing: {

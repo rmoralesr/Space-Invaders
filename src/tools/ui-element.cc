@@ -67,44 +67,21 @@ void GenerateUIElement(Body_t b, long long int tick = 0, bool flashing = false){
         if (UIElement_registry[i].body.position.x == b.position.x &&
         UIElement_registry[i].body.position.y == b.position.y) Destruct(&UIElement_registry[i]);
     }
-    UIElement_t *new_c = UIElement_Construct();
-    new_c->body = b;
-    new_c->flashing = flashing;
-}
 
-/*void GenerateUIElement(Body_t b, long long int tick = 0, bool flashing = false){
-    int n = -1;
+    int n = 0;
     bool free_space = false;
-
-    for (int i = 0; i < UIElement_kRegistryCapacity; i++){
-        if (UIElement_registry[i].body.position.x == b.position.x &&
-        UIElement_registry[i].body.position.y == b.position.y) {
-            Destruct(&UIElement_registry[i]);
-            n = i;
-            free_space = true;
-        }
+    while(n < UIElement_kRegistryCapacity && !free_space){
+        if (!UIElement_registry[n].active) free_space = true;
+        else n++;
     }
-
-    if (n == -1) {
-        n = 0;
-        while(n < UIElement_kRegistryCapacity && !free_space){
-            if (!UIElement_registry[n].active) free_space = true;
-            else n++;
-            free_space = true;
-        }
-    }
-
-    if (true){
-        printf("%d", (int)b.position.x);
-        UIElement_registry[n] = {};
+    if (free_space) { 
         UIElement_registry[n].active = true;
         UIElement_registry[n].body = b;
-        //UIElement_registry[n].flashing = flashing;
-        if (tick == 0) UIElement_registry[n].queued_tick = 0;
-        else UIElement_registry[n].queued_tick = 0;
+        UIElement_registry[n].flashing = flashing;
+        UIElement_registry[n].queued_tick = tick;
         UIElement_registry_active_count++;
     }
-}*/
+}
 
 // Clear
 void ClearUIContent(){
@@ -115,17 +92,18 @@ void ClearUIContent(){
 }
 
 // Texto
-void GenerateText(const char *text, int length, Vector2_t position, 
+void GenerateText(const char *text, Vector2_t position, 
     int initial_wait = 0, int wait_rate = 0, bool flashing = false, bool ignore_space = false){
     long long int queue_tick = g_tick + initial_wait;
-    for (int i = 0; i < length; i++){
+    int i = 0;
+    while(text[i] != '\0'){
         if (text[i] != ' ') {
             Body_t b = {false, position, CharMask(text[i])};
-            Print(&b.mask);
-            GenerateUIElement(b, 0, flashing);
+            GenerateUIElement(b, queue_tick, flashing);
         }
         if (text[i] != ' ' || !ignore_space) queue_tick += wait_rate;
         position.x += kCharacterWidth + 3;
+        i++;
     }
 }
 void GenerateNumber(int value, int digits, Vector2_t position, int delay = 0, bool flashing = false) {
@@ -148,7 +126,6 @@ void GenerateNumber(int value, int digits, Vector2_t position, int delay = 0, bo
 void AdvanceWipeScreen(WipeScreen *wp){
     if (wp->current_step != -1){
         wp->current_step += 1;
-        if (wp->current_step*wp->step_size >= wp->size.x) wp->current_step = -1;
     }
 }
 void WipeScreenToContent(WipeScreen *wp){
