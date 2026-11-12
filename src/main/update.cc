@@ -8,6 +8,14 @@
 #include "../tools/asset-loader.cc"
 #include "../tools/input.cc"
 #include "../entities/aliens_army.cc"
+#include "../entities/player.cc"
+
+enum kUpdateID {
+    kUpdateID_InsertCoin,
+    kUpdateID_ChoosingPlayer,
+    kUpdateID_AboutToPlay,
+    kUpdateID_Playing
+};
 
 struct QueuedUpdate{
 	bool active = false;
@@ -37,9 +45,12 @@ void QueueUpdate(int id, long long int tick){
 		Update_queue[n].queued_tick = tick;
 	}
 }
-
-void PreviewUpdate(Game_t *game) {
-
+void ClearQueuedActions(){
+	for (int i = 0; i < Update_kQueueCapacity; i++){
+		Update_queue[i].active = false;
+	}
+	g_wipe_screen.current_step = -1;
+	g_wipe_screen.queued_tick = 0;
 }
 
 void PreviewingInit(){
@@ -58,9 +69,31 @@ void PreviewingInit(){
 	GenerateText("=10 points",{81,185},(4+4+15+30)*ProgressiveTextTickRate, ProgressiveTextTickRate);
 
 	WipeScreenToContent(&g_wipe_screen);
-	g_wipe_screen.queued_tick = g_tick + (4+4+15+40)*ProgressiveTextTickRate + 8;
+	g_wipe_screen.queued_tick = g_tick + (4+4+15+40)*ProgressiveTextTickRate + 120;
 	
-	QueueUpdate(0, g_tick + (4+4+15+40)*ProgressiveTextTickRate + 22);
+	QueueUpdate(kUpdateID_InsertCoin, g_tick + (4+4+15+40)*ProgressiveTextTickRate + 120 + 22);
+}
+
+
+void ChoosingPlayerInit(Game_t *game){
+	ClearUIContent();
+	if (game->credits > 1){
+		GenerateText("push",{98,91});
+		GenerateText("1 or 2players button",{30,123});
+	} else {
+		GenerateText("push",{98,91});
+		GenerateText("only 1 player button",{30,123});
+	}
+}
+
+void AboutToPlayInit(Game_t *game){
+	ClearUIContent();
+	GenerateText("play player<1>",{59,120});
+
+	WipeScreenToContent(&g_wipe_screen);
+	g_wipe_screen.queued_tick = g_tick + 120;
+	
+	QueueUpdate(kUpdateID_Playing, g_tick + 120 + 22);
 }
 
 void InsertCoinInit(){
@@ -69,16 +102,19 @@ void InsertCoinInit(){
 	GenerateText("<1 or 2 players>",{49,143}, 0, ProgressiveTextTickRate);
 	GenerateText("*1 player  1 coin",{49,169}, 16*ProgressiveTextTickRate, ProgressiveTextTickRate);
 	GenerateText("*2 players 2 coins",{49,195}, (16+17)*ProgressiveTextTickRate, ProgressiveTextTickRate);
-
 }
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
 void GameUpdate(Game_t *game) {
 
 	g_tick++;
+
 	// Player Inputs
 	InputUpdate(&game->input);
-	if (game->input.insert_credit) game->credits++;
+	if (game->input.insert_credit) {
+		game->credits++;
+		GenerateNumber(game->credits,2, kCreditsNumberPosition);
+	}
 
 	// Text
 	if (g_tick == g_wipe_screen.queued_tick) g_wipe_screen.current_step = 0;
@@ -89,10 +125,28 @@ void GameUpdate(Game_t *game) {
 		if (Update_queue[i].active && Update_queue[i].queued_tick == g_tick){
 			Update_queue[i].active = false;
 			switch(Update_queue[i].id){
-				case 0 : 
+				case kUpdateID_InsertCoin : 
 					g_wipe_screen.current_step = -1;
 					ClearUIContent();
 					InsertCoinInit();
+					break;
+				case kUpdateID_ChoosingPlayer : 
+					g_wipe_screen.current_step = -1;
+					ClearUIContent();
+					ChoosingPlayerInit(game);
+					break;
+				case kUpdateID_AboutToPlay : 
+					g_wipe_screen.current_step = -1;
+					ClearUIContent();
+					game->game_state = kGameState_AboutToPlay;
+					AboutToPlayInit(game);
+					break;
+				case kUpdateID_Playing :
+					g_wipe_screen.current_step = -1;
+					ClearUIContent();
+					game->game_state = kGameState_Playing;
+					Player_Construct(&game->player);
+					AlienArmy_Init(&game->alien_army);
 					break;
 			}
 		}
@@ -100,16 +154,27 @@ void GameUpdate(Game_t *game) {
 
 	switch (game->game_state) {
 		case kGameState_Previewing: {
-			PreviewUpdate(game);
-			if (game->credits > 0) game->game_state = kGameState_ChoosingPlayers;
+			if (game->credits > 0) {
+				game->game_state = kGameState_ChoosingPlayers;
+				ClearQueuedActions();
+				ChoosingPlayerInit(game);
+			}
 			break;
 		}
 		case kGameState_ChoosingPlayers: {
-			if (game->input.one_player_button || game->input.two_player_button) { // TODO por ahora así, luego cambiar
-				Player_Construct(&game->player);
-				game->game_state = kGameState_Playing;
-				AlienArmy_Init(&game->alien_army);
+			if (game->input.insert_credit && game->credits == 2) {
+				WipeScreenToContent(&g_wipe_screen);
+				g_wipe_screen.queued_tick = g_tick + 1;
+				QueueUpdate(kUpdateID_ChoosingPlayer, g_tick + 22);
 			}
+			if (game->input.one_player_button || game->input.two_player_button) { // TODO por ahora así, luego cambiar
+				WipeScreenToFull(&g_wipe_screen);
+				g_wipe_screen.queued_tick = g_tick + 1;
+				QueueUpdate(kUpdateID_AboutToPlay, g_tick + 22);
+			}
+			break;
+		}
+		case kGameState_AboutToPlay:{
 			break;
 		}
 		case kGameState_Playing: {

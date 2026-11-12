@@ -2,7 +2,8 @@
 #define TYPES_CC 1
 
 #include "../tools/input.cc"
-#include "../entities/player.cc"
+#include "../entities/body.cc"
+#include "../entities/bullet.cc"
 #include "cirno.cc"
 
 // AQUÍ ESTÁN TODOS LOS TIPOS DE DATOS GENERALES QUE SE VAN A USAR EN EL JUEGO
@@ -45,10 +46,20 @@ struct AlienArmy_t {
     AlienArmyState descending;
 };
 
+struct Player_t {
+    bool active = false;
+    bool dying = false;
+
+    Body_t body;
+    Bullet_t bullet;
+    AlienArmy_t army;
+};
+
 enum GameState {
     kGameState_Playing,
     kGameState_Previewing,
-    kGameState_ChoosingPlayers
+    kGameState_ChoosingPlayers,
+    kGameState_AboutToPlay
 };
 
 const unsigned char kTargetFps = 60; //Control de frames por segundo

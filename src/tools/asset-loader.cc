@@ -29,13 +29,13 @@ constexpr int kAlienSeparationX = 3; // Separacion entre sprites
 constexpr int kAlienSeparationY = 1; // Separacion entre sprites
 
 //  UFO
+constexpr int kUFOWidth = 16; 
+constexpr int kUFOHeight = 7;
 
-//Dimensiones del UFO (jefe)
-// constexpr int kAlienSeparationY = 16; // Medida sin margenes
-// constexpr int kAlienSeparationY = 7; // Medida sin margenes
+constexpr int kUFOSeparation = 3;
 
-//Separaciones
-// constexpr int kAlienSeparationY = 1; // Separacion del margen
+constexpr int kUFOMarginTop = 2;
+constexpr int kUFOMarginLeft = 1;
 
 //  Shield
 
@@ -111,8 +111,14 @@ void LoadAssets() {
 
     //cargar los 2 sprites del UFO
 
-    
-    
+    for (int i = 0; i < 2; i++){
+       FromFile(&g_assets.UFOMasks[i],
+       "../../assets/UFO.png",
+       {kUFOMarginLeft+(kUFOWidth + kUFOSeparation) * i,
+        kUFOMarginTop},
+       {kUFOWidth, kUFOHeight}
+       );
+    }
 
     //cargar el sprite del Shield
 
