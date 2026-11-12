@@ -8,6 +8,7 @@
 #include "../core/mask.cc"
 #include "../entities/body.cc"
 #include "../core/draw.cc"
+#include "../tools/ui-element.cc"
 
 // FUNCIONES DE RENDERIZADO
 
