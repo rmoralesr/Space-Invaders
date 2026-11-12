@@ -5,12 +5,14 @@
 #include "../core/mask.cc"
 #include "../core/draw.cc"
 #include "body.cc"
+#include "bullet.cc"
 
 struct Player_t {
   bool active = false;
   bool dying = false;
 
   Body_t body;
+  Bullet_t bullet;
 };
 
 // constexpr unsigned int Player_kRegistryCapacity = 20;
@@ -33,14 +35,6 @@ void Draw(Player_t* self, bool erase = false);
 // Definiciones
 
 Player_t* Player_Construct() {
-//   int n = -1;
-//   for (int i = 0; i < Player_kRegistryCapacity; i++) {
-//     if (!Player_registry[i].active) {
-//       n = i;
-//       break;
-//     }
-//   }
-
   Player_t *self = nullptr;
 
   if (!Player_registry.active) { 
@@ -50,12 +44,13 @@ Player_t* Player_Construct() {
 
     self->body = {
         true,
-        {500, 500}, {}
+        {16, 224}, 
+        {}
     };
 
-    FromFile(&self->body.mask, "../assets/test.png");
+    FromFile(&self->body.mask, "../../assets/test.png");
 
-    // Player_registry_active_count++;
+    Print(&self->body.mask);
   }
 
   return self;
@@ -63,8 +58,6 @@ Player_t* Player_Construct() {
 
 void Destruct(Player_t* self) {
   self->active = false;
-
-//   Player_registry_active_count--;
 }
 
 

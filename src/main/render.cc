@@ -37,6 +37,7 @@ void GameRender(const Game *game) {
             break;
         }
         case kGameState_Playing: {
+            Draw(&game->player->body);
             break;
         }
     }

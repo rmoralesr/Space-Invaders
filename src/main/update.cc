@@ -45,14 +45,12 @@ void GameUpdate(Game *game) {
 			}
 			break;
 		}
-		case kGameState_Playing: {
+		case kGameState_Playing: {			
 			if (game->input.left_button) {
-				Move(game->player, {-1, 0});
-  				Draw(&game->player->body);
+				Move(game->player, {-2, 0});
 			}
 			if (game->input.right_button) {
-				Move(game->player, {+1, 0});
-				Draw(&game->player->body);
+				Move(game->player, {+2, 0});
 			}
 			break;
 		}
