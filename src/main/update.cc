@@ -18,12 +18,12 @@ void PreviewingInit(){
 	ClearUIElementGenerateQueue();
 	GenerateProgressiveText("play",4,{100,80}, 0);
 	GenerateProgressiveText("space  invaders",15,{50,100}, 4);
-    Body_t buddy = {
+    /*Body_t buddy = {
         true,
         {0,0}, {}
     };
     FromFile(&buddy.mask, "../../assets/test.png");
-	QueueUIElement(buddy, 10);
+	QueueUIElement(buddy, 10);*/
 }
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
