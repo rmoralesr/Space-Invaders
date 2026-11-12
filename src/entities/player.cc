@@ -28,7 +28,7 @@ void Draw(Player_t* self);
 // Definiciones
 
 void Player_Construct(Player_t *self) {
-  if (!Player_registry.active) {
+  if (!self->active) {
     self->active = true;
     self->dying = false;
 

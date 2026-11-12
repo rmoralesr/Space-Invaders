@@ -55,9 +55,10 @@ void Alien_Move(Alien_t *alien, Vector2_t delta) {
     AsignAlienMask(alien);
 }
 
-void AlienArmy_Move(AlienArmy_t *alien_army) {
+AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army) {
     int index = (alien_army->last_alien_moved + 1) % 55;
     bool finished = false;
+    if (alien_army->aliens_alive <= 0) return kAlienArmyFlag_exterminated;
     if (alien_army->descending != kAlienArmyState_generating) {
         do {
             if (alien_army->descending == kAlienArmyState_descendingWaiting && index == 0) {
@@ -67,6 +68,7 @@ void AlienArmy_Move(AlienArmy_t *alien_army) {
             if (alien_army->aliens[index].active) {
                 if (alien_army->descending == kAlienArmyState_descendingTrue) {
                     Alien_Move(&alien_army->aliens[index], {0, 8});
+                    if (alien_army->aliens[index].body.position.y >= 216) return kAlienArmyFlag_invaded;
                 }
                 Alien_Move(&alien_army->aliens[index], {alien_army->direction*2, 0});
                 if (alien_army->aliens[index].body.position.x <= 8 || alien_army->aliens[index].body.position.x >= 208) {
@@ -85,14 +87,15 @@ void AlienArmy_Move(AlienArmy_t *alien_army) {
         alien_army->last_alien_moved++;
         if (index == 54) alien_army->descending = kAlienArmyState_descendingFalse;
     }
+    return kAlienArmyFlag_none;
 }
 
-void AlienArmy_Control(AlienArmy_t *alien_army) {
+AlienArmyFlag AlienArmy_Control(AlienArmy_t *alien_army) {
     if (alien_army->alien_explosion_tick <= 0) {
-        AlienArmy_Move(alien_army);
-    } else {
-        alien_army->alien_explosion_tick--;
+        return AlienArmy_Move(alien_army);
     }
+    alien_army->alien_explosion_tick--;
+    return kAlienArmyFlag_none;
 }
 
 void AliensRender(AlienArmy_t *alien_army) {

@@ -33,6 +33,12 @@ enum AlienArmyState {
     kAlienArmyState_descendingTrue
 };
 
+enum AlienArmyFlag {
+    kAlienArmyFlag_none,
+    kAlienArmyFlag_exterminated,
+    kAlienArmyFlag_invaded
+};
+
 struct Alien_t {
     Body_t body;
     bool active;
