@@ -76,8 +76,6 @@ void InsertCoinInit(){
 void GameUpdate(Game_t *game) {
 
 	g_tick++;
-
-	g_tick++;
 	// Player Inputs
 	InputUpdate(&game->input);
 	if (game->input.insert_credit) game->credits++;
