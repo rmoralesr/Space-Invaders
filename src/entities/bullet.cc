@@ -7,19 +7,25 @@
 #include "body.cc"
 
 enum BulletType {
-  kBulletType_Player
+  kBulletType_Player,
+
+  kBulletType_Squiggly,
+  kBulletType_Plunger,
+  kBulletType_Straight
 };
 
 struct Bullet_t {
   bool active = false;
   bool dying = false;
 
+  unsigned int step = 0;
+
   BulletType type = kBulletType_Player;
 
   Body_t body;
 }; 
 
-constexpr unsigned int Bullet_kRegistryCapacity = 20;
+constexpr unsigned int Bullet_kRegistryCapacity = 4;
 unsigned int Bullet_registry_active_count = 0;
 Bullet_t Bullet_registry[Bullet_kRegistryCapacity] = {0};
 
@@ -61,16 +67,26 @@ void Destruct(Bullet_t* self) {
   }
 }
 
+void Tick(Bullet_t *self) {
+  if (self->type == kBulletType_Player) {
+    Move(self, {0, -1});
+  } else {
+    Move(self, {0, 1});
+  }
+  self->step++;
 
-void MoveTo(Bullet_t* self, Vector2_t pos) {
+  // Cambiar sprite
+}
+
+void MoveTo(Bullet_t *self, Vector2_t pos) {
   MoveTo(&self->body, pos);
 }
 
-void Move(Bullet_t* self, Vector2_t delta) {
+void Move(Bullet_t *self, Vector2_t delta) {
   Move(&self->body, delta);
 }
 
-void Draw(Bullet_t* self) {
+void Draw(Bullet_t *self) {
   Draw(&self->body);
 }
 
