@@ -29,6 +29,8 @@ constexpr int kAlienSeparationX = 3; // Separacion entre sprites
 constexpr int kAlienSeparationY = 1; // Separacion entre sprites
 
 //  UFO
+constexpr int kUFOWidth = 16; 
+constexpr int kUFOHeight = 7;
 
 constexpr int kUFOSeparation = 3;
 
@@ -111,8 +113,8 @@ void LoadAssets() {
 
     for (int i = 0; i < 2; i++){
        FromFile(&g_assets.UFOMasks[i],
-       "../assets/UFO.png",
-       {kUFOMarginLeft (kUFOWidth + kUFOSeparation) * i,
+       "../../assets/UFO.png",
+       {kUFOMarginLeft+(kUFOWidth + kUFOSeparation) * i,
         kUFOMarginTop},
        {kUFOWidth, kUFOHeight}
        );
