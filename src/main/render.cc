@@ -9,6 +9,7 @@
 #include "../core/draw.cc"
 #include "../entities/body.cc"
 #include "../entities/aliens_army.cc"
+#include "../entities/player.cc"
 #include "../tools/ui-element.cc"
 
 // FUNCIONES DE RENDERIZADO
