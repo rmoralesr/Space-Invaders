@@ -16,13 +16,23 @@ struct QueuedUIElement_t {
     UIElement_t element;
     long long int queued_tick;
 };
+struct WipeScreen {
+    Vector2_t position;
+    Vector2_t size;
+    int step_size = 16, current_step = -1;
+    long long int queued_tick;
+};
 
-const unsigned int UIElement_kRegistryCapacity = 100;
+const unsigned int UIElement_kRegistryCapacity = 200;
 unsigned int UIElement_registry_active_count = 0;
 UIElement_t UIElement_registry[UIElement_kRegistryCapacity] = {0};
 
-const unsigned int UIElement_kGenerateQueueCapacity = 100;
+const unsigned int UIElement_kGenerateQueueCapacity = 200;
 QueuedUIElement_t UIElement_GenerateQueue[UIElement_kGenerateQueueCapacity] = {0};
+
+const unsigned int ProgressiveTextTickRate = 2;
+
+WipeScreen g_wipe_screen;
 
 // Prototipaje
 
@@ -76,6 +86,10 @@ void Destruct(UIElement_t* self) {
 }
 
 void GenerateUIElement(Body_t b, bool flashing = false){
+    for (int i = 0; i < UIElement_kRegistryCapacity; i++){
+        if (UIElement_registry[i].body.position.x == b.position.x &&
+        UIElement_registry[i].body.position.y == b.position.y) Destruct(&UIElement_registry[i]);
+    }
     UIElement_t *new_c = UIElement_Construct();
     new_c->body = b;
     new_c->flashing = flashing;
@@ -112,6 +126,14 @@ void QueueUIElement(Body_t b, long long int queue_tick = 0, bool flashing = fals
     }
 }
 
+// Clear
+void ClearUIContent(){
+    for (int i = 0; i < UIElement_kRegistryCapacity; i++){
+        if (UIElement_registry[i].body.position.y > 33 &&
+        UIElement_registry[i].body.position.y < 33+207) Destruct(&UIElement_registry[i]);
+    }
+}
+
 // Texto
 void GenerateText(const char *text, int length, Vector2_t position, int delay = 0, bool flashing = false){
     for (int i = 0; i < length; i++){
@@ -125,14 +147,14 @@ void GenerateText(const char *text, int length, Vector2_t position, int delay = 
     }
 }
 void GenerateProgressiveText(const char *text, int length, Vector2_t position, 
-    int initial_wait = 0, int wait_rate = 6, bool flashing = false){
-    long long int queue_tick = g_tick + wait_rate*initial_wait;
+    int initial_wait = 0, bool ignore_space = false, int wait_rate = ProgressiveTextTickRate, bool flashing = false){
+    long long int queue_tick = g_tick + initial_wait;
     for (int i = 0; i < length; i++){
         if (text[i] != ' ') {
             Body_t b = {false, position, CharMask(text[i])};
             QueueUIElement(b, queue_tick, flashing);
         }
-        queue_tick += wait_rate;
+        if (text[i] != ' ' || !ignore_space) queue_tick += wait_rate;
         position.x += kCharacterWidth + 3;
     }
     if (initial_wait == 0) QueuedUIElementsUpdate();
@@ -151,6 +173,19 @@ void GenerateNumber(int value, int digits, Vector2_t position, int delay = 0, bo
         position.x += kCharacterWidth + 3;
         value %= pow(10, digits - 1 - i);
     }
+}
+
+//Wipe Screen
+
+void AdvanceWipeScreen(WipeScreen *wp){
+    if (wp->current_step != -1){
+        wp->current_step += 1;
+        if (wp->current_step*wp->step_size >= wp->size.x) wp->current_step = -1;
+    }
+}
+void WipeScreenToContent(WipeScreen *wp){
+    wp->position = {0,33};
+    wp->size = {kWindowSize.x, 207};
 }
 
 #endif // UI_ELEMENT_CC

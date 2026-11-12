@@ -25,7 +25,10 @@ void GameInit(Game *game) {
     game->credits = 0;
 
     LoadAssets();
-    GenerateText("score<1> hi-score score<2>", 26, {10,10});
+    GenerateText("score<1> hi-score score<2>", 26, {10,9});
+    GenerateNumber(game->score1,4, {10 + 8*2 , 9 + 8*2});
+    GenerateNumber(game->score2,4, {10 + 8*20, 9 + 8*2});
+    GenerateNumber(game->hiscore,4,{10 + 8*10, 9 + 8*2});
     GenerateText("credit", 6, {140,240});
     GenerateNumber(game->credits,2, {200,240});
 

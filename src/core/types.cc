@@ -30,6 +30,9 @@ struct Game {
     GameState game_state;
     Input input;
     int credits;
+    int score1;
+    int score2;
+    int hiscore;
 };
 
 #endif // TYPES_CC
