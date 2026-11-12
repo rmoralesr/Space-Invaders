@@ -12,7 +12,7 @@ struct Character_t {
     Body_t body = { false };
 };
 struct QueuedCharacter_t {
-    bool active = false;
+    bool active = false, flashing = false;
     char character;
     Vector2_t position;
     long long int queued_tick;
@@ -22,7 +22,7 @@ const unsigned int Character_kRegistryCapacity = 100;
 unsigned int Character_registry_active_count = 0;
 Character_t Character_registry[Character_kRegistryCapacity] = {0};
 
-const unsigned int Character_kGenerateQueueCapacity = 50;
+const unsigned int Character_kGenerateQueueCapacity = 100;
 QueuedCharacter_t Character_GenerateQueue[Character_kGenerateQueueCapacity] = {0};
 
 // Prototipaje
@@ -80,27 +80,14 @@ void GenerateCharacter(char c, Vector2_t position, bool flashing = false){
     new_c->body.position.x = position.x;
     new_c->flashing = flashing;
 }
-void GenerateNumber(int value, int digits, Vector2_t position, bool flashing = false) {
-    if (value > pow(10, digits) - 1) 
-        value = pow(10, digits) - 1;
-    int number;
-    for (int i = 0; i < digits; i++) {
-        number = value / pow(10, digits - 1 - i);
-        GenerateCharacter('0' + number, position, flashing);
-        position.x += kCharacterWidth + 3;
-        value %= pow(10, digits - 1 - i);
-    }
-}
-void GenerateText(const char *text, int length, Vector2_t position, bool flashing = false){
-    for (int i = 0; i < length; i++){
-        if (text[i] != ' ') GenerateCharacter(text[i], position, flashing);
-        position.x += kCharacterWidth + 3;
-    }
-}
-
 void GenerateQueuedCharacter(QueuedCharacter_t *qc){
-    GenerateCharacter(qc->character, qc->position);
+    GenerateCharacter(qc->character, qc->position, qc->flashing);
     qc->active = false;
+}
+void ClearCharacterGenerateQueue(){
+    for (int i = 0; i < Character_kGenerateQueueCapacity; i++){
+        Character_GenerateQueue[i].active = false;
+    }
 }
 void QueuedCharactersUpdate(){
 	for (int i = 0; i < Character_kGenerateQueueCapacity; i++){
@@ -108,33 +95,53 @@ void QueuedCharactersUpdate(){
             GenerateQueuedCharacter(&Character_GenerateQueue[i]);
 	}
 }
-void GenerateProgressiveText(const char *text, int length, Vector2_t position, int initial_wait = 0){
-    double queue_tick = g_tick + 6*initial_wait;
+void QueueCharacter(char c, Vector2_t position, long long int queue_tick = 0, bool flashing = false){
+    int n = 0;
+    bool free_space = false;
+    while(n < Character_kGenerateQueueCapacity && !free_space){
+        if (!Character_GenerateQueue[n].active) free_space = true;
+        else n++;
+    }
+    if (free_space) {
+        Character_GenerateQueue[n].active = true;
+        Character_GenerateQueue[n].character = c;
+        Character_GenerateQueue[n].flashing = flashing;
+        Character_GenerateQueue[n].position = position;
+        Character_GenerateQueue[n].queued_tick = queue_tick;
+    }
+}
+
+void GenerateText(const char *text, int length, Vector2_t position, int delay = 0, bool flashing = false){
     for (int i = 0; i < length; i++){
-        if (text[i] != ' '){
-            int n = 0;
-            bool free_space = false;
-            while(n < Character_kGenerateQueueCapacity && !free_space){
-                if (!Character_GenerateQueue[n].active) free_space = true;
-                else n++;
-            }
-            if (free_space) {
-                QueuedCharacter_t new_qc;
-                new_qc.active = true;
-                new_qc.character = text[i];
-                new_qc.position = position;
-                new_qc.queued_tick = queue_tick;
-                Character_GenerateQueue[n] = new_qc;
-            }
+        if (text[i] != ' ') {
+            if (delay == 0) GenerateCharacter(text[i], position, flashing);
+            else QueueCharacter(text[i], position, g_tick+delay, flashing);
         }
-        queue_tick += 6;
         position.x += kCharacterWidth + 3;
     }
-    QueuedCharactersUpdate();
 }
-void ClearCharacterGenerateQueue(){
-    for (int i = 0; i < Character_kGenerateQueueCapacity; i++){
-        Character_GenerateQueue[i].active = false;
+void GenerateProgressiveText(const char *text, int length, Vector2_t position, 
+    int initial_wait = 0, int wait_rate = 6, bool flashing = false){
+    long long int queue_tick = g_tick + wait_rate*initial_wait;
+    for (int i = 0; i < length; i++){
+        if (text[i] != ' ') {
+            QueueCharacter(text[i], position, queue_tick, flashing);
+        }
+        queue_tick += wait_rate;
+        position.x += kCharacterWidth + 3;
+    }
+    if (initial_wait == 0) QueuedCharactersUpdate();
+}
+void GenerateNumber(int value, int digits, Vector2_t position, int delay = 0, bool flashing = false) {
+    if (value > pow(10, digits) - 1) 
+        value = pow(10, digits) - 1;
+    int number;
+    for (int i = 0; i < digits; i++) {
+        number = value / pow(10, digits - 1 - i);
+        if (delay == 0) GenerateCharacter('0' + number, position, flashing);
+        else QueueCharacter('0' + number, position, flashing);
+        position.x += kCharacterWidth + 3;
+        value %= pow(10, digits - 1 - i);
     }
 }
 

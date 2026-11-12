@@ -26,6 +26,9 @@ void GameInit(Game *game) {
 
     LoadAssets();
     GenerateText("score<1> hi-score score<2>", 26, {10,10});
+    GenerateText("credit", 6, {140,240});
+    GenerateNumber(game->credits,2, {200,240});
+
     PreviewingInit();
 }
 
