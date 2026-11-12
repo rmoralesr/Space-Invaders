@@ -2,6 +2,7 @@
 #define UI_ELEMENT_CC 1
 
 #include "../core/cirno.cc"
+#include "../core/types.cc"
 #include "../entities/body.cc"
 #include "asset-loader.cc"
 
@@ -103,7 +104,7 @@ void GenerateText(const char *text, Vector2_t position,
             GenerateUIElement(b, queue_tick, flashing);
         }
         if (text[i] != ' ' || !ignore_space) queue_tick += wait_rate;
-        position.x += kCharacterWidth + 3;
+        position.x += kCharactersWidth + 3;
         i++;
     }
 }
@@ -117,7 +118,7 @@ void GenerateNumber(int value, int digits, Vector2_t position, int delay = 0, bo
         Body_t b = {false, position, CharMask('0'+number)};
         GenerateUIElement(b, g_tick + delay, flashing);
 
-        position.x += kCharacterWidth + 3;
+        position.x += kCharactersWidth + 3;
         value %= pow(10, digits - 1 - i);
     }
 }

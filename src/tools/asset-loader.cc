@@ -31,11 +31,11 @@ constexpr int kAlienSeparationY = 1; // Separacion entre sprites
 //  UFO
 
 //Dimensiones del UFO (jefe)
-constexpr int kAlienSeparationY = 16; // Medida sin margenes 
-constexpr int kAlienSeparationY = 7; // Medida sin margenes 
+// constexpr int kAlienSeparationY = 16; // Medida sin margenes
+// constexpr int kAlienSeparationY = 7; // Medida sin margenes
 
 //Separaciones
-constexpr int kAlienSeparationY = 1; // Separacion del margen
+// constexpr int kAlienSeparationY = 1; // Separacion del margen
 
 //  Shield
 
@@ -53,8 +53,7 @@ constexpr int kCharactersWidth = 5; // Medida de cada characters
 constexpr int kCharactersHeight = 7; // Medida de cada characters
 
 //Cantidad de characters
-constexpr int kNumCharacters = 36; // Numero de characters (A-Z, 0-9)
-constexpr int kNumExtraCharacters = 6; // Ultimos 6 characters especiales
+constexpr int kNumCharacters = 42; // Numero de character
 
 //Separaciones de los characters
 constexpr int kCharacterSeparationX = 5; // Separacion entre sprites
@@ -64,7 +63,7 @@ struct Assets {
     Mask_t AlienMasks[kNumAlienTypes]
             [kAliensPerType] = {};
 
-    Mask_t AlienMasks[3][2] = {}; // 3 tipos de alien y 2 sprites de cada uno
+    // Mask_t AlienMasks[3][2] = {}; // 3 tipos de alien y 2 sprites de cada uno
 
     Mask_t Squid[2] = {}; //Dos sprites de Pulpo
     Mask_t Crab[2] = {}; //Dos sprites de Cangrejo
@@ -79,31 +78,20 @@ struct Assets {
 
 Assets g_assets;
 
-//cargar los primeros 36 caracteres (A-Z, 0-9)
+//cargar todos los caracteres
 
 void LoadAssets() {
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 8; j++) {
             if (i * 8 + j < kNumCharacters) {
                 FromFile(&g_assets.CharacterMasks[i * 8 + j],
-                "../assets/caracteres.png",
+                "../../assets/caracteres.png",
                 {2 + (5 + kCharactersWidth) * j,
                 3 + (3 + kCharactersHeight) * i},
                 {kCharactersWidth, kCharactersHeight}
                 );
             }
         }
-    }
-
-    //cargar los 6 caracteres adicionales 
-
-    for (int i = 0; i < kNumExtraCharacters; i++){
-        FromFile(&g_assets.ExtraCharacterMasks[i],
-        "../assets/caracteres.png",
-        {2 +(5 + kCharactersWidth)*i,
-        3 +(3 + kCharactersHeight)*6},
-        {kCharactersWidth, kCharactersHeight}
-        );
     }
 
     //cargar 3 tipos de Aliens
@@ -113,7 +101,7 @@ void LoadAssets() {
 
           FromFile(
               &g_assets.AlienMasks[i][j],
-               "../assets/AliensVarios.png",
+               "../../assets/aliens.png",
                {2 + (kAlienWidth + kAlienSeparationX) * j,
                2 + (kAlienHeight + kAlienSeparationY) * i},
               {kAlienWidth, kAlienHeight}
@@ -130,7 +118,7 @@ void LoadAssets() {
 
     for(int i = 0; i < 2; i++){
       FromFile(&g_assets.EscudoMask,
-      "../assets/Shield.png",
+      "../../assets/Shield.png",
       {kShieldMarginLeft, kShieldMarginTop}, 
       {kShieldWidth + kShieldHeight}
       );
