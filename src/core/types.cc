@@ -21,10 +21,11 @@ enum AlienType {
     kAlienType_squid
 };
 
-enum DescendingState {
-    kDescendingState_false,
-    kDescendingState_waiting,
-    kDescendingState_true
+enum AlienArmyState {
+    kAlienArmyState_generating,
+    kAlienArmyState_descendingFalse,
+    kAlienArmyState_descendingWaiting,
+    kAlienArmyState_descendingTrue
 };
 
 struct Alien_t {
@@ -41,7 +42,7 @@ struct AlienArmy_t {
     int alien_explosion_tick;
     int last_alien_moved;
     int direction;
-    DescendingState descending;
+    AlienArmyState descending;
 };
 
 enum GameState {
