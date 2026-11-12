@@ -4,22 +4,17 @@
 #include "../core/cirno.cc"
 #include "../core/mask.cc"
 
-//  Caracteres
+// Player
 
-//Dimensiones de los caracteres
+//Dimensiones del player
+constexpr int kPlayerWidth = 18; // Medida sin margenes 
+constexpr int kPlayerHeight = 12; // Medida sin margenes 
 
-constexpr int kCaracterWidth = 5; // Medida de 
-constexpr int kCaracterHeight = 7; 
+//Separaciones
 
-//Cantidad de caracteres
-constexpr int kNumCharacters = 36; // Numero de caracteres (A-Z, 0-9)
-constexpr int kNumExtraCharacters = 6; // Ultimos 6 caracteres especiales
+constexpr int kPlayerSeparation = 5; // Separacion del margen
 
-//Separaciones de los caracteres
-constexpr int kCharacterSeparationX = 5; // Separacion entre sprites
-constexpr int kCharacterSeparationY = 3; // Separacion entre sprites
-
-//  Enemigos
+//  Aliens
 
 //Dimensiones de los enemigos
 constexpr int kAlienWidth = 12; // Medida sin margenes
@@ -36,43 +31,55 @@ constexpr int kAlienSeparationY = 1; // Separacion entre sprites
 //  UFO
 
 //Dimensiones del UFO (jefe)
-constexpr int kUFOWidth = 16; // Medida sin margenes
-constexpr int kUFOHeight = 7; // Medida sin margenes
+constexpr int kAlienSeparationY = 16; // Medida sin margenes 
+constexpr int kAlienSeparationY = 7; // Medida sin margenes 
 
 //Separaciones
-constexpr int kUFOSeparation = 3; // Separacion entre sprites
+constexpr int kAlienSeparationY = 1; // Separacion del margen
 
-constexpr int kUFOMarginTop = 2; // Separacion con el margen
-constexpr int kUFOMarginLeft = 1; // Separacion con el margen
+//  Shield
 
 //Dimensiones del escudo
+constexpr int kShieldWidth = 36; // Medida sin margenes
+constexpr int kShieldHeight = 26; // Medida sin margenes
 
-constexpr int kEscudoWidth = 36; // Medida sin margenes
-constexpr int kEscudoHeight = 26; // Medida sin margenes
+constexpr int kShieldMarginLeft = 3; // Separacion del margen
+constexpr int kShieldMarginTop = 3; // Separacion del margen
 
-constexpr int kEscudoMarginLeft = 3;
-constexpr int kEscudoMarginTop = 3;
+//  Characters
+
+//Dimensiones de los characters
+constexpr int kCharactersWidth = 5; // Medida de cada characters
+constexpr int kCharactersHeight = 7; // Medida de cada characters
+
+//Cantidad de characters
+constexpr int kNumCharacters = 36; // Numero de characters (A-Z, 0-9)
+constexpr int kNumExtraCharacters = 6; // Ultimos 6 characters especiales
+
+//Separaciones de los characters
+constexpr int kCharacterSeparationX = 5; // Separacion entre sprites
+constexpr int kCharacterSeparationY = 3; // Separacion entre sprites
 
 struct Assets {
-    Mask_t CharacterMasks[kNumCharacters] = {};
-    Mask_t ExtraCharacterMasks[kNumCharacters] = {};
     Mask_t AlienMasks[kNumAlienTypes]
             [kAliensPerType] = {};
 
     Mask_t AlienMasks[3][2] = {}; // 3 tipos de alien y 2 sprites de cada uno
 
     Mask_t Squid[2] = {}; //Dos sprites de Pulpo
-    Mast_t Crab[2] = {}; //Dos sprites de Cangrejo
-    Mast_t Octopus[2] = {}; //Dos sprites de Calamar
+    Mask_t Crab[2] = {}; //Dos sprites de Cangrejo
+    Mask_t Octopus[2] = {}; //Dos sprites de Calamar
     Mask_t UFOMasks[2] = {}; //Dos sprites de UFO
 
     Mask_t EscudoMask = {};
 
+    Mask_t CharacterMasks[kNumCharacters] = {};
+    Mask_t ExtraCharacterMasks[kNumCharacters] = {};
 };
 
 Assets g_assets;
 
-//cargar los primeros 36 caracteres 
+//cargar los primeros 36 caracteres (A-Z, 0-9)
 
 void LoadAssets() {
     for (int i = 0; i < 6; i++) {
@@ -80,9 +87,9 @@ void LoadAssets() {
             if (i * 8 + j < kNumCharacters) {
                 FromFile(&g_assets.CharacterMasks[i * 8 + j],
                 "../assets/caracteres.png",
-                {2 + (5 + kCharacterWidth) * j,
-                3 + (3 + kCharacterHeight) * i},
-                {kCharacterWidth, kCharacterHeight}
+                {2 + (5 + kCharactersWidth) * j,
+                3 + (3 + kCharactersHeight) * i},
+                {kCharactersWidth, kCharactersHeight}
                 );
             }
         }
@@ -93,48 +100,45 @@ void LoadAssets() {
     for (int i = 0; i < kNumExtraCharacters; i++){
         FromFile(&g_assets.ExtraCharacterMasks[i],
         "../assets/caracteres.png",
-        {2 +(5 + kCharacterWidth)*i,
-        3 +(3 + kCharacterHeight)*6},
-        {kCharacterWidth, kCharacterHeight}
+        {2 +(5 + kCharactersWidth)*i,
+        3 +(3 + kCharactersHeight)*6},
+        {kCharactersWidth, kCharactersHeight}
         );
     }
 
     //cargar 3 tipos de Aliens
 
    for (int i = 0; i < kNumAlienTypes; i++) {
-        for (int j = 0; j < kAliensPerType; j++) {
+      for (int j = 0; j < kAliensPerType; j++) {
 
-            FromFile(
-                &g_assets.AlienMasks[i][j],
-                "../assets/Aliens.png",
-                {2 + (kAlienWidth + kAlienSeparationX) * j,
-                 2 + (kAlienHeight + kAlienSeparationY) * i},
-                {kAlienWidth, kAlienHeight}
+          FromFile(
+              &g_assets.AlienMasks[i][j],
+               "../assets/AliensVarios.png",
+               {2 + (kAlienWidth + kAlienSeparationX) * j,
+               2 + (kAlienHeight + kAlienSeparationY) * i},
+              {kAlienWidth, kAlienHeight}
             );
         }
     }
 
     //cargar los 2 sprites del UFO
 
-    for (int i = 0; i < 2; i++){
-       FromFile(&g_assets.UFOMasks[i],
-       "../assets/UFO.png",
-       {kUFOMarginLeft (kUFOWidth + kUFOSeparation) * i,
-        kUFOMarginTop},
-       {kUFOWidth, kUFOHeight}
-       );
+    
+    
+
+    //cargar el sprite del Shield
+
+    for(int i = 0; i < 2; i++){
+      FromFile(&g_assets.EscudoMask,
+      "../assets/Shield.png",
+      {kShieldMarginLeft, kShieldMarginTop}, 
+      {kShieldWidth + kShieldHeight}
+      );
     }
 
-    //cargar el sprite del escudo
+    //cargar los sprites de Player
 
-    for (int i = 0; i < 2; i++){
-        FromFile(&g_assets.EscudosMasks,
-        "../assets/escudos.png",
-        {kEscudosMarginLeft, kEscudosMarginTop}, 
-        {kEscudosWidth + kEscudosHeight}
-        );
-    }
-
+    
 
 }
 
