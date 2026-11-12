@@ -30,9 +30,10 @@ void Draw(Player_t* self);
 void Player_Construct(Player_t *self) {
   if (!Player_registry.active) {
     self->active = true;
+    self->dying = false;
+
     self->score = 0;
     self->lives = 3;
-    self->dying = false;
 
     self->body = {
         true,
@@ -41,6 +42,13 @@ void Player_Construct(Player_t *self) {
     };
 
     FromFile(&self->body.mask, "../../assets/player.png");
+  }
+}
+
+void Die(Player_t *self) {
+  if (self->active) {
+    self->dying = true;
+    self->lives--;
   }
 }
 
@@ -55,7 +63,10 @@ void MoveTo(Player_t *self, Vector2_t pos) {
 }
 
 void Move(Player_t *self, Vector2_t delta) {
-  if ((self->body.position.x > 16 && self->body.position.x < (208 - self->body.mask.size.x)) || ((self->body.position.x == 16 && delta.x > 0) || (self->body.position.x == (208 - self->body.mask.size.x) && delta.x < 0))) {
+  if (
+    (self->body.position.x > 16 && self->body.position.x < (208 - self->body.mask.size.x)) || 
+    ((self->body.position.x == 16 && delta.x > 0) || (self->body.position.x == (208 - self->body.mask.size.x) && delta.x < 0))
+  ) {
     Move(&self->body, delta);
   }
 }
