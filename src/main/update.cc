@@ -7,7 +7,7 @@
 #include "../tools/ui-element.cc"
 #include "../tools/asset-loader.cc"
 #include "../tools/input.cc"
-
+#include "../entities/aliens_army.cc"
 
 struct QueuedUpdate{
 	bool active = false;
