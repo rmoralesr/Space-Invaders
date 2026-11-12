@@ -23,7 +23,7 @@ const unsigned int UIElement_kRegistryCapacity = 200;
 unsigned int UIElement_registry_active_count = 0;
 UIElement_t UIElement_registry[UIElement_kRegistryCapacity] = {0};
 
-const unsigned int ProgressiveTextTickRate = 2;
+const unsigned int ProgressiveTextTickRate = 6;
 
 WipeScreen g_wipe_screen;
 
