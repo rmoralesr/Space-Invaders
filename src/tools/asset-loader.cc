@@ -8,8 +8,8 @@
 
 //Dimensiones de los caracteres
 
-constexpr int kCaracterWidth = 5; // Medida de cada caracter
-constexpr int kCaracterHeight = 7; // Medida de cada caracter
+constexpr int kCaracterWidth = 5; // Medida de 
+constexpr int kCaracterHeight = 7; 
 
 //Cantidad de caracteres
 constexpr int kNumCharacters = 36; // Numero de caracteres (A-Z, 0-9)
@@ -102,14 +102,14 @@ void LoadAssets() {
     //cargar 3 tipos de Aliens
 
    for (int i = 0; i < kNumAlienTypes; i++) {
-      for (int j = 0; j < kAliensPerType; j++) {
+        for (int j = 0; j < kAliensPerType; j++) {
 
-          FromFile(
-              &g_assets.AlienMasks[i][j],
-               "../assets/Aliens.png",
-               {2 + (kAlienWidth + kAlienSeparationX) * j,
-               2 + (kAlienHeight + kAlienSeparationY) * i},
-              {kAlienWidth, kAlienHeight}
+            FromFile(
+                &g_assets.AlienMasks[i][j],
+                "../assets/Aliens.png",
+                {2 + (kAlienWidth + kAlienSeparationX) * j,
+                 2 + (kAlienHeight + kAlienSeparationY) * i},
+                {kAlienWidth, kAlienHeight}
             );
         }
     }
@@ -117,22 +117,22 @@ void LoadAssets() {
     //cargar los 2 sprites del UFO
 
     for (int i = 0; i < 2; i++){
-      FromFile(&g_assets.UFOMasks[i],
-      "../assets/UFO.png",
-      {kUFOMarginLeft (kUFOWidth + kUFOSeparation) * i,
-      kUFOMarginTop},
-      {kUFOWidth, kUFOHeight}
-      );
+       FromFile(&g_assets.UFOMasks[i],
+       "../assets/UFO.png",
+       {kUFOMarginLeft (kUFOWidth + kUFOSeparation) * i,
+        kUFOMarginTop},
+       {kUFOWidth, kUFOHeight}
+       );
     }
 
     //cargar el sprite del escudo
 
     for (int i = 0; i < 2; i++){
-      FromFile(&g_assets.EscudosMasks,
-      "../assets/escudos.png",
-      {kEscudosMarginLeft, kEscudosMarginTop}, 
-      {kEscudosWidth + kEscudosHeight}
-      );
+        FromFile(&g_assets.EscudosMasks,
+        "../assets/escudos.png",
+        {kEscudosMarginLeft, kEscudosMarginTop}, 
+        {kEscudosWidth + kEscudosHeight}
+        );
     }
 
 

@@ -3,9 +3,8 @@
 
 #include <math.h>
 
-#include "cirno.cc"
-#include "mask.cc"
-
+#include "../core/cirno.cc"
+#include "../core/mask.cc"
 
 // Los tipos body no necesitan un registro puesto que todos los body tienen un padre (un struct que los contenga)
 
@@ -14,6 +13,41 @@ struct Body_t {
   Vector2_t position = {0, 0};
   Mask_t mask = {};
 };
+
+// Prototipaje
+
+void MoveTo(Body_t* self, Vector2_t pos);
+void Move(Body_t* self, Vector2_t pos);
+
+
+Vector2_t GetOverlap(Body_t *A, Body_t *B);
+/** @brief Retorna si dos bodies estan tocandose */
+bool QuickCollide(Body_t *A, Body_t *B);
+/** @brief Retorna la cantidad de pixeles que se tocan entre dos bodies 
+  Admite el pointer a un body dummy al que se le escribe informacion sobre la colision
+*/
+unsigned int Collide(Body_t *A, Body_t *B,
+  Body_t *out_body = nullptr
+);
+
+// Definiciones
+
+/*void MoveTo(Body_t* self, Vector2_t pos) {
+  Draw(self, true);
+
+  self->position = pos;
+
+  Draw(self);
+}
+
+void Move(Body_t* self, Vector2_t delta) {
+  MoveTo(self, 
+    Sum(
+      self->position, 
+      delta
+    )
+  );
+}*/
 
 
 Vector2_t GetOverlap(Body_t *A, Body_t *B) {
@@ -28,7 +62,6 @@ Vector2_t GetOverlap(Body_t *A, Body_t *B) {
   };
 }
 
-/** @brief Retorna si dos bodies estan tocandose */
 bool QuickCollide(Body_t *A, Body_t *B) {
 
   Vector2_t overlap = GetOverlap(A, B);
@@ -86,12 +119,7 @@ bool QuickCollide(Body_t *A, Body_t *B) {
   
 }
 
-/** @brief Retorna la cantidad de pixeles que se tocan entre dos bodies 
-  Admite el pointer a un body dummy al que se le escribe informacion sobre la colision
-*/
-unsigned int Collide(Body_t *A, Body_t *B,
-  Body_t *out_body = nullptr
-) {
+unsigned int Collide(Body_t *A, Body_t *B, Body_t *out_body) {
 
   Vector2_t overlap = GetOverlap(A, B);
 
