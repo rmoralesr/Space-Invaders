@@ -6,11 +6,11 @@
 #include "../tools/asset-loader.cc"
 
 void AlienArmy_Init();
-void Destruct(Alien* self);
+void Destruct(Alien_t* self);
 
 // Definiciones
 
-void AsignAlienMask(Alien *alien) {
+void AsignAlienMask(Alien_t *alien) {
     alien->body.mask = g_assets.AlienMasks[alien->type][alien->sprite_frame];
 }
 
@@ -24,7 +24,7 @@ AlienType GetAlienType(int row) {
     return kAlienType_squid;
 }
 
-void Alien_Init(Alien *alien, int row, int col) {
+void Alien_Init(Alien_t *alien, int row, int col) {
     alien->type = GetAlienType(row);
     alien->active = true;
     alien->body.can_collide = true;
@@ -35,7 +35,7 @@ void Alien_Init(Alien *alien, int row, int col) {
     AsignAlienMask(alien);
 }
 
-void AlienArmy_Init(AlienArmy *alien_army) {
+void AlienArmy_Init(AlienArmy_t *alien_army) {
     alien_army->aliens_alive = 55;
     alien_army->last_alien_moved = 54;
     alien_army->alien_died = -1;
@@ -49,13 +49,13 @@ void AlienArmy_Init(AlienArmy *alien_army) {
     }
 }
 
-void Alien_Move(Alien *alien, Vector2_t delta) {
+void Alien_Move(Alien_t *alien, Vector2_t delta) {
     Move(&alien->body, delta);
     alien->sprite_frame = (alien->sprite_frame+1)%2;
     AsignAlienMask(alien);
 }
 
-void AlienArmy_Move(AlienArmy *alien_army) {
+void AlienArmy_Move(AlienArmy_t *alien_army) {
     int index = (alien_army->last_alien_moved + 1) % 55;
     bool finished = false;
     do {
@@ -81,7 +81,7 @@ void AlienArmy_Move(AlienArmy *alien_army) {
     } while (!finished && alien_army->aliens_alive > 0);
 }
 
-void AlienArmy_Control(AlienArmy *alien_army) {
+void AlienArmy_Control(AlienArmy_t *alien_army) {
     if (alien_army->alien_explosion_tick <= 0) {
         AlienArmy_Move(alien_army);
     } else {
@@ -89,14 +89,14 @@ void AlienArmy_Control(AlienArmy *alien_army) {
     }
 }
 
-void AliensRender(AlienArmy *alien_army) {
+void AliensRender(AlienArmy_t *alien_army) {
     for (int i = 0; i < 55; i++) {
         if (alien_army->aliens[i].active) Draw(&alien_army->aliens[i].body);
     }
     if (alien_army->alien_explosion_tick > 0) Draw(&alien_army->aliens[alien_army->alien_died].body);
 }
 
-void Destruct(AlienArmy* self, int index) {
+void Destruct(AlienArmy_t* self, int index) {
     if (self->aliens[index].active) {
         self->aliens[index].active = false;
         self->aliens_alive--;

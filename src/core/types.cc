@@ -27,15 +27,15 @@ enum DescendingState {
     kDescendingState_true
 };
 
-struct Alien {
+struct Alien_t {
     Body_t body;
     bool active;
     AlienType type;
     int sprite_frame;
 };
 
-struct AlienArmy {
-    Alien aliens[55];
+struct AlienArmy_t {
+    Alien_t aliens[55];
     int aliens_alive;
     int alien_died;
     int alien_explosion_tick;
@@ -59,7 +59,7 @@ struct Game_t {
     kGameState game_state;
     Input input;
     Player_t* player;
-    AlienArmy alien_army;
+    AlienArmy_t alien_army;
     int credits;
     int score1;
     int score2;
