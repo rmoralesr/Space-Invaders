@@ -59,6 +59,12 @@ constexpr int kNumCharacters = 42; // Numero de character
 constexpr int kCharacterSeparationX = 5; // Separacion entre sprites
 constexpr int kCharacterSeparationY = 3; // Separacion entre sprites
 
+// Y anim
+constexpr int kYAnimSprites = 5;
+constexpr int kYAnimWidth = 16;
+constexpr int kYAnimHeigth = 8;
+constexpr int kYAnimSeparation = 2;
+
 struct Assets {
     Mask_t AlienMasks[kNumAlienTypes]
             [kAliensPerType] = {};
@@ -74,6 +80,8 @@ struct Assets {
 
     Mask_t CharacterMasks[kNumCharacters] = {};
     Mask_t ExtraCharacterMasks[kNumCharacters] = {};
+
+    Mask_t YAnimMasks[kYAnimSprites] = {};
 };
 
 Assets g_assets;
@@ -132,6 +140,15 @@ void LoadAssets() {
 
     //cargar los sprites de Player
 
+    //cargar los sprites de la animacion Y
+
+    for (int i = 0; i < kYAnimSprites; i++){
+       FromFile(&g_assets.YAnimMasks[i],
+       "../../assets/Y-Anim.png",
+       {(kYAnimWidth + kYAnimSeparation) * i, 0},
+       {kYAnimWidth, kYAnimHeigth}
+       );
+    }
     
 
 }
