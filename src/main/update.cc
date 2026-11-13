@@ -182,8 +182,10 @@ void GameUpdate(Game_t *game) {
 		}
 		case kGameState_AboutToPlay: break;
 		case kGameState_Playing: {
-			AlienArmy_Control(&game->player[0].alien_army);
+			AlienArmyFlag alien_army_flag = AlienArmy_Control(&game->player[0].alien_army);
 			if (game->input.insert_credit) MatarAlien(&game->player[0].alien_army); //TODO Quitar
+			// if (alien_army_flag == kAlienArmyFlag_invaded) Instant_Dead(&game->player[0]);
+			if (alien_army_flag == kAlienArmyFlag_exterminated) PlayingInit(game);
 
 			if (game->input.left_button) {
 				Move(&game->player[0], {-2, 0});
