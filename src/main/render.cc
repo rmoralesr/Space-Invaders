@@ -20,11 +20,22 @@ void PreviewRender() {
 
 void GameRender(Game_t *game) {
 
+    //UI
     for (int i = 0; i < UIElement_kRegistryCapacity; i++){
         if ( !UIElement_registry[i].flashing || g_tick%8 > 3) 
             if (UIElement_registry[i].active && UIElement_registry[i].queued_tick <= g_tick) 
                 Draw(&UIElement_registry[i].body);
     }
+    for (int i = 0; i < AnimatedUIElement_kRegistryCapacity; i++){
+        if ( !AnimatedUIElement_registry[i].element.flashing || g_tick%8 > 3){
+            if (AnimatedUIElement_registry[i].active && AnimatedUIElement_registry[i].element.queued_tick <= g_tick){
+                Body_t b = AnimatedUIElement_registry[i].element.body;
+                if (g_tick%8 > 3) b.mask = AnimatedUIElement_registry[i].alt_mask;
+                Draw(&b);
+            }
+        }
+    }
+
 
     if (g_wipe_screen.current_step != -1){
         unsigned char RGBA[4] = {0,0,0,255};
@@ -34,6 +45,7 @@ void GameRender(Game_t *game) {
             RGBA
         );
     }
+
 
     switch (game->game_state) {
         case kGameState_Previewing: {

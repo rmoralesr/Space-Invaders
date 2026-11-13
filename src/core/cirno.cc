@@ -29,10 +29,13 @@ int pow(int base, int exp) {
   return value;
 }
 
-int log(unsigned int n, int exp = 2) {
+int log(unsigned int n, unsigned int base = 2) {
+  if (base < 2) return 0;
+
   int c = 0;
-  while (n > 0) {
-    n /= exp;
+  while (n >= base) {
+    n /= base;
+    c++;
   }
 
   return c;
