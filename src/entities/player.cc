@@ -5,13 +5,9 @@
 #include "../core/mask.cc"
 #include "../core/draw.cc"
 #include "../core/types.cc"
+#include "../tools/asset-loader.cc"
 #include "body.cc"
 #include "bullet.cc"
-
-// constexpr unsigned int Player_kRegistryCapacity = 20;
-// unsigned int Player_registry_active_count = 0;
-// Player_t Player_registry[Player_kRegistryCapacity] = {0};
-Player_t Player_registry = {0};
 
 // Prototipaje
 
@@ -28,12 +24,23 @@ void Draw(Player_t* self);
 // Definiciones
 
 void Player_Construct(Player_t *self) {
-  if (!Player_registry.active) {
+  if (!self->active) {
     self->active = true;
     self->dying = false;
 
     self->score = 0;
     self->lives = 3;
+
+    // for(int i = 0; i < kBunkerLimit; i++) {
+    //   self->bunker[i].body = {
+    //     true,
+    //     {32 - self->bunker[i].body.mask.size.x + (56*i), 192}, 
+    //     g_assets.EscudoMask
+    //   };
+      
+    //   // FromFile(&self->bunker[i].body.mask, "../../assets/test.png");
+    //   // Print(&self->bunker[i].body.mask);
+    // }
 
     self->body = {
         true,
@@ -45,19 +52,21 @@ void Player_Construct(Player_t *self) {
   }
 }
 
-void Dead(Player_t *self) {
+void Dead(Player_t *self, int damage) {
   if (self->active) {
+    self->active = false;
     self->dying = true;
-    self->lives--;
+    self->lives -= damage;
   }
 }
 
-void Instant_Dead(Player_t *self) {
-  if (self->active) {
-    self->dying = true;
-    self->lives = 0;
-  }
-}
+// void Instant_Dead(Player_t *self) {
+//   if (self->active) {
+//     self->active = false;
+//     self->dying = true;
+//     self->lives = 0;
+//   }
+// }
 
 void Destruct(Player_t *self) {
   if (self->active) {
@@ -80,6 +89,9 @@ void Move(Player_t *self, Vector2_t delta) {
 
 void Draw(Player_t *self) {
   if(self->active) {
+    for (int i = 0; i < kBunkerLimit; i++) {
+      Draw(&self->bunker[i].body);
+    }
     Draw(&self->body);
   }
 }

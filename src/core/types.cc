@@ -18,6 +18,7 @@
 
 const unsigned char kTargetFps = 60; //Control de frames por segundo
 const Vector2_t kWindowSize = {224, 256};
+const int kBunkerLimit = 4;
 long long int g_tick = 0;
 
 enum AlienType {
@@ -31,6 +32,10 @@ enum AlienArmyState {
     kAlienArmyState_descendingFalse,
     kAlienArmyState_descendingWaiting,
     kAlienArmyState_descendingTrue
+};
+
+struct Bunker_t {
+    Body_t body;
 };
 
 struct Alien_t {
@@ -57,6 +62,7 @@ struct Player_t {
     int lives;
 
     Body_t body;
+    Bunker_t bunker[kBunkerLimit];
     Bullet_t bullet;
     AlienArmy_t alien_army;
 };
