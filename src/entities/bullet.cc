@@ -11,7 +11,7 @@ enum BulletType {
 
   kBulletType_Squiggly,
   kBulletType_Plunger,
-  kBulletType_Straight
+  kBulletType_Rolling // Esta te apunta a ti!
 };
 
 struct Bullet_t {
