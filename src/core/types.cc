@@ -63,7 +63,7 @@ struct AlienArmy_t {
 
 struct Player_t {
     bool active;
-    bool dying;
+    bool dead;
     int score;
     int lives;
 

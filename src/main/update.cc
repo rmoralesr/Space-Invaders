@@ -224,14 +224,20 @@ void InsertCoinInit(){
 
 void PlayingInit(Game_t *game){
 	GenerateNumber(game->player[game->player_playing].score,4, kScore1NumberPosition);
+	if(game->multiplayer) GenerateNumber(game->player[game->player_playing].score,4, kScore2NumberPosition);
 	if(game->player[game->player_playing].lives == 0) AlienArmy_Init(&game->player[game->player_playing].alien_army);
 	Player_Reset(&game->player[game->player_playing]);
 }
 
 void PlayerLogic(Game_t *game) {
 	AlienArmyFlag alien_army_flag = AlienArmy_Control(&game->player[game->player_playing].alien_army);
-	if (game->input.insert_credit) MatarAlien(&game->player[game->player_playing].alien_army); //TODO Quitar
+
+
+	if (esat::IsKeyDown('M')) MatarAlien(&game->player[game->player_playing].alien_army); //TODO Quitar
 	if (game->input.action_button) MatarPlayer(&game->player[game->player_playing]); //TODO Quitar
+	if (esat::IsKeyDown('V')) game->player[game->player_playing].lives++; //TODO Quitar
+
+
 	// if (alien_army_flag == kAlienArmyFlag_invaded) Instant_Dead(&game->player[player]);
 	if (alien_army_flag == kAlienArmyFlag_exterminated) PlayingInit(game);
 	if (game->input.left_button) {
@@ -246,6 +252,14 @@ void DoGameCollisions() {
 	Bullet_t *bulletA;
 	Bullet_t *bulletB;
 
+}
+
+void UpdateCredits(Game_t *game, int number_credits) {
+	game->credits+=number_credits;
+	GenerateNumber(game->credits,2, kCreditsNumberPosition);
+	WipeScreenToFull(&g_wipe_screen);
+	g_wipe_screen.queued_tick = g_tick + 1;
+	QueueUpdate(kUpdateID_AboutToPlay, g_tick + 22);
 }
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
@@ -326,33 +340,37 @@ void GameUpdate(Game_t *game) {
 			}
 			if (game->input.one_player_button && game->credits >= 1) { // TODO por ahora así, luego cambiar
 				game->multiplayer = false;
-				WipeScreenToFull(&g_wipe_screen);
-				g_wipe_screen.queued_tick = g_tick + 1;
-				QueueUpdate(kUpdateID_AboutToPlay, g_tick + 22);
+				Player_Construct(&game->player[0]);
+				UpdateCredits(game, -1);
 			}
 			if (game->input.two_player_button && game->credits >= 2) { // TODO por ahora así, luego cambiar
 				game->multiplayer = true;
-				WipeScreenToFull(&g_wipe_screen);
-				g_wipe_screen.queued_tick = g_tick + 1;
-				QueueUpdate(kUpdateID_AboutToPlay, g_tick + 22);
+				for (int i = 0; i < 2; i++){
+					Player_Construct(&game->player[i]);
+				}
+				UpdateCredits(game, -2);
 			}
 			break;
 		}
 		case kGameState_AboutToPlay: break;
 		case kGameState_Playing: {
-			if (game->multiplayer) {
-				if(game->player[game->player_playing].active) {
-					PlayerLogic(game);
-				} else {
+
+			if(game->player[game->player_playing].active) {
+				PlayerLogic(game);
+			} else if(game->multiplayer && !game->player[!game->player_playing].dead) {
 					game->player_playing = !game->player_playing;
 					PlayingInit(game);
+			} else if(game->player[game->player_playing].dead) {
+				if (game->credits > 0) {
+					game->game_state = kGameState_ChoosingPlayers;
+					ClearQueuedActions();
+					ChoosingPlayerInit(game);
+				} else {
+					game->game_state = kGameState_Previewing;
+					PreviewingInit();
 				}
 			} else {
-				if(game->player[game->player_playing].active) {
-					PlayerLogic(game);
-				} else {
-					PlayingInit(game);
-				}
+				PlayingInit(game);
 			}
 
 			

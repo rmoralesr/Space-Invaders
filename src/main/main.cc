@@ -25,10 +25,6 @@ void GameInit(Game_t *game) {
     game->credits = 0;
     game->player_playing = 0;
 
-    for (int i = 0; i < 2; i++){
-        Player_Construct(&game->player[i]);
-    }
-
     LoadAssets();
     GenerateText("score<1> hi-score score<2>", {10,9});
     GenerateNumber(game->player[0].score,4, kScore1NumberPosition);

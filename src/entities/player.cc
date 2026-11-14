@@ -42,7 +42,7 @@ void Player_Assets(Player_t *self_assets) {
 
 void Player_Construct(Player_t *self) {
     self->active = false;
-    self->dying = false;
+    self->dead = false;
 
     self->score = 0;
     self->lives = 0;
@@ -53,6 +53,7 @@ void Player_Construct(Player_t *self) {
 void Player_Reset(Player_t *self) {
   if (!self->active) {
     self->active = true;
+    self->dead = false;
 
     if (self->lives == 0) {
       self->score = 0;
@@ -66,13 +67,15 @@ void Player_Reset(Player_t *self) {
 void Dead(Player_t *self, int damage) {
   if (self->active) {
     self->active = false;
-    self->dying = true;
+    // self->dying = true;
     self->lives -= damage;
+    if(self->lives == 0) self->dead = true;
   }
 }
 
-void Dead_Animation(Player_t *self) {
-  self->body.mask = g_assets.PlayerExplosion[0];
+// 2s de animación alternando frame a frame los dos sprites. 
+void Dead_Animation(Player_t *self, int index) {
+  self->body.mask = g_assets.PlayerExplosion[index];
 }
 
 void Destruct(Player_t *self) {
