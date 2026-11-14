@@ -237,11 +237,14 @@ void PlayingInit(Game_t *game){
 }
 
 void PlayerLogic(Game_t *game) {
-	AlienArmyFlag alien_army_flag = AlienArmy_Control(&game->player[game->player_playing].alien_army);
+	AlienArmyFlag alien_army_flag = AlienArmy_Control(&game->player[game->player_playing].alien_army, game->player[game->player_playing].score, game->player[game->player_playing].body.position.x);
 
 
 	if (esat::IsKeyDown('M')) MatarAlien(&game->player[game->player_playing].alien_army); //TODO Quitar
 	if (game->input.action_button) MatarPlayer(&game->player[game->player_playing]); //TODO Quitar
+	if (game->input.two_player_button) {
+		Destruct(&Bullet_registry[1+g_tick%3]); //TODO Quitar
+	}
 	if (esat::IsKeyDown('V')) game->player[game->player_playing].lives++; //TODO Quitar
 
 
