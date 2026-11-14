@@ -357,8 +357,8 @@ void GameUpdate(Game_t *game) {
 
 			if(game->player[game->player_playing].active) {
 				PlayerLogic(game);
-			} else if(game->multiplayer && !game->player[!game->player_playing].dead) {
-					game->player_playing = !game->player_playing;
+			} else if(game->multiplayer && !game->player[!game->player_playing].dead) { // Si es multiplayer comprueba que el otro player aun siga vivo
+					game->player_playing = !game->player_playing; // Cambia al otro jugador
 					PlayingInit(game);
 			} else if(game->player[game->player_playing].dead) {
 				if (game->credits > 0) {

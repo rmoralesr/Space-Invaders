@@ -41,7 +41,7 @@ void Move(Bullet_t *self, Vector2_t delta);
 
 // Definiciones
 
-Bullet_t* Bullet_Construct(BulletType type) {
+Bullet_t* Bullet_Construct(BulletType type) { // Cambiar puntero por referencia
   Bullet_t *self = &Bullet_registry[type];
 
   if (!self->active) { 

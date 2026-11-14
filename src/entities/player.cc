@@ -13,6 +13,9 @@
 
 void Player_Construct(Player_t *self);
 void Player_Reset(Player_t *self);
+
+void Dead(Player_t *self, int damage);
+void Dead_Animation(Player_t *self, int index);
 void Destruct(Player_t* self);
 
 void MoveTo(Player_t* self, Vector2_t pos);
