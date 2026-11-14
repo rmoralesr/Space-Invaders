@@ -100,6 +100,22 @@ void Move(Player_t *self, Vector2_t delta) {
   }
 }
 
+void Bullet_Move(Bullet_t *self_bullet) {
+  if (self_bullet->active) {
+    Move(self_bullet, {0, +8});
+  }
+}
+
+void Shoot(Player_t *self) {
+  if (!self->bullet.active) {
+    Bullet_Construct(kBulletType_Player);
+    Bullet_registry[1].body.mask = g_assets.CharacterMasks[0];
+    MoveTo(&Bullet_registry[kBulletType_Player], {self->body.position.x, self->body.position.y});
+  } else {
+    Tick(&Bullet_registry[kBulletType_Player]);
+  }
+}
+
 void Draw(Player_t *self) {
   if(self->active) {
     for (int i = 0; i < kBunkerLimit; i++) {
