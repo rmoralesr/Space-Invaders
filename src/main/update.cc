@@ -9,6 +9,7 @@
 #include "../tools/input.cc"
 #include "../entities/aliens_army.cc"
 #include "../entities/player.cc"
+#include "../entities/collision-handler.cc"
 
 enum kUpdateID {
 	kUpdateID_Previewing,
@@ -198,6 +199,13 @@ void PlayingInit(Game_t *game){
 	AlienArmy_Init(&game->player[0].alien_army);
 }
 
+void DoGameCollisions() {
+	// Balas
+	Bullet_t *bulletA;
+	Bullet_t *bulletB;
+
+}
+
 /** @brief Actualiza los datos del juego y pinta los necesarios */
 void GameUpdate(Game_t *game) {
 
@@ -287,10 +295,21 @@ void GameUpdate(Game_t *game) {
 			if (alien_army_flag == kAlienArmyFlag_exterminated) PlayingInit(game);
 
 			if (game->input.left_button) {
-				Move(&game->player[0], {-2, 0});
+				Move(&game->player[0], {-1, 0});
 			} else if (game->input.right_button) {
-				Move(&game->player[0], {+2, 0});
+				Move(&game->player[0], {+1, 0});
 			}
+
+			// TODO: Hacer que cada disparo sea su propia variable
+			// Bullet_t *CurrentPlayerBullet;
+			// Bullet_t *CurrentSquigglyBullet;
+			// Bullet_t *CurrentPlungerBullet;
+			// Bullet_t *CurrentRollingBullet;
+			
+			// Jugador Disparo
+
+
+
 			break;
 		}
 	}

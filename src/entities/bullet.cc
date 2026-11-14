@@ -34,7 +34,8 @@ Bullet_t Bullet_registry[Bullet_kRegistryCapacity] = {0};
 Bullet_t* Bullet_Construct();
 void Destruct(Bullet_t* self);
 
-void Tick(Bullet_t* self); // Actualiza toda la logica. Se mueve hacia adelante y/o intenta colisionar (por ver), en este caso.
+void Tick(Bullet_t *self); // Actualiza toda la logica. Se mueve hacia adelante y/o intenta colisionar (por ver), en este caso.
+void Dead(Bullet_t *self);
 
 void MoveTo(Bullet_t *self, Vector2_t pos);
 void Move(Bullet_t *self, Vector2_t delta);
@@ -70,15 +71,29 @@ void Destruct(Bullet_t* self) {
   }
 }
 
-void Tick(Bullet_t *self) {
-  if (self->type == kBulletType_Player) {
-    Move(self, {0, -1});
-  } else {
-    Move(self, {0, 1});
-  }
-  self->step++;
-
+void Dead(Bullet_t *self) {
   // Cambiar sprite
+  self->dying = true;
+  self->step = 6; // Countdown para destruirse
+}
+
+void Tick(Bullet_t *self) {
+  if (!self->dying) {
+
+    if (self->type == kBulletType_Player) {
+      Move(self, {0, -1});
+    } else {
+      Move(self, {0, 1});
+    }
+    self->step++;
+
+    // Cambiar sprite
+  } else {
+    
+    self->step--;
+    if (self->step <= 0) Destruct(self);
+
+  }
 }
 
 void MoveTo(Bullet_t *self, Vector2_t pos) {
