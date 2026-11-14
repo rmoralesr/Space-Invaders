@@ -10,6 +10,7 @@
 #include "../entities/aliens_army.cc"
 #include "../entities/player.cc"
 #include "../entities/collision-handler.cc"
+#include "../core/score.cc"
 
 enum kUpdateID {
 	kUpdateID_Previewing,
@@ -216,7 +217,9 @@ void GameUpdate(Game_t *game) {
 	if (game->input.insert_credit) {
 		game->credits++;
 		GenerateNumber(game->credits,2, kCreditsNumberPosition);
+		AddScore(50, &game->player[0], game);
 	}
+
 
 	// Text
     for (int i = 0; i < AnimatedUIElement_kRegistryCapacity; i++){
