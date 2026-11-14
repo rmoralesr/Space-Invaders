@@ -87,8 +87,10 @@ void Tick(Bullet_t *self) {
     //   //self->body.mask =
     // }
 
-    self->body.mask = g_assets.AlienBulletsMasks[self->type-1][self->current_frame];
-    self->current_frame = (self->current_frame + 1)%4;
+    if (self->type != kBulletType_Player) {
+      self->body.mask = g_assets.AlienBulletsMasks[self->type-1][self->current_frame];
+      self->current_frame = (self->current_frame + 1)%4;
+    }
 
   } else {
     
