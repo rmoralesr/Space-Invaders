@@ -3,6 +3,7 @@
 
 #include "../core/cirno.cc"
 #include "../core/mask.cc"
+#include <esat/sprite.h>
 
 // Player
 
@@ -11,7 +12,6 @@ constexpr int kPlayerWidth = 16; // Medida sin margenes
 constexpr int kPlayerHeight = 8; // Medida sin margenes 
 
 //Separaciones
-
 constexpr int kPlayerSeparation = 5; // Separacion del margen
 
 //  Aliens
@@ -29,8 +29,8 @@ constexpr int kAlienSeparationX = 3; // Separacion entre sprites
 constexpr int kAlienSeparationY = 1; // Separacion entre sprites
 
 //  UFO
-constexpr int kUFOWidth = 16; 
-constexpr int kUFOHeight = 7;
+constexpr int kUFOWidth = 16; // Medida sin margenes
+constexpr int kUFOHeight = 7; // Medida sin margenes
 
 constexpr int kUFOSeparation = 3;
 
@@ -42,9 +42,6 @@ constexpr int kUFOMarginLeft = 1;
 //Dimensiones del escudo
 constexpr int kShieldWidth = 36; // Medida sin margenes
 constexpr int kShieldHeight = 26; // Medida sin margenes
-
-constexpr int kShieldMarginLeft = 3; // Separacion del margen
-constexpr int kShieldMarginTop = 3; // Separacion del margen
 
 //  Characters
 
@@ -157,7 +154,6 @@ void LoadAssets() {
     
     g_assets.ColorMask = esat::SpriteFromFile("../../assets/ColorMask.png");
     
-
 }
 
 #endif // ASSET_LOADER_CC
