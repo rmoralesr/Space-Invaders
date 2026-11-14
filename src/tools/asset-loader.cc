@@ -111,15 +111,16 @@ void LoadAssets() {
               &g_assets.AlienMasks[i][j],
                "../../assets/aliens.png",
                {2 + (kAlienWidth + kAlienSeparationX) * j,
-               2 + (kAlienHeight + kAlienSeparationY) * i},
+               1 + (kAlienHeight + kAlienSeparationY) * i},
               {kAlienWidth, kAlienHeight}
             );
         }
     }
 
-    //cargar los 2 sprites del UFO
+    FromFile(&g_assets.AlienExplosionMask, "../../assets/AlienExplosion.png");
 
     for (int i = 0; i < 2; i++){
+          //cargar los 2 sprites del UFO
        FromFile(&g_assets.UFOMasks[i],
        "../../assets/UFO.png",
        {kUFOMarginLeft+(kUFOWidth + kUFOSeparation) * i,
@@ -129,16 +130,21 @@ void LoadAssets() {
     }
 
     //cargar el sprite del Shield
+    
+    FromFile(&g_assets.ShieldMask, "../../assets/Shield.png");
+    
+    //cargar los sprites de Player
+
+    FromFile(&g_assets.PlayerMasks, "../../assets/player.png"); 
 
     for(int i = 0; i < 2; i++){
-      FromFile(&g_assets.EscudoMask,
-      "../../assets/Shield.png",
-      {kShieldMarginLeft, kShieldMarginTop}, 
-      {kShieldWidth + kShieldHeight}
-      );
+        FromFile(
+        &g_assets.PlayerExplosion[i],
+        "../../assets/PlayerExplosion.png",
+        {kPlayerWidth * i, 0},
+        {kPlayerWidth, kPlayerHeight}
+        );
     }
-
-    //cargar los sprites de Player
 
     //cargar los sprites de la animacion Y
 
@@ -149,6 +155,8 @@ void LoadAssets() {
        {kYAnimWidth, kYAnimHeigth}
        );
     }
+    
+    g_assets.ColorMask = esat::SpriteFromFile("../../assets/ColorMask.png");
     
 
 }
