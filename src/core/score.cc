@@ -7,6 +7,19 @@
 #include "types.cc"
 #include <stdio.h>
 
+int AlienScore(enum AlienType alien){
+    switch(alien)
+    case  kAlienType_octopus:
+        return 10;
+        break;
+    case  kAlienType_crab:
+        return 20;
+        break;
+    case  kAlienType_squid:
+        return 30;
+        break;
+}
+
 void AddScore(int points, Game_t *game){
     game->player[game->player_playing].score+=points;
     if(!game->player_playing){
@@ -22,21 +35,7 @@ void AddScore(int points, Game_t *game){
     
 }
 
-int AlienScore(enum AlienType alien){
-    switch(alien)
-    case  kAlienType_octopus:
-        return 10;
-        break;
-    case  kAlienType_crab:
-        return 20;
-        break;
-    case  kAlienType_squid:
-        return 30;
-        break;
 
-    
-    
-}
 
 
 #endif //SCORE_CC
