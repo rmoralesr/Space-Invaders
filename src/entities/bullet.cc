@@ -25,9 +25,8 @@ struct Bullet_t {
   Body_t body;
 }; 
 
-constexpr unsigned int Bullet_kRegistryCapacity = 4;
 unsigned int Bullet_registry_active_count = 0;
-Bullet_t Bullet_registry[Bullet_kRegistryCapacity] = {0};
+Bullet_t Bullet_registry[4] = {0};
 
 // Prototipaje
 
@@ -42,26 +41,20 @@ void Move(Bullet_t *self, Vector2_t delta);
 
 // Definiciones
 
-Bullet_t* Bullet_Construct() {
-  int n = -1;
-  for (int i = 0; i < Bullet_kRegistryCapacity; i++) {
-    if (!Bullet_registry[i].active) {
-      n = i;
-      break;
-    }
-  }
+Bullet_t* Bullet_Construct(BulletType type) {
+  Bullet_t *self = &Bullet_registry[type];
 
-  Bullet_t *self = nullptr;
-
-  if (n != -1) { 
-    Bullet_registry[n] = {};
-    self = &Bullet_registry[n];
+  if (!self->active) { 
+    Bullet_registry[type] = {};
     self->active = true;
+    self->type = type;
 
     Bullet_registry_active_count++;
-  }
 
-  return self;
+    return self;
+  } else {
+    return nullptr;
+  }
 }
 
 void Destruct(Bullet_t* self) {

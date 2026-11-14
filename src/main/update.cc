@@ -300,11 +300,6 @@ void GameUpdate(Game_t *game) {
 				Move(&game->player[0], {+1, 0});
 			}
 
-			// TODO: Hacer que cada disparo sea su propia variable
-			// Bullet_t *CurrentPlayerBullet;
-			// Bullet_t *CurrentSquigglyBullet;
-			// Bullet_t *CurrentPlungerBullet;
-			// Bullet_t *CurrentRollingBullet;
 			
 			// Jugador Disparo
 
