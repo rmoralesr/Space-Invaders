@@ -90,31 +90,43 @@ void PreviewingInit(){
 	if (!g_alt_title_anim) {
 		anim_tick += 60;
 	} else {
+
+		Mask_t anim1[kMaxAnimationExtraMasks] = {0};
+		anim1[0] = g_assets.AlienMasks[2][1];
 		GenerateAnimatedUIElement(
 			{false, {kWindowSize.x,64}, g_assets.AlienMasks[2][0]},
 			anim_tick, anim_tick + (kWindowSize.x-120 - 7),
 			{-1, 0},
-			g_assets.AlienMasks[2][1]
+			anim1, 2
 		);
 		anim_tick += (kWindowSize.x-120 - 7);
+
 		GenerateUIElement({false, {120,64}, {0}}, anim_tick);
+
+		Mask_t anim2[kMaxAnimationExtraMasks] = {0};
+		anim2[0] = g_assets.YAnimMasks[2];
 		GenerateAnimatedUIElement(
 			{false, {120,64}, g_assets.YAnimMasks[1]},
-			anim_tick, anim_tick + (kWindowSize.x-120 - 7),
+			anim_tick, anim_tick + (kWindowSize.x-120 - 5),
 			{1, 0},
-			g_assets.YAnimMasks[2]
+			anim2, 2
 		);
-		anim_tick += (kWindowSize.x-120 - 7);
+		anim_tick += (kWindowSize.x-120 - 5);
+
 		GenerateUIElement({false, {kWindowSize.x-3, 64}, g_assets.YAnimMasks[1]}, anim_tick);
 		anim_tick += 60;
 		GenerateUIElement({false, {kWindowSize.x-3, 64}, {0}}, anim_tick);
+
+		Mask_t anim3[kMaxAnimationExtraMasks] = {0};
+		anim3[0] = g_assets.YAnimMasks[4];
 		GenerateAnimatedUIElement(
 			{false, {kWindowSize.x-3,64}, g_assets.YAnimMasks[3]},
 			anim_tick, anim_tick + (kWindowSize.x-3 - 120),
 			{-1, 0},
-			g_assets.YAnimMasks[4]
+			anim3, 2
 		);
 		anim_tick += (kWindowSize.x-3 - 120);
+
 		GenerateUIElement({false, {120, 64}, g_assets.YAnimMasks[3]}, anim_tick);
 
 		anim_tick += 60;
@@ -168,24 +180,36 @@ void InsertCoinInit(){
 
 	if (g_alt_title_anim){
 		anim_tick += 60;
+
+		Mask_t anim1[kMaxAnimationExtraMasks] = {0};
+		anim1[0] = g_assets.AlienMasks[2][1];
 		GenerateAnimatedUIElement(
-			{false, {0,40}, g_assets.AlienMasks[2][0]},
-			anim_tick, anim_tick + 120,
+			{false, {0,38}, g_assets.AlienMasks[2][0]},
+			anim_tick, anim_tick + 119,
 			{1, 0},
-			g_assets.AlienMasks[2][1]
+			anim1, 2
 		);
-		anim_tick += 120;
-		GenerateUIElement({false, {120, 40}, g_assets.AlienMasks[2][1]}, anim_tick);
+		anim_tick += 119;
+
+		GenerateUIElement({false, {119, 38}, g_assets.AlienMasks[2][1]}, anim_tick);
 		anim_tick += 6;
+
+		Mask_t anim2[kMaxAnimationExtraMasks] = {0};
+		for (int i = 0; i < 3; i++) anim2[i] = g_assets.AlienBulletsMasks[2][1+i];
 		GenerateAnimatedUIElement(
-			{false, {120,48}, g_assets.CharacterMasks[0]},
-			anim_tick, anim_tick + 113-40-8,
+			{false, {123,42}, g_assets.AlienBulletsMasks[2][0]},
+			anim_tick, anim_tick + 113-42-8,
 			{0, 1},
-			g_assets.CharacterMasks[0]
+			anim2, 4, 1
 		);
-		anim_tick += 113-40-8;
-		GenerateUIElement({false, {121, 113}, {0}}, anim_tick);
-		anim_tick += 60;
+		anim_tick += 113-42-8;
+		GenerateUIElement({false, {122, 109}, g_assets.AlienBulletExplosionMask}, anim_tick);
+
+		anim_tick += 8;
+		GenerateUIElement({false, {122, 109}, {0}}, anim_tick); // Borrar Explosion
+		GenerateUIElement({false, {65 + 8*7, 113}, {0}}, anim_tick); // Borrar C
+
+		anim_tick += 20;
 	}
 
 	anim_tick += 60;

@@ -69,6 +69,9 @@ struct Assets {
     Mask_t PlayerMasks = {};
     Mask_t PlayerExplosion[2] = {};
 
+    Mask_t AlienBulletsMasks[3][4] = {};
+    Mask_t AlienBulletExplosionMask;
+
     Mask_t UFOMasks[2] = {}; //Dos sprites de UFO
 
     Mask_t ShieldMask = {};
@@ -82,9 +85,12 @@ struct Assets {
 };
 Assets g_assets;
 
-//cargar todos los caracteres
+
 
 void LoadAssets() {
+
+    //cargar todos los caracteres
+
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 8; j++) {
             if (i * 8 + j < kNumCharacters) {
@@ -114,9 +120,41 @@ void LoadAssets() {
     }
 
     FromFile(&g_assets.AlienExplosionMask, "../../assets/AlienExplosion.png");
+    
+    //cargar las balas de los aliens
+
+    for (int i = 0; i < 4; i++){
+        FromFile(
+            &g_assets.AlienBulletsMasks[0][i],
+            "../../assets/disparo_plunger.png",
+            {3*i, 0},
+            {3, 7}
+        );
+    }
+
+    for (int i = 0; i < 4; i++){
+        FromFile(
+            &g_assets.AlienBulletsMasks[1][i],
+            "../../assets/disparo_rolling.png",
+            {3*i, 0},
+            {3, 7}
+        );
+    }
+
+    for (int i = 0; i < 4; i++){
+        FromFile(
+            &g_assets.AlienBulletsMasks[2][i],
+            "../../assets/disparo_squiggly.png",
+            {3*i, 0},
+            {3, 7}
+        );
+    }
+
+    FromFile(&g_assets.AlienBulletExplosionMask, "../../assets/disparo_explosion.png");
+
+    //cargar los 2 sprites del UFO
 
     for (int i = 0; i < 2; i++){
-          //cargar los 2 sprites del UFO
        FromFile(&g_assets.UFOMasks[i],
        "../../assets/UFO.png",
        {kUFOMarginLeft+(kUFOWidth + kUFOSeparation) * i,
