@@ -26,7 +26,7 @@ UFO_t g_UFO;
 void UFO_Init(){
     g_UFO.active = false;
     g_UFO.anim_tick_progress = 0;
-    g_UFO.start_tick = g_tick + 55; //+ 1200;
+    g_UFO.start_tick = g_tick + 1200;
 }
 
 void GenerateUFO(){
