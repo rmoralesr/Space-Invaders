@@ -9,7 +9,7 @@
 #include "cirno.cc"
 
 
-constexpr unsigned int kMask_WordCount = 100;
+constexpr unsigned int kMask_WordCount = 70;
 
 struct Mask_t {
   Vector2_t size = {0,0};
@@ -77,6 +77,7 @@ void FromFile(Mask_t *mask, const char *path,
   esat::SpriteHandle sprite = esat::SpriteFromFile(path);
 
   if (!isZero(sub_size)) {
+    printf("sub ");
     esat::SpriteHandle aux = esat::SubSprite(sprite, 
       sub_position.x, sub_position.y, 
       sub_size.x, sub_size.y
@@ -91,6 +92,11 @@ void FromFile(Mask_t *mask, const char *path,
 
   int mx = esat::SpriteWidth(sprite);
   int my = esat::SpriteHeight(sprite);
+
+  if (mx*my > kMask_WordCount*8) {
+    printf("mask.cc > FromFile: %s es demasiado grande (%d x %d)", path, mx, my);
+  }
+  printf("%d, %d\n", mx, my);
 
   mask->size = {mx, my};
 
@@ -118,7 +124,8 @@ void Sub(Mask_t *A, Mask_t *B, Vector2_t offset = {0,0}) {
     min(A->size.y, B->size.y + offset.y) - offset.y
   };
 
-  if (overlap.x <= 0 && overlap.y <= 0) return; // Nada que hacer
+  if (overlap.x <= 0 || overlap.y <= 0) return; // Nada que hacer
+
 
   for (int y = 0; y < overlap.y; y++) { // x,y son locales de B
     for (int x = 0; x < overlap.x; x++) {

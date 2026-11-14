@@ -3,6 +3,7 @@
 
 #include <esat/draw.h>
 
+#include "../tools/asset-loader.cc"
 #include "../entities/body.cc"
 #include "cirno.cc"
 
@@ -34,12 +35,8 @@ void DrawRectangle(Vector2_t position, Vector2_t size, unsigned char RGBA[4]){
 
 void GetPositionColor(unsigned char RGBA[4], unsigned int x, unsigned int y) {
 
-    // TODO, cuando tengamos las color mask
-
-    RGBA[0] = 255;
-    RGBA[1] = 255;
-    RGBA[2] = 255;
-    RGBA[3] = 255;
+    esat::SpriteGetPixel(g_assets.ColorMask, x/8,y/8, RGBA);
+    
 }
 
 void SetToBlack(unsigned char RGBA[4]) {
@@ -51,7 +48,7 @@ void SetToBlack(unsigned char RGBA[4]) {
 
 static bool ShouldPaint(Body_t* self,
   unsigned int x, unsigned y,
-  unsigned char RGBA[4]
+  unsigned char RGBA[4], bool ex_nihilo
 ) {
 
     if (!ReadBit(&self->mask, x,y)) return false; // No hay pixel
@@ -59,12 +56,19 @@ static bool ShouldPaint(Body_t* self,
     unsigned char new_RGBA[4];
     GetPositionColor(new_RGBA, self->position.x + x, self->position.y + y);
 
-    return (
+    bool ret = ex_nihilo || (
       new_RGBA[0] == RGBA[0]
       && new_RGBA[1] == RGBA[1]
       && new_RGBA[2] == RGBA[2]
       && new_RGBA[3] == RGBA[3]
     );
+
+    RGBA[0] = new_RGBA[0];
+    RGBA[1] = new_RGBA[1];
+    RGBA[2] = new_RGBA[2];
+    RGBA[3] = new_RGBA[3];
+
+    return ret;
 }
 
 void Draw(Body_t* self) {
@@ -81,14 +85,14 @@ void Draw(Body_t* self) {
 
             if (
               (x < self->mask.size.x) // Si x == size.x, estamos fuera, por lo que hay que cerrar y pintar si queda length
-              && ShouldPaint(self, x,y, RGBA)
+              && ShouldPaint(self, x,y, RGBA, length == 0)
             ) {
 
                 if (length == 0) ox = x;
                 length++;
 
             } else if (length > 0) {
-
+                
                 DrawRectangle(
                   { self->position.x + ox, self->position.y + y },
                   { length, 1 },

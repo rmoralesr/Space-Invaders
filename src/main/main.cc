@@ -62,6 +62,7 @@ int esat::main(int argc, char **argv) {
         FrameWait(last_time);
     }
 
+    esat::SpriteRelease(g_assets.ColorMask);
 
     esat::WindowDestroy();
     return 0;
