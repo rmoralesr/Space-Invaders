@@ -27,10 +27,18 @@ void GameRender(Game_t *game) {
                 Draw(&UIElement_registry[i].body);
     }
     for (int i = 0; i < AnimatedUIElement_kRegistryCapacity; i++){
+        
         if ( !AnimatedUIElement_registry[i].element.flashing || g_tick%8 > 3){
             if (AnimatedUIElement_registry[i].active && AnimatedUIElement_registry[i].element.queued_tick <= g_tick){
+
                 Body_t b = AnimatedUIElement_registry[i].element.body;
-                if (g_tick%8 > 3) b.mask = AnimatedUIElement_registry[i].alt_mask;
+
+                int frame_rate = AnimatedUIElement_registry[i].frame_rate;
+                int frame_count = AnimatedUIElement_registry[i].frame_count;
+
+                if (g_tick%(frame_rate*frame_count) > frame_rate - 1) {
+                    b.mask = AnimatedUIElement_registry[i].extra_masks[ (g_tick%(frame_rate*frame_count))/frame_rate - 1 ];
+                } 
                 Draw(&b);
             }
         }

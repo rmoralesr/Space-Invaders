@@ -14,11 +14,14 @@ struct UIElement_t {
     long long int queued_tick;
 };
 
+const int kMaxAnimationExtraMasks = 3;
 struct AnimatedUIElement_t {
     bool active;
     Vector2_t delta;
     UIElement_t element;
-    Mask_t alt_mask;
+    Mask_t extra_masks[kMaxAnimationExtraMasks];
+    int frame_count = 1;
+    int frame_rate = 4;
     long long int end_tick;
 };
 
@@ -111,7 +114,9 @@ void GenerateUIElement(Body_t b, long long int tick = 0, bool flashing = false){
         UIElement_registry_active_count++;
     }
 }
-void GenerateAnimatedUIElement(Body_t b, long long int start_tick, long long int end_tick, Vector2_t delta, Mask_t alt_mask, bool flashing = false){
+void GenerateAnimatedUIElement(Body_t b, long long int start_tick, long long int end_tick, Vector2_t delta, 
+    Mask_t extra_masks[3] = {0}, int fr_count = 1, int fr_rate = 4, bool flashing = false){
+
     int n = 0;
     bool free_space = false;
     while(n < AnimatedUIElement_kRegistryCapacity && !free_space){
@@ -127,8 +132,14 @@ void GenerateAnimatedUIElement(Body_t b, long long int start_tick, long long int
         AnimatedUIElement_registry[n].active = true;
         AnimatedUIElement_registry[n].end_tick = end_tick;
         AnimatedUIElement_registry[n].delta = delta;
-        AnimatedUIElement_registry[n].alt_mask = alt_mask;
 
+        AnimatedUIElement_registry[n].frame_count = fr_count;
+        AnimatedUIElement_registry[n].frame_rate = fr_rate;
+        if (fr_count > 1){
+            for (int i = 0; i < fr_count-1; i++){
+                AnimatedUIElement_registry[n].extra_masks[i] = extra_masks[i];
+            }
+        }
         AnimatedUIElement_registry_active_count++;
     }
 }

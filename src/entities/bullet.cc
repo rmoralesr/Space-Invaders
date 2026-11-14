@@ -41,7 +41,7 @@ void Move(Bullet_t *self, Vector2_t delta);
 
 // Definiciones
 
-Bullet_t* Bullet_Construct(BulletType type) {
+Bullet_t* Bullet_Construct(BulletType type) { // Cambiar puntero por referencia
   Bullet_t *self = &Bullet_registry[type];
 
   if (!self->active) { 
@@ -67,7 +67,8 @@ void Destruct(Bullet_t* self) {
 void Dead(Bullet_t *self) {
   // Cambiar sprite
   self->dying = true;
-  self->step = 6; // Countdown para destruirse
+  self->body.can_collide = false;
+  self->step = 3; // Countdown para destruirse
 }
 
 void Tick(Bullet_t *self) {
@@ -81,6 +82,9 @@ void Tick(Bullet_t *self) {
     self->step++;
 
     // Cambiar sprite
+    if (self->step % 3 == 0) {
+      //self->body.mask = 
+    }
   } else {
     
     self->step--;
