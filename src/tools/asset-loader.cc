@@ -66,24 +66,23 @@ constexpr int kYAnimHeigth = 8;
 constexpr int kYAnimSeparation = 2;
 
 struct Assets {
-    Mask_t AlienMasks[kNumAlienTypes]
-            [kAliensPerType] = {};
+    Mask_t AlienMasks[kNumAlienTypes][kAliensPerType] = {};
+    Mask_t AlienExplosionMask = {};
 
-    // Mask_t AlienMasks[3][2] = {}; // 3 tipos de alien y 2 sprites de cada uno
+    Mask_t PlayerMasks = {};
+    Mask_t PlayerExplosion[2] = {};
 
-    Mask_t Squid[2] = {}; //Dos sprites de Pulpo
-    Mask_t Crab[2] = {}; //Dos sprites de Cangrejo
-    Mask_t Octopus[2] = {}; //Dos sprites de Calamar
     Mask_t UFOMasks[2] = {}; //Dos sprites de UFO
 
-    Mask_t EscudoMask = {};
+    Mask_t ShieldMask = {};
 
     Mask_t CharacterMasks[kNumCharacters] = {};
     Mask_t ExtraCharacterMasks[kNumCharacters] = {};
 
     Mask_t YAnimMasks[kYAnimSprites] = {};
-};
 
+    esat::SpriteHandle ColorMask;
+};
 Assets g_assets;
 
 //cargar todos los caracteres
