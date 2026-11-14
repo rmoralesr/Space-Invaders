@@ -109,7 +109,7 @@ struct QueuedUpdate{
 	long long int queued_tick;
 };
 
-Game_t game = {};
+Game_t g_game = {};
 
 const unsigned int Update_kQueueCapacity = 10;
 QueuedUpdate Update_queue[Update_kQueueCapacity] = {0};

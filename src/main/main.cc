@@ -40,18 +40,18 @@ int esat::main(int argc, char **argv) {
     esat::WindowInit(kWindowSize.x*kPixelScale, kWindowSize.y*kPixelScale);
     WindowSetMouseVisibility(true);
 
-    GameInit(&game);
+    GameInit(&g_game);
 
     while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
         double last_time = esat::Time();
 
-        GameUpdate(&game);
+        GameUpdate(&g_game);
 
         esat::DrawBegin();
         esat::DrawClear(0,0,0);
         esat::DrawSetStrokeColor(0,0,0,0);
 
-        GameRender(&game);
+        GameRender(&g_game);
 
         esat::DrawEnd();
         esat::WindowFrame();
