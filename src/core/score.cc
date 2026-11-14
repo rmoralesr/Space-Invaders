@@ -12,7 +12,7 @@
 void UpdateScore(){
     Player_t *player = &g_game.player[g_game.player_playing];
     Vector2_t score_position;
-    if (g_game.player_playing) score_position = kScore1NumberPosition;
+    if (!g_game.player_playing) score_position = kScore1NumberPosition;
     else score_position = kScore2NumberPosition;
     GenerateNumber(player->score, 4, score_position);
     GenerateNumber(g_game.hiscore, 4, kHiScoreNumberPosition);
@@ -20,7 +20,7 @@ void UpdateScore(){
 void AddScore(int points, bool update_score = true){
     Player_t *player = &g_game.player[g_game.player_playing];
     Vector2_t score_position;
-    if (g_game.player_playing) score_position = kScore1NumberPosition;
+    if (!g_game.player_playing) score_position = kScore1NumberPosition;
     else score_position = kScore2NumberPosition;
 
     player->score += points;
