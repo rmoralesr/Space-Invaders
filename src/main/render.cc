@@ -9,6 +9,7 @@
 #include "../core/draw.cc"
 #include "../entities/body.cc"
 #include "../entities/aliens_army.cc"
+#include "../entities/UFO.cc"
 #include "../entities/player.cc"
 #include "../tools/ui-element.cc"
 
@@ -76,6 +77,7 @@ void GameRender(Game_t *game) {
         }
         case kGameState_Playing: {
             AliensRender(&game->player[game->player_playing].alien_army);
+            if (g_UFO.active) Draw(&g_UFO.body);
             Draw(&game->player[game->player_playing]);
             BulletRender();
             break;

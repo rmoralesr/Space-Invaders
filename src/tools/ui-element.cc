@@ -114,6 +114,13 @@ void GenerateUIElement(Body_t b, long long int tick = 0, bool flashing = false){
         UIElement_registry_active_count++;
     }
 }
+void QueuedEraseText(Vector2_t position, int length, long long int tick){
+    for (int i = 0; i < length; i++){
+        GenerateUIElement( {false, position, {0}}, tick);
+        position.x += kCharactersWidth + 3;
+    }
+}
+
 void GenerateAnimatedUIElement(Body_t b, long long int start_tick, long long int end_tick, Vector2_t delta, 
     Mask_t extra_masks[3] = {0}, int fr_count = 1, int fr_rate = 4, bool flashing = false){
 
