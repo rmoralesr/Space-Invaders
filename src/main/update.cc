@@ -157,9 +157,16 @@ void ChoosingPlayerInit(Game_t *game){
 
 void AboutToPlayInit(Game_t *game){
 	ClearUIContent();
-	GenerateText("play player<1>",{59,120});
-	GenerateNumber(game->player[0].score,4, kScore1NumberPosition, 0, true);
-	EraseText(kScore2NumberPosition, 4);
+
+	if (!game->player_playing){
+		GenerateText("play player<1>",{59,120});
+		GenerateNumber(game->player[0].score,4, kScore1NumberPosition, 0, true);
+	} else {
+		GenerateText("play player<2>",{59,120});
+		GenerateNumber(game->player[1].score,4, kScore2NumberPosition, 0, true);
+	}
+	if (!game->multiplayer) EraseText(kScore2NumberPosition, 4);
+
 	WipeScreenToContent(&g_wipe_screen);
 	g_wipe_screen.queued_tick = g_tick + 120;
 	
@@ -359,7 +366,8 @@ void GameUpdate(Game_t *game) {
 				PlayerLogic(game);
 			} else if(game->multiplayer && !game->player[!game->player_playing].dead) {
 					game->player_playing = !game->player_playing;
-					PlayingInit(game);
+					game->game_state = kGameState_AboutToPlay;
+					AboutToPlayInit(game);
 			} else if(game->player[game->player_playing].dead) {
 				if (game->credits > 0) {
 					game->game_state = kGameState_ChoosingPlayers;
