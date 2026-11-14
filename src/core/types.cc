@@ -58,7 +58,8 @@ struct AlienArmy_t {
     int alien_explosion_tick;
     int last_alien_moved;
     int direction;
-    AlienArmyState descending;
+    BulletType last_bullet_moved;
+    AlienArmyState army_state;
 };
 
 struct Player_t {
