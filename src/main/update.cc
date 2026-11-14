@@ -216,12 +216,13 @@ void PlayerLogic(Game_t *game) {
 	if (g_tick == g_UFO.start_tick) GenerateUFO();
 
 	if (esat::IsKeyDown('M')) MatarAlien(&game->player[game->player_playing].alien_army); //TODO Quitar
-	if (game->input.action_button) MatarPlayer(&game->player[game->player_playing]); //TODO Quitar
+	if (esat::IsKeyDown('K')) MatarPlayer(&game->player[game->player_playing]); //TODO Quitar
+	if (esat::IsKeyDown('V')) game->player[game->player_playing].lives++; //TODO Quitar
+	if (esat::IsKeyDown('U')) DestroyUFO(); //TODO Quitar
+
 	if (game->input.two_player_button) {
 		Destruct(&Bullet_registry[1+g_tick%3]); //TODO Quitar
 	}
-	if (esat::IsKeyDown('V')) game->player[game->player_playing].lives++; //TODO Quitar
-	if (esat::IsKeyDown('U')) DestroyUFO(); //TODO Quitar
 
 
 	// if (alien_army_flag == kAlienArmyFlag_invaded) Instant_Dead(&game->player[player]);
@@ -367,7 +368,8 @@ void GameUpdate(Game_t *game) {
 
 			
 			// Jugador Disparo
-
+			if(game->input.action_button) Shoot(&game->player[game->player_playing]);
+			Bullet_Move();
 
 
 			break;
