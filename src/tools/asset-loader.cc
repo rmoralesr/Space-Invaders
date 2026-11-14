@@ -3,15 +3,15 @@
 
 #include "../core/cirno.cc"
 #include "../core/mask.cc"
+#include <esat/sprite.h>
 
 // Player
 
 //Dimensiones del player
-constexpr int kPlayerWidth = 18; // Medida sin margenes 
-constexpr int kPlayerHeight = 12; // Medida sin margenes 
+constexpr int kPlayerWidth = 16; // Medida sin margenes 
+constexpr int kPlayerHeight = 8; // Medida sin margenes 
 
 //Separaciones
-
 constexpr int kPlayerSeparation = 5; // Separacion del margen
 
 //  Aliens
@@ -29,8 +29,8 @@ constexpr int kAlienSeparationX = 3; // Separacion entre sprites
 constexpr int kAlienSeparationY = 1; // Separacion entre sprites
 
 //  UFO
-constexpr int kUFOWidth = 16; 
-constexpr int kUFOHeight = 7;
+constexpr int kUFOWidth = 16; // Medida sin margenes
+constexpr int kUFOHeight = 7; // Medida sin margenes
 
 constexpr int kUFOSeparation = 3;
 
@@ -42,9 +42,6 @@ constexpr int kUFOMarginLeft = 1;
 //Dimensiones del escudo
 constexpr int kShieldWidth = 36; // Medida sin margenes
 constexpr int kShieldHeight = 26; // Medida sin margenes
-
-constexpr int kShieldMarginLeft = 3; // Separacion del margen
-constexpr int kShieldMarginTop = 3; // Separacion del margen
 
 //  Characters
 
@@ -59,23 +56,30 @@ constexpr int kNumCharacters = 42; // Numero de character
 constexpr int kCharacterSeparationX = 5; // Separacion entre sprites
 constexpr int kCharacterSeparationY = 3; // Separacion entre sprites
 
+// Y anim
+constexpr int kYAnimSprites = 5;
+constexpr int kYAnimWidth = 16;
+constexpr int kYAnimHeigth = 8;
+constexpr int kYAnimSeparation = 2;
+
 struct Assets {
-    Mask_t AlienMasks[kNumAlienTypes]
-            [kAliensPerType] = {};
+    Mask_t AlienMasks[kNumAlienTypes][kAliensPerType] = {};
+    Mask_t AlienExplosionMask = {};
 
-    // Mask_t AlienMasks[3][2] = {}; // 3 tipos de alien y 2 sprites de cada uno
+    Mask_t PlayerMasks = {};
+    Mask_t PlayerExplosion[2] = {};
 
-    Mask_t Squid[2] = {}; //Dos sprites de Pulpo
-    Mask_t Crab[2] = {}; //Dos sprites de Cangrejo
-    Mask_t Octopus[2] = {}; //Dos sprites de Calamar
     Mask_t UFOMasks[2] = {}; //Dos sprites de UFO
 
-    Mask_t EscudoMask = {};
+    Mask_t ShieldMask = {};
 
     Mask_t CharacterMasks[kNumCharacters] = {};
     Mask_t ExtraCharacterMasks[kNumCharacters] = {};
-};
 
+    Mask_t YAnimMasks[kYAnimSprites] = {};
+
+    esat::SpriteHandle ColorMask;
+};
 Assets g_assets;
 
 //cargar todos los caracteres
@@ -103,15 +107,16 @@ void LoadAssets() {
               &g_assets.AlienMasks[i][j],
                "../../assets/aliens.png",
                {2 + (kAlienWidth + kAlienSeparationX) * j,
-               2 + (kAlienHeight + kAlienSeparationY) * i},
+               1 + (kAlienHeight + kAlienSeparationY) * i},
               {kAlienWidth, kAlienHeight}
             );
         }
     }
 
-    //cargar los 2 sprites del UFO
+    FromFile(&g_assets.AlienExplosionMask, "../../assets/AlienExplosion.png");
 
     for (int i = 0; i < 2; i++){
+          //cargar los 2 sprites del UFO
        FromFile(&g_assets.UFOMasks[i],
        "../../assets/UFO.png",
        {kUFOMarginLeft+(kUFOWidth + kUFOSeparation) * i,
@@ -121,19 +126,34 @@ void LoadAssets() {
     }
 
     //cargar el sprite del Shield
-
-    for(int i = 0; i < 2; i++){
-      FromFile(&g_assets.EscudoMask,
-      "../../assets/Shield.png",
-      {kShieldMarginLeft, kShieldMarginTop}, 
-      {kShieldWidth + kShieldHeight}
-      );
-    }
-
+    
+    FromFile(&g_assets.ShieldMask, "../../assets/Shield.png");
+    
     //cargar los sprites de Player
 
-    
+    FromFile(&g_assets.PlayerMasks, "../../assets/player.png"); 
 
+    for(int i = 0; i < 2; i++){
+        FromFile(
+        &g_assets.PlayerExplosion[i],
+        "../../assets/PlayerExplosion.png",
+        {kPlayerWidth * i, 0},
+        {kPlayerWidth, kPlayerHeight}
+        );
+    }
+
+    //cargar los sprites de la animacion Y
+
+    for (int i = 0; i < kYAnimSprites; i++){
+       FromFile(&g_assets.YAnimMasks[i],
+       "../../assets/Y-Anim.png",
+       {(kYAnimWidth + kYAnimSeparation) * i, 0},
+       {kYAnimWidth, kYAnimHeigth}
+       );
+    }
+    
+    g_assets.ColorMask = esat::SpriteFromFile("../../assets/ColorMask.png");
+    
 }
 
 #endif // ASSET_LOADER_CC

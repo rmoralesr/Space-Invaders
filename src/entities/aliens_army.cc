@@ -111,7 +111,7 @@ void Destruct(AlienArmy_t* self, int index) {
         self->aliens_alive--;
         self->alien_explosion_tick = 16;
         self->alien_died = index;
-        self->aliens[index].body.mask = g_assets.CharacterMasks[0];
+        self->aliens[index].body.mask = g_assets.AlienExplosionMask;
     }
 }
 

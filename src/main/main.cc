@@ -37,7 +37,7 @@ void GameInit(Game_t *game) {
     GenerateText("credit", {140,240});
     GenerateNumber(game->credits,2, kCreditsNumberPosition);
 
-    PreviewingInit();
+    InsertCoinInit();
 }
 
 

@@ -5,6 +5,7 @@
 #include "body.cc"
 #include "bullet.cc"
 #include "player.cc"
+#include "aliens_army.cc"
 
 // Prototipaje
 
@@ -12,8 +13,7 @@ Body_t g_dummy_body; // Usado para no construir y deconstruir un body por colisi
 Mask_t g_dummy_mask;
 
 /** @brief Devuelve el AABB overlap de los dos bodies */
-Vector2_t GetOverlap(Body_t *A, Body_t *B)
-
+Vector2_t GetOverlap(Body_t *A, Body_t *B);
 
 bool QuickCollide(Body_t *A, Body_t *B);
 
@@ -21,10 +21,10 @@ bool QuickCollide(Body_t *A, Body_t *B);
 unsigned int Collide(
   Body_t *A, Body_t *B, 
   Body_t *out_body = nullptr
-)
+);
 // Devuelve si han colisionado y ejecutan la logica por si mismos
 bool Collide(Bullet_t *A, Bullet_t *B);
-bool Collide(Bullet_t *A, Alien *B);
+bool Collide(Bullet_t *A, Alien_t *B);
 bool Collide(Bullet_t *A);
 
 
@@ -165,17 +165,15 @@ bool Collide(Bullet_t *A, Bullet_t *B) {
 
       A->body.can_collide = false;
       B->body.can_collide = false;
-      A->dying = true;
-      B->dying = true;
 
       Vector2_t delta = Sub(A->body.position, B->body.position);
       
       g_dummy_mask = A->body.mask;
 
-      // <- Actualizar Sprite de A AQUI
+      Dead(A); // <- Actualizar Sprite de A AQUI
       Sub(&A->body.mask, &B->body.mask, delta);
 
-      // <- Actualizar Sprite de B AQUI
+      Dead(B); // <- Actualizar Sprite de B AQUI
       Sub(&B->body.mask, &g_dummy_mask, Neg(delta)); 
 
       return true;
