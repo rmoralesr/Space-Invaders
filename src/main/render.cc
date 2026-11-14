@@ -14,6 +14,14 @@
 
 // FUNCIONES DE RENDERIZADO
 
+void BulletRender() {
+    for (int i = 0; i < 4; i++) {
+        if (Bullet_registry[i].active) {
+            Draw(&Bullet_registry[i].body);
+        }
+    }
+}
+
 void PreviewRender() {
 
 }
@@ -61,6 +69,7 @@ void GameRender(Game_t *game) {
         case kGameState_Playing: {
             AliensRender(&game->player[game->player_playing].alien_army);
             Draw(&game->player[game->player_playing]);
+            BulletRender();
             break;
         }
     }

@@ -58,7 +58,10 @@ struct AlienArmy_t {
     int alien_explosion_tick;
     int last_alien_moved;
     int direction;
-    BulletType last_bullet_moved;
+    int plunger_table_pos;
+    int squiggly_table_pos;
+    int left_x;
+    BulletType bullet_to_move;
     AlienArmyState army_state;
 };
 
