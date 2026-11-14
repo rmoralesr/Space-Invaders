@@ -347,11 +347,13 @@ void GameUpdate(Game_t *game) {
 			}
 			if (game->input.one_player_button && game->credits >= 1) { // TODO por ahora así, luego cambiar
 				game->multiplayer = false;
+				game->player_playing = false;
 				Player_Construct(&game->player[0]);
 				UpdateCredits(game, -1);
 			}
 			if (game->input.two_player_button && game->credits >= 2) { // TODO por ahora así, luego cambiar
 				game->multiplayer = true;
+				game->player_playing = false;
 				for (int i = 0; i < 2; i++){
 					Player_Construct(&game->player[i]);
 				}
@@ -361,8 +363,6 @@ void GameUpdate(Game_t *game) {
 		}
 		case kGameState_AboutToPlay: break;
 		case kGameState_Playing: {
-
-			printf("player: %d\n", game->player_playing);
 
 			if(game->player[game->player_playing].active) {
 				PlayerLogic(game);
