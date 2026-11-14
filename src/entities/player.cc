@@ -12,6 +12,7 @@
 // Prototipaje
 
 void Player_Construct(Player_t *self);
+void Player_Reset(Player_t *self);
 void Destruct(Player_t* self);
 
 void MoveTo(Player_t* self, Vector2_t pos);
@@ -23,32 +24,47 @@ void Draw(Player_t* self);
 
 // Definiciones
 
+void Player_Assets(Player_t *self_assets) {
+  // for(int i = 0; i < kBunkerLimit; i++) {
+  //   self->bunker[i].body = {
+  //     true,
+  //     {32 - self->bunker[i].body.mask.size.x + (56*i), 192}, 
+  //     g_assets.EscudoMask
+  //   };
+    
+  //   // FromFile(&self->bunker[i].body.mask, "../../assets/test.png");
+  //   // Print(&self->bunker[i].body.mask);
+  // }
+
+  self_assets->body = {
+    true,
+    {16, 224}, 
+    {}
+  };
+
+  FromFile(&self_assets->body.mask, "../../assets/player.png");
+}
+
 void Player_Construct(Player_t *self) {
-  if (!self->active) {
-    self->active = true;
+    self->active = false;
     self->dying = false;
 
     self->score = 0;
-    self->lives = 3;
+    self->lives = 0;
 
-    // for(int i = 0; i < kBunkerLimit; i++) {
-    //   self->bunker[i].body = {
-    //     true,
-    //     {32 - self->bunker[i].body.mask.size.x + (56*i), 192}, 
-    //     g_assets.EscudoMask
-    //   };
-      
-    //   // FromFile(&self->bunker[i].body.mask, "../../assets/test.png");
-    //   // Print(&self->bunker[i].body.mask);
-    // }
+    Player_Assets(self);
+}
 
-    self->body = {
-        true,
-        {16, 224}, 
-        {}
-    };
+void Player_Reset(Player_t *self) {
+  if (!self->active) {
+    self->active = true;
 
-    FromFile(&self->body.mask, "../../assets/player.png");
+    if (self->lives == 0) {
+      self->score = 0;
+      self->lives = 3;
+    }
+
+    Player_Assets(self);
   }
 }
 

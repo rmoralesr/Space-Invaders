@@ -62,7 +62,7 @@ struct AlienArmy_t {
 };
 
 struct Player_t {
-    bool active = false;
+    bool active;
     bool dying;
     int score;
     int lives;
@@ -84,6 +84,8 @@ struct Game_t {
     GameState game_state;
     Input input;
     Player_t player[2];
+    bool player_playing;
+    bool multiplayer;
     int credits;
     int hiscore;
 };

@@ -32,6 +32,10 @@ void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
 	Destruct(alien_army, g_tick%55);
 }
 
+void MatarPlayer(Player_t *player) { // TODO quitar
+	Dead(player, 1);
+}
+
 void QueueUpdate(int id, long long int tick){
     int n = 0;
     bool free_space = false;
@@ -106,9 +110,22 @@ void InsertCoinInit(){
 }
 
 void PlayingInit(Game_t *game){
-	GenerateNumber(game->player[0].score,4, kScore1NumberPosition);
-	Player_Construct(&game->player[0]);
-	AlienArmy_Init(&game->player[0].alien_army);
+	GenerateNumber(game->player[game->player_playing].score,4, kScore1NumberPosition);
+	if(game->player[game->player_playing].lives == 0) AlienArmy_Init(&game->player[game->player_playing].alien_army);
+	Player_Reset(&game->player[game->player_playing]);
+}
+
+void PlayerLogic(Game_t *game) {
+	AlienArmyFlag alien_army_flag = AlienArmy_Control(&game->player[game->player_playing].alien_army);
+	if (game->input.insert_credit) MatarAlien(&game->player[game->player_playing].alien_army); //TODO Quitar
+	if (game->input.action_button) MatarPlayer(&game->player[game->player_playing]); //TODO Quitar
+	// if (alien_army_flag == kAlienArmyFlag_invaded) Instant_Dead(&game->player[player]);
+	if (alien_army_flag == kAlienArmyFlag_exterminated) PlayingInit(game);
+	if (game->input.left_button) {
+		Move(&game->player[game->player_playing], {-2, 0});
+	} else if (game->input.right_button) {
+		Move(&game->player[game->player_playing], {+2, 0});
+	}
 }
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
@@ -173,7 +190,14 @@ void GameUpdate(Game_t *game) {
 				g_wipe_screen.queued_tick = g_tick + 1;
 				QueueUpdate(kUpdateID_ChoosingPlayer, g_tick + 22);
 			}
-			if (game->input.one_player_button || game->input.two_player_button) { // TODO por ahora así, luego cambiar
+			if (game->input.one_player_button && game->credits >= 1) { // TODO por ahora así, luego cambiar
+				game->multiplayer = false;
+				WipeScreenToFull(&g_wipe_screen);
+				g_wipe_screen.queued_tick = g_tick + 1;
+				QueueUpdate(kUpdateID_AboutToPlay, g_tick + 22);
+			}
+			if (game->input.two_player_button && game->credits >= 2) { // TODO por ahora así, luego cambiar
+				game->multiplayer = true;
 				WipeScreenToFull(&g_wipe_screen);
 				g_wipe_screen.queued_tick = g_tick + 1;
 				QueueUpdate(kUpdateID_AboutToPlay, g_tick + 22);
@@ -182,15 +206,19 @@ void GameUpdate(Game_t *game) {
 		}
 		case kGameState_AboutToPlay: break;
 		case kGameState_Playing: {
-			AlienArmyFlag alien_army_flag = AlienArmy_Control(&game->player[0].alien_army);
-			if (game->input.insert_credit) MatarAlien(&game->player[0].alien_army); //TODO Quitar
-			// if (alien_army_flag == kAlienArmyFlag_invaded) Instant_Dead(&game->player[0]);
-			if (alien_army_flag == kAlienArmyFlag_exterminated) PlayingInit(game);
-
-			if (game->input.left_button) {
-				Move(&game->player[0], {-2, 0});
-			} else if (game->input.right_button) {
-				Move(&game->player[0], {+2, 0});
+			if (game->multiplayer) {
+				if(game->player[game->player_playing].active) {
+					PlayerLogic(game);
+				} else {
+					game->player_playing = !game->player_playing;
+					PlayingInit(game);
+				}
+			} else {
+				if(game->player[game->player_playing].active) {
+					PlayerLogic(game);
+				} else {
+					PlayingInit(game);
+				}
 			}
 			break;
 		}

@@ -23,6 +23,11 @@ void GameInit(Game_t *game) {
     // TODO
     game->game_state = kGameState_Previewing;
     game->credits = 0;
+    game->player_playing = 0;
+
+    for (int i = 0; i < 2; i++){
+        Player_Construct(&game->player[i]);
+    }
 
     LoadAssets();
     GenerateText("score<1> hi-score score<2>", {10,9});
