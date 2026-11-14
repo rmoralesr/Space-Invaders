@@ -354,39 +354,23 @@ void GameUpdate(Game_t *game) {
 		}
 		case kGameState_AboutToPlay: break;
 		case kGameState_Playing: {
-			if (game->multiplayer) {
-				if(game->player[game->player_playing].active) {
-					PlayerLogic(game);
-				} else if(!game->player[!game->player_playing].dead) {
-						game->player_playing = !game->player_playing;
-						PlayingInit(game);
-				} else if(game->player[game->player_playing].dead) {
-					if (game->credits > 0) {
-						game->game_state = kGameState_ChoosingPlayers;
-						ClearQueuedActions();
-						ChoosingPlayerInit(game);
-					} else {
-						game->game_state = kGameState_Previewing;
-						PreviewingInit();
-					}
-				} else {
+
+			if(game->player[game->player_playing].active) {
+				PlayerLogic(game);
+			} else if(game->multiplayer && !game->player[!game->player_playing].dead) {
+					game->player_playing = !game->player_playing;
 					PlayingInit(game);
+			} else if(game->player[game->player_playing].dead) {
+				if (game->credits > 0) {
+					game->game_state = kGameState_ChoosingPlayers;
+					ClearQueuedActions();
+					ChoosingPlayerInit(game);
+				} else {
+					game->game_state = kGameState_Previewing;
+					PreviewingInit();
 				}
 			} else {
-				if(game->player[game->player_playing].active) {
-					PlayerLogic(game);
-				} else if(game->player[game->player_playing].dead) {
-					if (game->credits > 0) {
-						game->game_state = kGameState_ChoosingPlayers;
-						ClearQueuedActions();
-						ChoosingPlayerInit(game);
-					} else {
-						game->game_state = kGameState_Previewing;
-						PreviewingInit();
-					}
-				} else {
-					PlayingInit(game);
-				}
+				PlayingInit(game);
 			}
 
 			
