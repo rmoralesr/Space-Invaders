@@ -368,7 +368,8 @@ void GameUpdate(Game_t *game) {
 
 			
 			// Jugador Disparo
-			// if(game->input.action_button) Shoot(&game->player[game->player_playing]);
+			if(game->input.action_button) Shoot(&game->player[game->player_playing]);
+			Bullet_Move();
 
 
 			break;

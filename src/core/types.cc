@@ -73,7 +73,6 @@ struct Player_t {
 
     Body_t body;
     Bunker_t bunker[kBunkerLimit];
-    Bullet_t bullet;
     AlienArmy_t alien_army;
 };
 
