@@ -9,15 +9,13 @@
 
 int AlienScore(enum AlienType alien){
     switch(alien)
-    case  kAlienType_octopus:
+    case kAlienType_octopus:
         return 10;
-        break;
-    case  kAlienType_crab:
+    case kAlienType_crab:
         return 20;
-        break;
-    case  kAlienType_squid:
+    case kAlienType_squid:
         return 30;
-        break;
+        
 }
 
 void AddScore(int points, Game_t *game){
