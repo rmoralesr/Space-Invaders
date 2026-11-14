@@ -19,6 +19,7 @@ struct Bullet_t {
   bool dying = false;
 
   unsigned int step = 0;
+  int current_frame = 0;
 
   BulletType type = kBulletType_Player;
 
@@ -81,10 +82,14 @@ void Tick(Bullet_t *self) {
     }
     self->step++;
 
-    // Cambiar sprite
-    if (self->step % 3 == 0) {
-      //self->body.mask = 
-    }
+    // Cambiar sprite (los aliens llaman a Tick() cada tres frames ya
+    // if (self->step % 3 == 0) {
+    //   //self->body.mask =
+    // }
+
+    self->body.mask = g_assets.AlienBulletsMasks[self->type-1][self->current_frame];
+    self->current_frame = (self->current_frame + 1)%4;
+
   } else {
     
     self->step--;

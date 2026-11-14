@@ -4,6 +4,7 @@
 #include "body.cc"
 #include "../core/types.cc"
 #include "../tools/asset-loader.cc"
+#include "../core/score.cc"
 
 void AlienArmy_Init();
 void Destruct(Alien_t* self);
@@ -225,6 +226,15 @@ void AliensRender(AlienArmy_t *alien_army) {
     if (alien_army->alien_explosion_tick > 0) Draw(&alien_army->aliens[alien_army->alien_died].body);
 }
 
+int AlienGetPoints(AlienType type) {
+    switch (type) {
+        case kAlienType_crab: return 20;
+        case kAlienType_squid: return 30;
+        case kAlienType_octopus: return 10;
+    }
+    return 0;
+}
+
 void Destruct(AlienArmy_t* self, int index) {
     if (self->aliens[index].active) {
         self->aliens[index].active = false;
@@ -232,6 +242,7 @@ void Destruct(AlienArmy_t* self, int index) {
         self->alien_explosion_tick = 16;
         self->alien_died = index;
         self->aliens[index].body.mask = g_assets.AlienExplosionMask;
+        AddScore(AlienGetPoints(self->aliens[index].type));
     }
 }
 
