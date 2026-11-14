@@ -7,8 +7,8 @@
 // Player
 
 //Dimensiones del player
-constexpr int kPlayerWidth = 18; // Medida sin margenes 
-constexpr int kPlayerHeight = 12; // Medida sin margenes 
+constexpr int kPlayerWidth = 16; // Medida sin margenes 
+constexpr int kPlayerHeight = 8; // Medida sin margenes 
 
 //Separaciones
 
