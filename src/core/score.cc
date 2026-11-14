@@ -7,11 +7,16 @@
 #include "types.cc"
 #include <stdio.h>
 
-void AddScore(int points, Player_t *player, Game_t *game){
-    player->score+=points;
-    GenerateNumber(player->score, 4, kScore1NumberPosition);
-    if(game->hiscore<player->score){
-        game->hiscore=player->score;
+void AddScore(int points, Game_t *game){
+    game->player[game->player_playing].score+=points;
+    if(!game->player_playing){
+    GenerateNumber(game->player[game->player_playing].score, 4, kScore1NumberPosition);
+    }else{
+        GenerateNumber(game->player[game->player_playing].score, 4, kScore2NumberPosition);
+    }
+
+    if(game->hiscore<game->player[game->player_playing].score){
+        game->hiscore=game->player[game->player_playing].score;
         GenerateNumber(game->hiscore, 4, kHiScoreNumberPosition);
     }
     
