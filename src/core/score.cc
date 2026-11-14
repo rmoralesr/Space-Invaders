@@ -22,7 +22,7 @@ void AddScore(int points, Game_t *game){
     
 }
 
-void AlienScore(enum AlienType alien){
+int AlienScore(enum AlienType alien){
     switch(alien)
     case  kAlienType_octopus:
         return 10;
@@ -37,8 +37,6 @@ void AlienScore(enum AlienType alien){
     
     
 }
-
-
 
 
 #endif //SCORE_CC
