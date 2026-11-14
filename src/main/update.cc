@@ -8,26 +8,10 @@
 #include "../tools/asset-loader.cc"
 #include "../tools/input.cc"
 #include "../entities/aliens_army.cc"
+#include "../entities/UFO.cc"
 #include "../entities/player.cc"
 #include "../entities/collision-handler.cc"
 #include "../core/score.cc"
-
-enum kUpdateID {
-	kUpdateID_Previewing,
-    kUpdateID_InsertCoin,
-    kUpdateID_ChoosingPlayer,
-    kUpdateID_AboutToPlay,
-    kUpdateID_Playing
-};
-
-struct QueuedUpdate{
-	bool active = false;
-	int id;
-	long long int queued_tick;
-};
-
-const unsigned int Update_kQueueCapacity = 10;
-QueuedUpdate Update_queue[Update_kQueueCapacity] = {0};
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
@@ -37,20 +21,6 @@ void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
 
 void MatarPlayer(Player_t *player) { // TODO quitar
 	Dead(player, 1);
-}
-
-void QueueUpdate(int id, long long int tick){
-    int n = 0;
-    bool free_space = false;
-    while(n < Update_kQueueCapacity && !free_space){
-        if (!Update_queue[n].active) free_space = true;
-        else n++;
-    }
-	if (free_space){
-		Update_queue[n].active = true;
-		Update_queue[n].id = id;
-		Update_queue[n].queued_tick = tick;
-	}
 }
 void ClearQueuedActions(){
 	for (int i = 0; i < Update_kQueueCapacity; i++){
@@ -233,16 +203,21 @@ void PlayingInit(Game_t *game){
 	GenerateNumber(game->player[game->player_playing].score,4, kScore1NumberPosition);
 	if(game->multiplayer) GenerateNumber(game->player[game->player_playing].score,4, kScore2NumberPosition);
 	if(game->player[game->player_playing].lives == 0) AlienArmy_Init(&game->player[game->player_playing].alien_army);
+	UFO_Init();
 	Player_Reset(&game->player[game->player_playing]);
 }
 
 void PlayerLogic(Game_t *game) {
 	AlienArmyFlag alien_army_flag = AlienArmy_Control(&game->player[game->player_playing].alien_army);
-
+	
+	// UFO
+	TickUFO();
+	if (g_tick == g_UFO.start_tick) GenerateUFO();
 
 	if (esat::IsKeyDown('M')) MatarAlien(&game->player[game->player_playing].alien_army); //TODO Quitar
 	if (game->input.action_button) MatarPlayer(&game->player[game->player_playing]); //TODO Quitar
 	if (esat::IsKeyDown('V')) game->player[game->player_playing].lives++; //TODO Quitar
+	if (esat::IsKeyDown('U')) DestroyUFO(); //TODO Quitar
 
 
 	// if (alien_army_flag == kAlienArmyFlag_invaded) Instant_Dead(&game->player[player]);
@@ -326,6 +301,9 @@ void GameUpdate(Game_t *game) {
 					game->game_state = kGameState_Playing;
 					PlayingInit(game);
 					break;
+				case kUpdateID_UpdateScore:
+					UpdateScore();
+					break;
 			}
 		}
 	}
@@ -392,6 +370,7 @@ void GameUpdate(Game_t *game) {
 		}
 	}
 
+	// Timing checks
 	for (int i = 0; i < UIElement_kRegistryCapacity; i++){
 		if (UIElement_registry[i].active && UIElement_registry[i].queued_tick == g_tick) 
 			EraseUIElement(UIElement_registry[i].body.position, i);

@@ -152,16 +152,8 @@ void LoadAssets() {
     FromFile(&g_assets.AlienBulletExplosionMask, "../../assets/disparo_explosion.png");
 
     //cargar los 2 sprites del UFO
-
-    for (int i = 0; i < 2; i++){
-          //cargar los 2 sprites del UFO
-       FromFile(&g_assets.UFOMasks[i],
-       "../../assets/UFO.png",
-       {kUFOMarginLeft+(kUFOWidth + kUFOSeparation) * i,
-        kUFOMarginTop},
-       {kUFOWidth, kUFOHeight}
-       );
-    }
+    FromFile(&g_assets.UFOMasks[0], "../../assets/UFO.png");
+    FromFile(&g_assets.UFOMasks[1], "../../assets/UFOExplosion.png");
 
     //cargar el sprite del Shield
     

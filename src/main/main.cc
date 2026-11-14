@@ -13,7 +13,6 @@
 #include "update.cc"
 #include "render.cc"
 
-
 /** @brief Controla el maximo de frames por segundo */
 void FrameWait(double last_time);
 
@@ -41,10 +40,7 @@ int esat::main(int argc, char **argv) {
     esat::WindowInit(kWindowSize.x*kPixelScale, kWindowSize.y*kPixelScale);
     WindowSetMouseVisibility(true);
 
-    Game_t game = {};
-
     GameInit(&game);
-
 
     while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
         double last_time = esat::Time();
