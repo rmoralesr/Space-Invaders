@@ -8,13 +8,15 @@
 #include <stdio.h>
 
 int AlienScore(enum AlienType alien){
-    switch(alien)
+    switch(alien){
     case kAlienType_octopus:
         return 10;
     case kAlienType_crab:
         return 20;
     case kAlienType_squid:
         return 30;
+    }
+    return 0;
         
 }
 

@@ -206,7 +206,7 @@ void PlayingInit(Game_t *game){
 
 void PlayerLogic(Game_t *game) {
 	AlienArmyFlag alien_army_flag = AlienArmy_Control(&game->player[game->player_playing].alien_army);
-	if (game->input.insert_credit) MatarAlien(&game->player[game->player_playing].alien_army); //TODO Quitar
+	if (game->input.insert_credit) MatarAlien(&game->player[game->player_playing].alien_army);//TODO Quitar
 	if (game->input.action_button) MatarPlayer(&game->player[game->player_playing]); //TODO Quitar
 	// if (alien_army_flag == kAlienArmyFlag_invaded) Instant_Dead(&game->player[player]);
 	if (alien_army_flag == kAlienArmyFlag_exterminated) PlayingInit(game);
@@ -226,6 +226,7 @@ void DoGameCollisions() {
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
 void GameUpdate(Game_t *game) {
+	
 
 	g_tick++;
 
@@ -330,7 +331,7 @@ void GameUpdate(Game_t *game) {
 					PlayingInit(game);
 				}
 			}
-
+		
 			
 			// Jugador Disparo
 
