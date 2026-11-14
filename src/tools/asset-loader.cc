@@ -130,13 +130,7 @@ void LoadAssets() {
 
     //cargar el sprite del Shield
 
-    for(int i = 0; i < 2; i++){
-      FromFile(&g_assets.EscudoMask,
-      "../../assets/Shield.png",
-      {kShieldMarginLeft, kShieldMarginTop}, 
-      {kShieldWidth + kShieldHeight}
-      );
-    }
+      FromFile(&g_assets.EscudoMask, "../../assets/shield.png");
 
     //cargar los sprites de Player
 
