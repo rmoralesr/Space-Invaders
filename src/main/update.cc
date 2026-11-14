@@ -43,7 +43,7 @@ void PreviewingInit(){
 	GenerateText("space  invaders",{57,89}, anim_tick, ProgressiveTextTickRate);
 	anim_tick += 15*ProgressiveTextTickRate;
 	GenerateText("*score advance table*",{33,121},anim_tick);
-	GenerateUIElement({false, {64,136}, g_assets.UFOMasks[0]},anim_tick);
+	GenerateUIElement({false, {60,136}, g_assets.UFOMasks[0]},anim_tick);
 	GenerateUIElement({false, {66,152}, g_assets.AlienMasks[2][0]},anim_tick);
 	GenerateUIElement({false, {66,168}, g_assets.AlienMasks[1][0]},anim_tick);
 	GenerateUIElement({false, {66,184}, g_assets.AlienMasks[0][0]},anim_tick);
