@@ -105,9 +105,8 @@ void LoadAssets() {
     }
 
     //cargar 3 tipos de Aliens
-
-   for (int i = 0; i < kNumAlienTypes; i++) {
-      for (int j = 0; j < kAliensPerType; j++) {
+    for (int i = 0; i < kNumAlienTypes; i++) {
+        for (int j = 0; j < kAliensPerType; j++) {
 
           FromFile(
               &g_assets.AlienMasks[i][j],
@@ -155,6 +154,7 @@ void LoadAssets() {
     //cargar los 2 sprites del UFO
 
     for (int i = 0; i < 2; i++){
+          //cargar los 2 sprites del UFO
        FromFile(&g_assets.UFOMasks[i],
        "../../assets/UFO.png",
        {kUFOMarginLeft+(kUFOWidth + kUFOSeparation) * i,
@@ -178,10 +178,15 @@ void LoadAssets() {
         {kPlayerWidth * i, 0},
         {kPlayerWidth, kPlayerHeight}
         );
+        FromFile(
+        &g_assets.PlayerExplosion[i],
+        "../../assets/PlayerExplosion.png",
+        {kPlayerWidth * i, 0},
+        {kPlayerWidth, kPlayerHeight}
+        );
     }
 
     //cargar los sprites de la animacion Y
-
     for (int i = 0; i < kYAnimSprites; i++){
        FromFile(&g_assets.YAnimMasks[i],
        "../../assets/Y-Anim.png",
