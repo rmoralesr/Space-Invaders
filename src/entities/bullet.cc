@@ -76,9 +76,9 @@ void Tick(Bullet_t *self) {
   if (!self->dying) {
 
     if (self->type == kBulletType_Player) {
-      Move(self, {0, -1});
+      Move(self, {0, -4});
     } else {
-      Move(self, {0, 1});
+      Move(self, {0, 4});
     }
     self->step++;
 
