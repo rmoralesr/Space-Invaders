@@ -10,8 +10,6 @@
 //Dimensiones del player
 constexpr int kPlayerWidth = 16; // Medida sin margenes 
 constexpr int kPlayerHeight = 8; // Medida sin margenes 
-constexpr int kPlayerWidth = 16; // Medida sin margenes 
-constexpr int kPlayerHeight = 8; // Medida sin margenes 
 
 //Separaciones
 constexpr int kPlayerSeparation = 5; // Separacion del margen
@@ -31,8 +29,6 @@ constexpr int kAlienSeparationX = 3; // Separacion entre sprites
 constexpr int kAlienSeparationY = 1; // Separacion entre sprites
 
 //  UFO
-constexpr int kUFOWidth = 16; // Medida sin margenes
-constexpr int kUFOHeight = 7; // Medida sin margenes
 constexpr int kUFOWidth = 16; // Medida sin margenes
 constexpr int kUFOHeight = 7; // Medida sin margenes
 
@@ -79,14 +75,11 @@ struct Assets {
     Mask_t UFOMasks[2] = {}; //Dos sprites de UFO
 
     Mask_t ShieldMask = {};
-    Mask_t ShieldMask = {};
 
     Mask_t CharacterMasks[kNumCharacters] = {};
     Mask_t ExtraCharacterMasks[kNumCharacters] = {};
 
     Mask_t YAnimMasks[kYAnimSprites] = {};
-
-    esat::SpriteHandle ColorMask;
 
     esat::SpriteHandle ColorMask;
 };
