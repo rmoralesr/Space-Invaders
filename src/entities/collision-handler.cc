@@ -163,9 +163,6 @@ bool Collide(Bullet_t *A, Bullet_t *B) {
 
     if (res > 0) { // Ha habido colision
 
-      A->body.can_collide = false;
-      B->body.can_collide = false;
-
       Vector2_t delta = Sub(A->body.position, B->body.position);
       
       g_dummy_mask = A->body.mask;
