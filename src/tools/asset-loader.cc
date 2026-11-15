@@ -74,7 +74,7 @@ struct Assets {
     Mask_t AlienMasks[kNumAlienTypes][kAliensPerType] = {};
     Mask_t AlienExplosionMask = {};
 
-    Mask_t PlayerMasks = {};
+    Mask_t PlayerMask = {};
     Mask_t PlayerExplosion[2] = {};
     Mask_t PlayerBullet = {};
 
@@ -168,7 +168,7 @@ void LoadAssets() {
     FromFile(&g_assets.ShieldMask, "../../assets/Shield.png");
     
     //cargar los sprites de Player
-    FromFile(&g_assets.PlayerMasks, "../../assets/player.png"); 
+    FromFile(&g_assets.PlayerMask, "../../assets/player.png"); 
 
     //cargar los sprites de PlayerBulet
     FromFile(&g_assets.PlayerBullet, "../../assets/PlayerBullet.png");

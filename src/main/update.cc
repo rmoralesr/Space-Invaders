@@ -31,92 +31,104 @@ void ClearQueuedActions(){
 	g_wipe_screen.queued_tick = 0;
 }
 
-void PreviewingInit(){
-	long long int anim_tick = g_tick;
-	if (!g_alt_title_anim) {
-		GenerateText("play",{97,65}, anim_tick, ProgressiveTextTickRate);
-	} else {
-		GenerateText("pla",{97,65}, anim_tick, ProgressiveTextTickRate);
-		anim_tick += 3*ProgressiveTextTickRate;
-		GenerateUIElement({false, {120,64}, g_assets.YAnimMasks[0]}, anim_tick);
+void PreviewingInit(Game_t *game){
+	if (!game->game_state == kGameState_Previewing){
+
+		game->game_state = kGameState_Previewing;
+
+		g_wipe_screen.current_step = -1;
+		ClearUIContent();
+		GenerateLives(-1);
+	
+		long long int anim_tick = g_tick;
+		if (!g_alt_title_anim) {
+			GenerateText("play",{97,65}, anim_tick, ProgressiveTextTickRate);
+		} else {
+			GenerateText("pla",{97,65}, anim_tick, ProgressiveTextTickRate);
+			anim_tick += 3*ProgressiveTextTickRate;
+			GenerateUIElement({false, {120,64}, g_assets.YAnimMasks[0]}, anim_tick);
+		}
+		anim_tick += 4*ProgressiveTextTickRate;
+		GenerateText("space  invaders",{57,89}, anim_tick, ProgressiveTextTickRate);
+		anim_tick += 15*ProgressiveTextTickRate;
+		GenerateText("*score advance table*",{33,121},anim_tick);
+		GenerateUIElement({false, {60,136}, g_assets.UFOMasks[0]},anim_tick);
+		GenerateUIElement({false, {66,152}, g_assets.AlienMasks[2][0]},anim_tick);
+		GenerateUIElement({false, {66,168}, g_assets.AlienMasks[1][0]},anim_tick);
+		GenerateUIElement({false, {66,184}, g_assets.AlienMasks[0][0]},anim_tick);
+
+		GenerateText("=? mystery",{81,137},anim_tick, ProgressiveTextTickRate);
+		anim_tick += 10*ProgressiveTextTickRate;
+		GenerateText("=30 points",{81,153},anim_tick, ProgressiveTextTickRate);
+		anim_tick += 10*ProgressiveTextTickRate;
+		GenerateText("=20 points",{81,169},anim_tick, ProgressiveTextTickRate);
+		anim_tick += 10*ProgressiveTextTickRate;
+		GenerateText("=10 points",{81,185},anim_tick, ProgressiveTextTickRate);
+		anim_tick += 10*ProgressiveTextTickRate;
+
+		if (!g_alt_title_anim) {
+			anim_tick += 60;
+		} else {
+
+			Mask_t anim1[kMaxAnimationExtraMasks] = {0};
+			anim1[0] = g_assets.AlienMasks[2][1];
+			GenerateAnimatedUIElement(
+				{false, {kWindowSize.x,64}, g_assets.AlienMasks[2][0]},
+				anim_tick, anim_tick + (kWindowSize.x-120 - 7),
+				{-1, 0},
+				anim1, 2
+			);
+			anim_tick += (kWindowSize.x-120 - 7);
+
+			GenerateUIElement({false, {120,64}, {0}}, anim_tick);
+
+			Mask_t anim2[kMaxAnimationExtraMasks] = {0};
+			anim2[0] = g_assets.YAnimMasks[2];
+			GenerateAnimatedUIElement(
+				{false, {120,64}, g_assets.YAnimMasks[1]},
+				anim_tick, anim_tick + (kWindowSize.x-120 - 5),
+				{1, 0},
+				anim2, 2
+			);
+			anim_tick += (kWindowSize.x-120 - 5);
+
+			GenerateUIElement({false, {kWindowSize.x-3, 64}, g_assets.YAnimMasks[1]}, anim_tick);
+			anim_tick += 60;
+			GenerateUIElement({false, {kWindowSize.x-3, 64}, {0}}, anim_tick);
+
+			Mask_t anim3[kMaxAnimationExtraMasks] = {0};
+			anim3[0] = g_assets.YAnimMasks[4];
+			GenerateAnimatedUIElement(
+				{false, {kWindowSize.x-3,64}, g_assets.YAnimMasks[3]},
+				anim_tick, anim_tick + (kWindowSize.x-3 - 120),
+				{-1, 0},
+				anim3, 2
+			);
+			anim_tick += (kWindowSize.x-3 - 120);
+
+			GenerateUIElement({false, {120, 64}, g_assets.YAnimMasks[3]}, anim_tick);
+
+			anim_tick += 60;
+			GenerateUIElement({false, {120, 64}, {0}}, anim_tick);
+			GenerateText("y", {121,65},  anim_tick);
+		}
+
+		anim_tick += 60;
+		WipeScreenToContent(&g_wipe_screen);
+		g_wipe_screen.queued_tick = anim_tick;
+
+		anim_tick += 22;
+		QueueUpdate(kUpdateID_InsertCoin, anim_tick);
 	}
-	anim_tick += 4*ProgressiveTextTickRate;
-	GenerateText("space  invaders",{57,89}, anim_tick, ProgressiveTextTickRate);
-	anim_tick += 15*ProgressiveTextTickRate;
-	GenerateText("*score advance table*",{33,121},anim_tick);
-	GenerateUIElement({false, {60,136}, g_assets.UFOMasks[0]},anim_tick);
-	GenerateUIElement({false, {66,152}, g_assets.AlienMasks[2][0]},anim_tick);
-	GenerateUIElement({false, {66,168}, g_assets.AlienMasks[1][0]},anim_tick);
-	GenerateUIElement({false, {66,184}, g_assets.AlienMasks[0][0]},anim_tick);
-
-	GenerateText("=? mystery",{81,137},anim_tick, ProgressiveTextTickRate);
-	anim_tick += 10*ProgressiveTextTickRate;
-	GenerateText("=30 points",{81,153},anim_tick, ProgressiveTextTickRate);
-	anim_tick += 10*ProgressiveTextTickRate;
-	GenerateText("=20 points",{81,169},anim_tick, ProgressiveTextTickRate);
-	anim_tick += 10*ProgressiveTextTickRate;
-	GenerateText("=10 points",{81,185},anim_tick, ProgressiveTextTickRate);
-	anim_tick += 10*ProgressiveTextTickRate;
-
-	if (!g_alt_title_anim) {
-		anim_tick += 60;
-	} else {
-
-		Mask_t anim1[kMaxAnimationExtraMasks] = {0};
-		anim1[0] = g_assets.AlienMasks[2][1];
-		GenerateAnimatedUIElement(
-			{false, {kWindowSize.x,64}, g_assets.AlienMasks[2][0]},
-			anim_tick, anim_tick + (kWindowSize.x-120 - 7),
-			{-1, 0},
-			anim1, 2
-		);
-		anim_tick += (kWindowSize.x-120 - 7);
-
-		GenerateUIElement({false, {120,64}, {0}}, anim_tick);
-
-		Mask_t anim2[kMaxAnimationExtraMasks] = {0};
-		anim2[0] = g_assets.YAnimMasks[2];
-		GenerateAnimatedUIElement(
-			{false, {120,64}, g_assets.YAnimMasks[1]},
-			anim_tick, anim_tick + (kWindowSize.x-120 - 5),
-			{1, 0},
-			anim2, 2
-		);
-		anim_tick += (kWindowSize.x-120 - 5);
-
-		GenerateUIElement({false, {kWindowSize.x-3, 64}, g_assets.YAnimMasks[1]}, anim_tick);
-		anim_tick += 60;
-		GenerateUIElement({false, {kWindowSize.x-3, 64}, {0}}, anim_tick);
-
-		Mask_t anim3[kMaxAnimationExtraMasks] = {0};
-		anim3[0] = g_assets.YAnimMasks[4];
-		GenerateAnimatedUIElement(
-			{false, {kWindowSize.x-3,64}, g_assets.YAnimMasks[3]},
-			anim_tick, anim_tick + (kWindowSize.x-3 - 120),
-			{-1, 0},
-			anim3, 2
-		);
-		anim_tick += (kWindowSize.x-3 - 120);
-
-		GenerateUIElement({false, {120, 64}, g_assets.YAnimMasks[3]}, anim_tick);
-
-		anim_tick += 60;
-		GenerateUIElement({false, {120, 64}, {0}}, anim_tick);
-		GenerateText("y", {121,65},  anim_tick);
-	}
-
-	anim_tick += 60;
-	WipeScreenToContent(&g_wipe_screen);
-	g_wipe_screen.queued_tick = anim_tick;
-
-	anim_tick += 22;
-	QueueUpdate(kUpdateID_InsertCoin, anim_tick);
-
 }
 
 
 void ChoosingPlayerInit(Game_t *game){
+	game->game_state = kGameState_ChoosingPlayers;
+
 	ClearUIContent();
+	GenerateLives(-1);
+
 	if (game->credits > 1){
 		GenerateText("push",{98,91});
 		GenerateText("1 or 2players button",{33,123});
@@ -137,6 +149,10 @@ void AboutToPlayInit(Game_t *game){
 		GenerateNumber(game->player[1].score,4, kScore2NumberPosition, 0, true);
 	}
 	if (!game->multiplayer) EraseText(kScore2NumberPosition, 4);
+
+	int lives = game->player[game->player_playing].lives;
+	if (lives == 0) lives = 3;
+	GenerateLives(lives);
 
 	WipeScreenToContent(&g_wipe_screen);
 	g_wipe_screen.queued_tick = g_tick + 120;
@@ -208,9 +224,15 @@ void PlayingInit(Game_t *game){
 	Player_Reset(&game->player[game->player_playing]);
 }
 
-void GameOverInit() {
-	ClearUIContent();
-	GenerateText("game over",{81,59},g_tick, ProgressiveTextTickRate);
+void GameOverInit(Game_t *game) {
+	if (game->game_state != kGameState_GameOver){
+		game->game_state = kGameState_GameOver;
+
+		ClearUIContent();
+		GenerateText("game over",{81,59},g_tick, ProgressiveTextTickRate);
+
+		QueueUpdate(kUpdateID_OnGameOverEnd, g_tick + 180);
+	}
 }
 
 void PlayerLogic(Game_t *game) {
@@ -344,10 +366,7 @@ void GameUpdate(Game_t *game) {
 			Update_queue[i].active = false;
 			switch(Update_queue[i].id){
 				case kUpdateID_Previewing :
-					g_wipe_screen.current_step = -1;
-					ClearUIContent();
-					game->game_state = kGameState_Previewing;
-					PreviewingInit();
+					PreviewingInit(game);
 					break;
 				case kUpdateID_InsertCoin : 
 					g_wipe_screen.current_step = -1;
@@ -357,7 +376,6 @@ void GameUpdate(Game_t *game) {
 				case kUpdateID_ChoosingPlayer : 
 					g_wipe_screen.current_step = -1;
 					ClearUIContent();
-					game->game_state = kGameState_ChoosingPlayers;
 					ChoosingPlayerInit(game);
 					break;
 				case kUpdateID_AboutToPlay : 
@@ -375,9 +393,14 @@ void GameUpdate(Game_t *game) {
 				case kUpdateID_GameOver :
 					// g_wipe_screen.current_step = -1;
 					// ClearUIContent();
-					game->game_state = kGameState_GameOver;
-					GameOverInit();
+					GameOverInit(game);
 					break;
+				case kUpdateID_OnGameOverEnd :
+					if (game->credits > 0) {
+						ChoosingPlayerInit(game);
+					} else {
+						PreviewingInit(game);
+					}
 				case kUpdateID_UpdateScore:
 					UpdateScore();
 					break;
@@ -454,11 +477,6 @@ void GameUpdate(Game_t *game) {
 				}
 			break;
 			case kGameState_GameOver:
-				if (game->credits > 0) {
-					QueueUpdate(kUpdateID_ChoosingPlayer, g_tick + 180);
-				} else {
-					QueueUpdate(kUpdateID_Previewing, g_tick + 180);
-				}
 			break;
 		}
 	}

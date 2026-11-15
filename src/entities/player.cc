@@ -6,8 +6,10 @@
 #include "../core/draw.cc"
 #include "../core/types.cc"
 #include "../tools/asset-loader.cc"
+#include "../tools/ui-element.cc"
 #include "body.cc"
 #include "bullet.cc"
+#include "UFO.cc"
 
 // Prototipaje
 
@@ -31,7 +33,7 @@ void Player_Assets(Player_t *self_assets) {
   self_assets->body = {
     true,
     {16, 224}, 
-    g_assets.PlayerMasks
+    g_assets.PlayerMask
   };
 }
 
@@ -61,11 +63,12 @@ void Player_Reset(Player_t *self) {
     self->dead = false;
     self->dying = false;
     self->dying_tick = 0;
-    
+
     if (self->lives == 0) {
       self->score = 0;
       self->lives = 3;
     }
+    GenerateLives(self->lives);
 
     Player_Assets(self);
   }
@@ -76,6 +79,9 @@ void Dead(Player_t *self, int damage) {
     self->active = false;
     self->dying_tick = 60;
     self->lives -= damage;
+
+    GenerateLives(self->lives);
+
     if(self->lives == 0) self->dead = true;
   }
 }
@@ -118,6 +124,8 @@ void Shoot(Player_t *self) {
     Bullet_registry[kBulletType_Player] = *Bullet_Construct(kBulletType_Player);
     Bullet_registry[kBulletType_Player].body.mask = g_assets.PlayerBullet;
     MoveTo(&Bullet_registry[kBulletType_Player], {self->body.position.x + self->body.mask.size.x/2 - g_assets.PlayerBullet.size.x/2, self->body.position.y});
+  
+    if (!g_UFO.active) g_UFO.dir = !g_UFO.dir;
   }
 }
 

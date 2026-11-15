@@ -46,6 +46,7 @@ const Vector2_t kCreditsNumberPosition = {200,240};
 const Vector2_t kScore1NumberPosition = {10 + 8*2 , 9 + 8*2};
 const Vector2_t kScore2NumberPosition = {10 + 8*20, 9 + 8*2};
 const Vector2_t kHiScoreNumberPosition = {10 + 8*10, 9 + 8*2};
+const Vector2_t kLivesNumberPosition = {10, 240};
 
 WipeScreen g_wipe_screen;
 bool g_alt_title_anim = true;
@@ -155,7 +156,7 @@ void GenerateAnimatedUIElement(Body_t b, long long int start_tick, long long int
 void ClearUIContent(){
     for (int i = 0; i < UIElement_kRegistryCapacity; i++){
         if (UIElement_registry[i].body.position.y > 33 &&
-        UIElement_registry[i].body.position.y < 33+207) Destruct(&UIElement_registry[i]);
+        UIElement_registry[i].body.position.y < 33+206) Destruct(&UIElement_registry[i]);
     }
     for (int i = 0; i < AnimatedUIElement_kRegistryCapacity; i++){
         Destruct(&AnimatedUIElement_registry[i]);
@@ -194,6 +195,21 @@ void GenerateNumber(int value, int digits, Vector2_t position, int start_tick = 
     }
 }
 
+//Vidas
+
+void GenerateLives(int lives){
+  if (lives >= 0){
+    GenerateNumber(lives, 1, kLivesNumberPosition);
+  } else {
+    EraseUIElement(kLivesNumberPosition);
+  }
+  for (int i = 0; i < 3; i++){
+    Vector2_t live_position = {20 + 20*i + kLivesNumberPosition.x, kLivesNumberPosition.y - 1};
+    if (i < lives - 1) GenerateUIElement({false, live_position, g_assets.PlayerMask});
+    else EraseUIElement(live_position);
+  }
+}
+
 //Wipe Screen
 
 void AdvanceWipeScreen(WipeScreen *wp){
@@ -203,7 +219,7 @@ void AdvanceWipeScreen(WipeScreen *wp){
 }
 void WipeScreenToContent(WipeScreen *wp){
     wp->position = {0,33};
-    wp->size = {kWindowSize.x, 207};
+    wp->size = {kWindowSize.x, 206};
 }
 void WipeScreenToFull(WipeScreen *wp){
     wp->position = {0,0};

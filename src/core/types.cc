@@ -95,6 +95,7 @@ enum kUpdateID {
     kUpdateID_Playing,
     kUpdateID_Death,
     kUpdateID_GameOver,
+    kUpdateID_OnGameOverEnd,
 	kUpdateID_UpdateScore
 };
 
