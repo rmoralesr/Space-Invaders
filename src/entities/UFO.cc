@@ -26,6 +26,7 @@ UFO_t g_UFO;
 void UFO_Init(){
     g_UFO.active = false;
     g_UFO.anim_tick_progress = 0;
+    g_UFO.points_index = 0;
     g_UFO.start_tick = g_tick + 1200;
 }
 
@@ -72,6 +73,10 @@ void TickUFO(){
             }
         }
     }
+}
+void AdvanceUFOPointsIndex(){
+    g_UFO.points_index++;
+    if (g_UFO.points_index > 15) g_UFO.points_index = 0;
 }
 
 #endif // UFO_CC

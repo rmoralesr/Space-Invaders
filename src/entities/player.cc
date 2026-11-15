@@ -82,7 +82,19 @@ void Dead(Player_t *self, int damage) {
 
     GenerateLives(self->lives);
 
+    g_game.game_state = kGameState_Death;
     if(self->lives == 0) self->dead = true;
+
+    if(g_game.multiplayer && !g_game.player[!g_game.player_playing].dead) { // Si es multiplayer comprueba que el otro player aun siga vivo
+      WipeScreenToContent(&g_wipe_screen);
+			g_wipe_screen.queued_tick = g_tick + 60;
+      QueueUpdate(kUpdateID_AboutToPlay, g_tick + 60 + 22);
+    } else if(!self->dead) {
+      QueueUpdate(kUpdateID_Playing, g_tick + 60);
+    } else {
+      QueueUpdate(kUpdateID_GameOver, g_tick + 60);
+    }
+
   }
 }
 

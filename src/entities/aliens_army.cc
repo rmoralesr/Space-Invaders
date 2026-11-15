@@ -5,6 +5,7 @@
 #include "../core/types.cc"
 #include "../tools/asset-loader.cc"
 #include "../core/score.cc"
+#include "../entities/UFO.cc"
 
 void AlienArmy_Init();
 
@@ -133,6 +134,7 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
                         Bullet_registry[1] = *Bullet_Construct(kBulletType_Squiggly);
                         Bullet_registry[1].body.mask = g_assets.AlienBulletsMasks[2][0];
                         MoveTo(&Bullet_registry[1], {x, y+8});
+                        AdvanceUFOPointsIndex();
                     }
                 }
             }
@@ -147,6 +149,7 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
                         Bullet_registry[2] = *Bullet_Construct(kBulletType_Plunger);
                         Bullet_registry[2].body.mask = g_assets.AlienBulletsMasks[0][0];
                         MoveTo(&Bullet_registry[2], {x, y+8});
+                        AdvanceUFOPointsIndex();
                     }
                 }
             }
@@ -161,6 +164,7 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
                         Bullet_registry[3] = *Bullet_Construct(kBulletType_Rolling);
                         Bullet_registry[3].body.mask = g_assets.AlienBulletsMasks[1][0];
                         MoveTo(&Bullet_registry[3], {x, y+8});
+                        AdvanceUFOPointsIndex();
                     }
                 }
             }

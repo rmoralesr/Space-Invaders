@@ -49,7 +49,9 @@ const Vector2_t kHiScoreNumberPosition = {10 + 8*10, 9 + 8*2};
 const Vector2_t kLivesNumberPosition = {10, 240};
 
 WipeScreen g_wipe_screen;
-bool g_alt_title_anim = true;
+bool g_alt_title_anim = false;
+
+Body_t g_bottomline = {};
 
 // Prototipaje
 
@@ -57,6 +59,12 @@ UIElement_t* UIElement_Construct();
 void Destruct(UIElement_t* self);
 
 // Definiciones
+
+void GenerateBottomLine(){
+    g_bottomline.mask = g_assets.LineMask;
+    g_bottomline.position = {0,238};
+    g_bottomline.can_collide = true;
+}
 
 char TranslateCharToIndex(char c){
     if (c >= 'a' && c <= 'z') {
@@ -171,7 +179,7 @@ void GenerateText(const char *text, Vector2_t position,
     int i = 0;
     while(text[i] != '\0'){
         if (text[i] != ' ') {
-            Body_t b = {false, position, CharMask(text[i])};
+            Body_t b = {true, position, CharMask(text[i])};
             GenerateUIElement(b, queue_tick, flashing);
         }
         if (text[i] != ' ' || !ignore_space) queue_tick += wait_rate;
@@ -187,7 +195,7 @@ void GenerateNumber(int value, int digits, Vector2_t position, int start_tick = 
     for (int i = 0; i < digits; i++) {
         number = value / pow(10, digits - 1 - i);
 
-        Body_t b = {false, position, CharMask('0'+number)};
+        Body_t b = {true, position, CharMask('0'+number)};
         GenerateUIElement(b, start_tick, flashing);
 
         position.x += kCharactersWidth + 3;
@@ -205,7 +213,7 @@ void GenerateLives(int lives){
   }
   for (int i = 0; i < 3; i++){
     Vector2_t live_position = {20 + 20*i + kLivesNumberPosition.x, kLivesNumberPosition.y - 1};
-    if (i < lives - 1) GenerateUIElement({false, live_position, g_assets.PlayerMask});
+    if (i < lives - 1) GenerateUIElement({true, live_position, g_assets.PlayerMask});
     else EraseUIElement(live_position);
   }
 }

@@ -1,6 +1,7 @@
 #ifndef ASSET_LOADER_CC
 #define ASSET_LOADER_CC 1
 
+#include "../core/types.cc"
 #include "../core/cirno.cc"
 #include "../core/mask.cc"
 #include <esat/sprite.h>
@@ -89,6 +90,8 @@ struct Assets {
     Mask_t ExtraCharacterMasks[kNumCharacters] = {};
 
     Mask_t YAnimMasks[kYAnimSprites] = {};
+
+    Mask_t LineMask = {};
 
     esat::SpriteHandle ColorMask;
 };
@@ -199,6 +202,10 @@ void LoadAssets() {
     }
     
     g_assets.ColorMask = esat::SpriteFromFile("../../assets/ColorMask.png");
+
+    g_assets.LineMask.size = {224, 1};
+    for (int i = 0; i < 224; i++) WriteBit(&g_assets.LineMask, i, 0, 1);
+
     
 }
 

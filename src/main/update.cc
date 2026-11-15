@@ -21,7 +21,6 @@ void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
 
 void MatarPlayer(Player_t *player, Game_t *game) { // TODO quitar
 	Dead(player, 1);
-	game->game_state = kGameState_Death;
 }
 void ClearQueuedActions(){
 	for (int i = 0; i < Update_kQueueCapacity; i++){
@@ -32,13 +31,11 @@ void ClearQueuedActions(){
 }
 
 void PreviewingInit(Game_t *game){
-	if (!game->game_state == kGameState_Previewing){
-
+	if (game->game_state != kGameState_Previewing){
 		game->game_state = kGameState_Previewing;
 
 		g_wipe_screen.current_step = -1;
 		ClearUIContent();
-		GenerateLives(-1);
 	
 		long long int anim_tick = g_tick;
 		if (!g_alt_title_anim) {
@@ -126,8 +123,8 @@ void PreviewingInit(Game_t *game){
 void ChoosingPlayerInit(Game_t *game){
 	game->game_state = kGameState_ChoosingPlayers;
 
+	g_wipe_screen.current_step = -1;
 	ClearUIContent();
-	GenerateLives(-1);
 
 	if (game->credits > 1){
 		GenerateText("push",{98,91});
@@ -140,6 +137,12 @@ void ChoosingPlayerInit(Game_t *game){
 
 void AboutToPlayInit(Game_t *game){
 	ClearUIContent();
+
+	if (game->multiplayer) {
+		if(game->multiplayer && !game->player[!game->player_playing].dead) game->player_playing = !game->player_playing;
+	} else {
+		game->player_playing = 0;
+	}
 
 	if (!game->player_playing){
 		GenerateText("play player<1>",{59,120});
@@ -160,63 +163,73 @@ void AboutToPlayInit(Game_t *game){
 	QueueUpdate(kUpdateID_Playing, g_tick + 120 + 22);
 }
 
-void InsertCoinInit(){
-	if (!g_alt_title_anim) GenerateText("insert  coin",{65,113});
-	else  GenerateText("insert ccoin",{65,113});
+void InsertCoinInit(Game_t *game){
+	if (game->game_state != kGameState_InsertCoin){
 
-	long long int anim_tick = g_tick;
-	GenerateText("<1 or 2 players>",{49,143}, anim_tick, ProgressiveTextTickRate);
-	anim_tick += 16*ProgressiveTextTickRate;
-	GenerateText("*1 player  1 coin",{49,169}, anim_tick, ProgressiveTextTickRate);
-	anim_tick += 17*ProgressiveTextTickRate;
-	GenerateText("*2 players 2 coins",{49,195}, anim_tick, ProgressiveTextTickRate);
-	anim_tick += 18*ProgressiveTextTickRate;
+		game->game_state = kGameState_InsertCoin;
 
-	if (g_alt_title_anim){
+		g_wipe_screen.current_step = -1;
+		ClearUIContent();
+
+		if (!g_alt_title_anim) GenerateText("insert  coin",{65,113});
+		else  GenerateText("insert ccoin",{65,113});
+
+		long long int anim_tick = g_tick;
+		GenerateText("<1 or 2 players>",{49,143}, anim_tick, ProgressiveTextTickRate);
+		anim_tick += 16*ProgressiveTextTickRate;
+		GenerateText("*1 player  1 coin",{49,169}, anim_tick, ProgressiveTextTickRate);
+		anim_tick += 17*ProgressiveTextTickRate;
+		GenerateText("*2 players 2 coins",{49,195}, anim_tick, ProgressiveTextTickRate);
+		anim_tick += 18*ProgressiveTextTickRate;
+
+		if (g_alt_title_anim){
+			anim_tick += 60;
+
+			Mask_t anim1[kMaxAnimationExtraMasks] = {0};
+			anim1[0] = g_assets.AlienMasks[2][1];
+			GenerateAnimatedUIElement(
+				{false, {0,38}, g_assets.AlienMasks[2][0]},
+				anim_tick, anim_tick + 119,
+				{1, 0},
+				anim1, 2
+			);
+			anim_tick += 119;
+
+			GenerateUIElement({false, {119, 38}, g_assets.AlienMasks[2][1]}, anim_tick);
+			anim_tick += 6;
+
+			Mask_t anim2[kMaxAnimationExtraMasks] = {0};
+			for (int i = 0; i < 3; i++) anim2[i] = g_assets.AlienBulletsMasks[kBulletType_Squiggly-1][1+i];
+			GenerateAnimatedUIElement(
+				{false, {123,42}, g_assets.AlienBulletsMasks[kBulletType_Squiggly-1][0]},
+				anim_tick, anim_tick + 113-42-8,
+				{0, 1},
+				anim2, 4, 1
+			);
+			anim_tick += 113-42-8;
+			GenerateUIElement({false, {122, 109}, g_assets.AlienBulletExplosionMask}, anim_tick);
+
+			anim_tick += 8;
+			GenerateUIElement({false, {122, 109}, {0}}, anim_tick); // Borrar Explosion
+			GenerateUIElement({false, {65 + 8*7, 113}, {0}}, anim_tick); // Borrar C
+
+			anim_tick += 20;
+		}
+
 		anim_tick += 60;
+		WipeScreenToContent(&g_wipe_screen);
+		g_wipe_screen.queued_tick = anim_tick;
 
-		Mask_t anim1[kMaxAnimationExtraMasks] = {0};
-		anim1[0] = g_assets.AlienMasks[2][1];
-		GenerateAnimatedUIElement(
-			{false, {0,38}, g_assets.AlienMasks[2][0]},
-			anim_tick, anim_tick + 119,
-			{1, 0},
-			anim1, 2
-		);
-		anim_tick += 119;
+		anim_tick += 22;
+		QueueUpdate(kUpdateID_Previewing, anim_tick);
 
-		GenerateUIElement({false, {119, 38}, g_assets.AlienMasks[2][1]}, anim_tick);
-		anim_tick += 6;
+		g_alt_title_anim = !g_alt_title_anim;
 
-		Mask_t anim2[kMaxAnimationExtraMasks] = {0};
-		for (int i = 0; i < 3; i++) anim2[i] = g_assets.AlienBulletsMasks[2][1+i];
-		GenerateAnimatedUIElement(
-			{false, {123,42}, g_assets.AlienBulletsMasks[2][0]},
-			anim_tick, anim_tick + 113-42-8,
-			{0, 1},
-			anim2, 4, 1
-		);
-		anim_tick += 113-42-8;
-		GenerateUIElement({false, {122, 109}, g_assets.AlienBulletExplosionMask}, anim_tick);
-
-		anim_tick += 8;
-		GenerateUIElement({false, {122, 109}, {0}}, anim_tick); // Borrar Explosion
-		GenerateUIElement({false, {65 + 8*7, 113}, {0}}, anim_tick); // Borrar C
-
-		anim_tick += 20;
 	}
-
-	anim_tick += 60;
-	WipeScreenToContent(&g_wipe_screen);
-	g_wipe_screen.queued_tick = anim_tick;
-
-	anim_tick += 22;
-	QueueUpdate(kUpdateID_Previewing, anim_tick);
-
-	g_alt_title_anim = !g_alt_title_anim;
 }
 
 void PlayingInit(Game_t *game){
+	GenerateBottomLine();
 	GenerateNumber(game->player[game->player_playing].score,4, kScore1NumberPosition);
 	if(game->multiplayer) GenerateNumber(game->player[game->player_playing].score,4, kScore2NumberPosition);
 	if(game->player[game->player_playing].lives == 0) AlienArmy_Init(&game->player[game->player_playing].alien_army);
@@ -231,7 +244,10 @@ void GameOverInit(Game_t *game) {
 		ClearUIContent();
 		GenerateText("game over",{81,59},g_tick, ProgressiveTextTickRate);
 
-		QueueUpdate(kUpdateID_OnGameOverEnd, g_tick + 180);
+		WipeScreenToContent(&g_wipe_screen);
+		g_wipe_screen.queued_tick = g_tick + 180;
+
+		QueueUpdate(kUpdateID_OnGameOverEnd, g_tick + 180 + 22);
 	}
 }
 
@@ -325,8 +341,11 @@ void PlayerLogic(Game_t *game) {
 
 
 
-	// if (alien_army_flag == kAlienArmyFlag_invaded) Instant_Dead(&game->player[player]);
-	if (alien_army_flag == kAlienArmyFlag_exterminated) PlayingInit(game);
+	if (alien_army_flag == kAlienArmyFlag_invaded) Dead(current_player, 4);
+	if (alien_army_flag == kAlienArmyFlag_exterminated && current_player->lives > 0) {
+		AlienArmy_Init(&game->player[game->player_playing].alien_army);
+		UFO_Init();
+	}
 }
 
 void UpdateCredits(Game_t *game, int number_credits) {
@@ -370,10 +389,8 @@ void GameUpdate(Game_t *game) {
 				case kUpdateID_Previewing :
 					PreviewingInit(game);
 					break;
-				case kUpdateID_InsertCoin : 
-					g_wipe_screen.current_step = -1;
-					ClearUIContent();
-					InsertCoinInit();
+				case kUpdateID_InsertCoin :
+					InsertCoinInit(game);
 					break;
 				case kUpdateID_ChoosingPlayer : 
 					g_wipe_screen.current_step = -1;
@@ -411,7 +428,8 @@ void GameUpdate(Game_t *game) {
 	}
 
 	switch (game->game_state) {
-		case kGameState_Previewing: {
+		case kGameState_Previewing: 
+		case kGameState_InsertCoin: {
 			if (game->credits > 0) {
 				game->game_state = kGameState_ChoosingPlayers;
 				ClearQueuedActions();
@@ -429,14 +447,15 @@ void GameUpdate(Game_t *game) {
 				game->multiplayer = false;
 				game->player_playing = false;
 				Player_Construct(&game->player[0]);
+				game->player_playing = 0;
 				UpdateCredits(game, -1);
-			}
-			if (game->input.two_player_button && game->credits >= 2) { // TODO por ahora así, luego cambiar
+			} else if (game->input.two_player_button && game->credits >= 2) { // TODO por ahora así, luego cambiar
 				game->multiplayer = true;
 				game->player_playing = false;
 				for (int i = 0; i < 2; i++){
 					Player_Construct(&game->player[i]);
 				}
+				game->player_playing = 1;
 				UpdateCredits(game, -2);
 			}
 			break;
@@ -468,15 +487,7 @@ void GameUpdate(Game_t *game) {
 			break;
 			case kGameState_Death:
 				Dead_Animation(&game->player[game->player_playing]);
-
 				// if(!game->player[game->player_playing].dead || (game->multiplayer && !game->player[!game->player_playing].dead)) {
-				if(game->multiplayer && !game->player[!game->player_playing].dead) { // Si es multiplayer comprueba que el otro player aun siga vivo
-					QueueUpdate(kUpdateID_AboutToPlay, g_tick + 60);
-				} else if(!game->player[game->player_playing].dead) {
-					QueueUpdate(kUpdateID_Playing, g_tick + 60);
-				} else {
-					QueueUpdate(kUpdateID_GameOver, g_tick + 60);
-				}
 			break;
 			case kGameState_GameOver:
 			break;

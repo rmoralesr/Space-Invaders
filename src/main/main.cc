@@ -20,7 +20,7 @@ void FrameWait(double last_time);
 /** @brief Inicializa las variables necesarias para el juego */
 void GameInit(Game_t *game) {
     // TODO
-    game->game_state = kGameState_Previewing;
+    
     game->credits = 0;
     game->player_playing = 0;
 
@@ -32,7 +32,8 @@ void GameInit(Game_t *game) {
     GenerateText("credit", {140,240});
     GenerateNumber(game->credits,2, kCreditsNumberPosition);
 
-    InsertCoinInit();
+    game->game_state = kGameState_InsertCoin;
+    PreviewingInit(game);
 }
 
 

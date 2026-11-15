@@ -82,6 +82,7 @@ enum GameState {
     kGameState_Previewing,
     kGameState_ChoosingPlayers,
     kGameState_AboutToPlay,
+    kGameState_InsertCoin,
     kGameState_Playing,
     kGameState_Death,
     kGameState_GameOver

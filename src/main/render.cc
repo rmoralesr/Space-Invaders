@@ -53,17 +53,6 @@ void GameRender(Game_t *game) {
         }
     }
 
-
-    if (g_wipe_screen.current_step != -1){
-        unsigned char RGBA[4] = {0,0,0,255};
-        DrawRectangle(
-            g_wipe_screen.position, 
-            {g_wipe_screen.current_step*g_wipe_screen.step_size,g_wipe_screen.size.y},
-            RGBA
-        );
-    }
-
-
     switch (game->game_state) {
         case kGameState_Previewing: {
             PreviewRender();
@@ -76,6 +65,7 @@ void GameRender(Game_t *game) {
             break;
         }
         case kGameState_Playing: {
+            Draw(&g_bottomline);
             AliensRender(&game->player[game->player_playing].alien_army);
             if (g_UFO.active) Draw(&g_UFO.body);
             Draw(&game->player[game->player_playing]);
@@ -83,15 +73,27 @@ void GameRender(Game_t *game) {
             break;
         }
         case kGameState_Death:
+            Draw(&g_bottomline);
             AliensRender(&game->player[game->player_playing].alien_army);
             if (g_UFO.active) Draw(&g_UFO.body);
             Draw(&game->player[game->player_playing]);
         break;
         case kGameState_GameOver:
+            Draw(&g_bottomline);
             AliensRender(&game->player[game->player_playing].alien_army);
             if (g_UFO.active) Draw(&g_UFO.body);
         break;
     }
+
+    if (g_wipe_screen.current_step != -1){
+        unsigned char RGBA[4] = {0,0,0,255};
+        DrawRectangle(
+            g_wipe_screen.position, 
+            {g_wipe_screen.current_step*g_wipe_screen.step_size,g_wipe_screen.size.y},
+            RGBA
+        );
+    }
+
 }
 
 #endif // RENDER_CC
