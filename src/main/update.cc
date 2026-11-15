@@ -137,6 +137,9 @@ void ChoosingPlayerInit(Game_t *game){
 
 void AboutToPlayInit(Game_t *game){
 	ClearUIContent();
+	for (int i = 0; i < 4; i++) {
+		Bullet_registry[i].active = false;
+	}
 
 	if (game->multiplayer) {
 		if(game->multiplayer && !game->player[!game->player_playing].dead) game->player_playing = !game->player_playing;
