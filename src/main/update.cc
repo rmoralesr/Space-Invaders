@@ -240,11 +240,18 @@ void PlayerLogic(Game_t *game) {
 
 
 	// Update Objetos
-	int i;
+	int i, j;
 
+	Bunker_t *bunker;
 	Bullet_t *bullet;
 	Bullet_t *p_bullet = &Bullet_registry[kBulletType_Player];
-	if (p_bullet->active) Tick(p_bullet);
+	if (p_bullet->active) {
+		Tick(p_bullet);
+		for (j = 0; j < kBunkerLimit; j++) {
+			bunker = &current_player->bunker[j];
+			Collide(p_bullet, bunker);
+		}
+	}
 
 	for (i = 0; i < 3; i++) {
 		bullet = &Bullet_registry[i+1];
@@ -253,10 +260,16 @@ void PlayerLogic(Game_t *game) {
 				Tick(bullet, current_player->alien_army.aliens_alive <= 8);
 
 			Collide(p_bullet, bullet);
+
+			for (j = 0; j < kBunkerLimit; j++) {
+				bunker = &current_player->bunker[j];
+				Collide(bullet, bunker);
+			}
 		}
 	}
 
-	
+
+
 
 
 	// if (alien_army_flag == kAlienArmyFlag_invaded) Instant_Dead(&game->player[player]);
