@@ -109,8 +109,8 @@ void Bullet_Move() {
 void Shoot(Player_t *self) {
   if (!Bullet_registry[kBulletType_Player].active) {
     Bullet_registry[kBulletType_Player] = *Bullet_Construct(kBulletType_Player);
-    Bullet_registry[kBulletType_Player].body.mask = g_assets.AlienBulletsMasks[1][0];
-    MoveTo(&Bullet_registry[kBulletType_Player], {self->body.position.x, self->body.position.y});
+    Bullet_registry[kBulletType_Player].body.mask = g_assets.PlayerBullet;
+    MoveTo(&Bullet_registry[kBulletType_Player], {self->body.position.x + self->body.mask.size.x/2, self->body.position.y});
   }
 }
 
