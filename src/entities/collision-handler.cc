@@ -6,6 +6,7 @@
 #include "bullet.cc"
 #include "player.cc"
 #include "aliens_army.cc"
+#include "UFO.cc"
 
 // Prototipaje
 
@@ -163,15 +164,13 @@ bool Collide(Bullet_t *A, Bullet_t *B) {
 
     if (res > 0) { // Ha habido colision
 
-      Vector2_t delta = Sub(A->body.position, B->body.position);
-      
       g_dummy_mask = A->body.mask;
 
-      Dead(A); // <- Actualizar Sprite de A AQUI
-      Sub(&A->body.mask, &B->body.mask, Neg(delta));
+      Dead(A); // Se actualiza el sprite y la posicion
+      Sub(&A->body.mask, &B->body.mask, Sub(B->body.position, A->body.position));
 
-      Dead(B); // <- Actualizar Sprite de B AQUI
-      Sub(&B->body.mask, &g_dummy_mask, delta); 
+      Dead(B); // 
+      Sub(&B->body.mask, &g_dummy_mask, Sub(A->body.position, B->body.position)); 
 
       return true;
 
@@ -182,32 +181,55 @@ bool Collide(Bullet_t *A, Bullet_t *B) {
 }
 
 bool Collide(Bullet_t *A, Bunker_t *B) {
-  unsigned int res = Collide(&A->body, &B->body);
+  if (A->body.can_collide) {
+    unsigned int res = Collide(&A->body, &B->body);
 
-  if (res > 0) { // Ha habido colision
+    if (res > 0) { // Ha habido colision
 
-    Vector2_t delta = Sub(A->body.position, B->body.position);
+      Sub(&B->body.mask, &A->body.mask, Sub(A->body.position, B->body.position));
 
-    Sub(&B->body.mask, &A->body.mask, delta);
-    Dead(A); // <- Actualizar Sprite de A AQUI
-    Sub(&B->body.mask, &A->body.mask, delta); 
+      Dead(A); // Se actualiza el sprite y la posicion
 
-    return true;
+      Sub(&B->body.mask, &A->body.mask, Sub(A->body.position, B->body.position)); 
 
+      return true;
+
+    }
   }
 
   return false;
 }
 
-bool Collide (Bullet_t *A, Alien_t *B) {
-  unsigned int res = Collide(&A->body, &B->body);
+bool Collide(Bullet_t *A, Alien_t *B) {
+  if (A->body.can_collide && B->body.can_collide) {
+    unsigned int res = Collide(&A->body, &B->body);
 
-  if (res > 0) { // Ha habido colision
+    if (res > 0) { // Ha habido colision
 
-    A->active = false;
+      A->active = false;
 
-    return true;
+      Dead(B);
 
+      return true;
+
+    }
+  }
+  return false;
+}
+
+bool Collide(Bullet_t *A, UFO_t *B) {
+  if (A->body.can_collide && B->body.can_collide) {
+    unsigned int res = Collide(&A->body, &B->body);
+
+    if (res > 0) { // Ha habido colision
+
+      A->active = false;
+
+      DestroyUFO();
+
+      return true;
+
+    }
   }
 
   return false;

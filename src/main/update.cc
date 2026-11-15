@@ -243,16 +243,30 @@ void PlayerLogic(Game_t *game) {
 	int i, j;
 
 	Bunker_t *bunker;
+	Alien_t *alien;
 	Bullet_t *bullet;
+
+	// Todo Bala jugador
 	Bullet_t *p_bullet = &Bullet_registry[kBulletType_Player];
 	if (p_bullet->active) {
 		Tick(p_bullet);
+		
+		Collide(p_bullet, &g_UFO);
+
+		// Bunkers
 		for (j = 0; j < kBunkerLimit; j++) {
 			bunker = &current_player->bunker[j];
 			Collide(p_bullet, bunker);
 		}
+
+		// Aliens
+		for (j = 0; j < 55; j++) {
+			alien = &current_player->alien_army.aliens[j];
+			if(alien->active) Collide(p_bullet, alien);
+		}
 	}
 
+	// Otras balas
 	for (i = 0; i < 3; i++) {
 		bullet = &Bullet_registry[i+1];
 		if (bullet->active) {

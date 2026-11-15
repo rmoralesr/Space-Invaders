@@ -41,6 +41,7 @@ void EscapeUFO(){
     g_UFO.active = false;
     g_UFO.start_tick = g_tick + 1200;
 }
+
 void DestroyUFO(){
     g_UFO.body.can_collide = false;
     g_UFO.body.mask = g_assets.UFOMasks[1];
