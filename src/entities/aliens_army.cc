@@ -113,6 +113,13 @@ int AlienArmy_PickBulletY(AlienArmy_t *alien_army, int col) {
     return -1;
 }
 
+Alien_t *AlienArmy_GetLowestAlienInColumn(AlienArmy_t *alien_army, int col) {
+    for (int row = 0; row < 5; row++) {
+        if (alien_army->aliens[row*11+col].active) return &alien_army->aliens[row*11+col];
+    }
+    return nullptr;
+}
+
 void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
     int y = -1;
     int x = -1;
