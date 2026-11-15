@@ -238,10 +238,12 @@ void Alien_Dead(Alien_t *alien) {
 }
 
 void Destruct(AlienArmy_t* self, int index) {
-    Alien_Dead(&self->aliens[index]);
-    self->aliens_alive--;
-    self->alien_explosion_tick = 16;
-    self->alien_died = index;
+    if (self->aliens[index].active) {
+        Alien_Dead(&self->aliens[index]);
+        self->aliens_alive--;
+        self->alien_explosion_tick = 16;
+        self->alien_died = index;
+    }
 }
 
 #endif // ALIENS_ARMY_CC
