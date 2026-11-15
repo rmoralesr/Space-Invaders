@@ -282,7 +282,16 @@ void PlayerLogic(Game_t *game) {
 		}
 	}
 
-
+	// Aliens con barreras
+	for (i = 0; i < 11; i++) {
+		alien = AlienArmy_GetLowestAlienInColumn(&current_player->alien_army, i);
+		if (alien != nullptr) {
+			for (j = 0; j < kBunkerLimit; j++) {
+				bunker = &current_player->bunker[j];
+				Collide(alien, bunker);
+			}
+		}
+	}
 
 
 

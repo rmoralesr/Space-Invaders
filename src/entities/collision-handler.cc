@@ -26,7 +26,10 @@ unsigned int Collide(
 // Devuelve si han colisionado y ejecutan la logica por si mismos
 bool Collide(Bullet_t *A, Bullet_t *B);
 bool Collide(Bullet_t *A, Alien_t *B);
-bool Collide(Bullet_t *A);
+bool Collide(Bullet_t *A, Bunker_t *B);
+bool Collide(Bullet_t *A, UFO_t *B);
+
+void Collide(Alien_t *A, UFO_t *B);
 
 
 // Definiciones
@@ -182,9 +185,7 @@ bool Collide(Bullet_t *A, Bullet_t *B) {
 
 bool Collide(Bullet_t *A, Bunker_t *B) {
   if (A->body.can_collide) {
-    unsigned int res = Collide(&A->body, &B->body);
-
-    if (res > 0) { // Ha habido colision
+    if (QuickCollide(&A->body, &B->body)) {
 
       Sub(&B->body.mask, &A->body.mask, Sub(A->body.position, B->body.position));
 
@@ -202,9 +203,7 @@ bool Collide(Bullet_t *A, Bunker_t *B) {
 
 bool Collide(Bullet_t *A, Alien_t *B) {
   if (A->body.can_collide && B->body.can_collide) {
-    unsigned int res = Collide(&A->body, &B->body);
-
-    if (res > 0) { // Ha habido colision
+    if (QuickCollide(&A->body, &B->body)) {
 
       A->active = false;
 
@@ -219,9 +218,7 @@ bool Collide(Bullet_t *A, Alien_t *B) {
 
 bool Collide(Bullet_t *A, UFO_t *B) {
   if (A->body.can_collide && B->body.can_collide) {
-    unsigned int res = Collide(&A->body, &B->body);
-
-    if (res > 0) { // Ha habido colision
+    if (QuickCollide(&A->body, &B->body)) {
 
       A->active = false;
 
@@ -233,6 +230,13 @@ bool Collide(Bullet_t *A, UFO_t *B) {
   }
 
   return false;
+}
+
+void Collide(Alien_t *A, Bunker_t *B) {
+  unsigned int res = Collide(&A->body, &B->body, &g_dummy_body);
+
+  if (res > 0)
+    Sub(&B->body.mask, &g_dummy_body.mask, Sub(g_dummy_body.position, B->body.position)); 
 }
 
 
