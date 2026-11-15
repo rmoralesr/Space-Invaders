@@ -5,6 +5,14 @@
 #include "../core/mask.cc"
 #include <esat/sprite.h>
 
+enum BulletType {
+  kBulletType_Player,
+
+  kBulletType_Squiggly,
+  kBulletType_Plunger,
+  kBulletType_Rolling // Esta te apunta a ti!
+};
+
 // Player
 
 //Dimensiones del player
@@ -124,7 +132,7 @@ void LoadAssets() {
 
     for (int i = 0; i < 4; i++){
         FromFile(
-            &g_assets.AlienBulletsMasks[0][i],
+            &g_assets.AlienBulletsMasks[kBulletType_Plunger-1][i],
             "../../assets/disparo_plunger.png",
             {3*i, 0},
             {3, 7}
@@ -133,7 +141,7 @@ void LoadAssets() {
 
     for (int i = 0; i < 4; i++){
         FromFile(
-            &g_assets.AlienBulletsMasks[1][i],
+            &g_assets.AlienBulletsMasks[kBulletType_Rolling-1][i],
             "../../assets/disparo_rolling.png",
             {3*i, 0},
             {3, 7}
@@ -142,7 +150,7 @@ void LoadAssets() {
 
     for (int i = 0; i < 4; i++){
         FromFile(
-            &g_assets.AlienBulletsMasks[2][i],
+            &g_assets.AlienBulletsMasks[kBulletType_Squiggly-1][i],
             "../../assets/disparo_squiggly.png",
             {3*i, 0},
             {3, 7}

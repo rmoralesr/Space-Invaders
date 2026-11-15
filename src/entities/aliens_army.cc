@@ -119,9 +119,7 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
     int x = -1;
     switch (alien_army->bullet_to_move) {
         case kBulletType_Squiggly:
-            if (Bullet_registry[kBulletType_Squiggly].active) {
-                Tick(&Bullet_registry[kBulletType_Squiggly]);
-            } else {
+            if (!Bullet_registry[kBulletType_Squiggly].active) {
                 if (AlienArmy_CanFire(alien_army, score, kBulletType_Squiggly)) {
                     y = AlienArmy_PickBulletY(alien_army, kAlienBulletsTable[alien_army->squiggly_table_pos] - 1);
                     x = AlienArmy_PickBulletX(alien_army, playerX, kBulletType_Squiggly);
@@ -135,9 +133,7 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
             alien_army->bullet_to_move = kBulletType_Plunger;
             break;
         case kBulletType_Plunger:
-            if (Bullet_registry[kBulletType_Plunger].active) {
-                Tick(&Bullet_registry[kBulletType_Plunger]);
-            } else {
+            if (!Bullet_registry[kBulletType_Plunger].active) {
                 if (AlienArmy_CanFire(alien_army, score, kBulletType_Plunger)) {
                     y = AlienArmy_PickBulletY(alien_army, kAlienBulletsTable[alien_army->plunger_table_pos] - 1);
                     x = AlienArmy_PickBulletX(alien_army, playerX, kBulletType_Plunger);
@@ -151,9 +147,7 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
             alien_army->bullet_to_move = kBulletType_Rolling;
             break;
         case kBulletType_Rolling:
-            if (Bullet_registry[kBulletType_Rolling].active) {
-                Tick(&Bullet_registry[kBulletType_Rolling]);
-            } else {
+            if (!Bullet_registry[kBulletType_Rolling].active) {
                 if (AlienArmy_CanFire(alien_army, score, kBulletType_Rolling)) {
                     y = AlienArmy_PickBulletY(alien_army, AlienArmy_GetColNearPlayer(alien_army, playerX));
                     x = AlienArmy_PickBulletX(alien_army, playerX, kBulletType_Rolling);
@@ -235,15 +229,19 @@ int AlienGetPoints(AlienType type) {
     return 0;
 }
 
-void Destruct(AlienArmy_t* self, int index) {
-    if (self->aliens[index].active) {
-        self->aliens[index].active = false;
-        self->aliens_alive--;
-        self->alien_explosion_tick = 16;
-        self->alien_died = index;
-        self->aliens[index].body.mask = g_assets.AlienExplosionMask;
-        AddScore(AlienGetPoints(self->aliens[index].type));
+void Alien_Dead(Alien_t *alien) {
+    if (alien->active) {
+        alien->active = false;
+        alien->body.mask = g_assets.AlienExplosionMask;
+        AddScore(AlienGetPoints(alien->type));
     }
+}
+
+void Destruct(AlienArmy_t* self, int index) {
+    Alien_Dead(&self->aliens[index]);
+    self->aliens_alive--;
+    self->alien_explosion_tick = 16;
+    self->alien_died = index;
 }
 
 #endif // ALIENS_ARMY_CC

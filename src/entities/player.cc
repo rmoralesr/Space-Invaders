@@ -106,6 +106,7 @@ void Move(Player_t *self, Vector2_t delta) {
   }
 }
 
+// Obsoleta
 void Bullet_Move() {
   if (Bullet_registry[kBulletType_Player].active) {
     Tick(&Bullet_registry[kBulletType_Player]);

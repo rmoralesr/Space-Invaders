@@ -168,10 +168,10 @@ bool Collide(Bullet_t *A, Bullet_t *B) {
       g_dummy_mask = A->body.mask;
 
       Dead(A); // <- Actualizar Sprite de A AQUI
-      Sub(&A->body.mask, &B->body.mask, delta);
+      Sub(&A->body.mask, &B->body.mask, Neg(delta));
 
       Dead(B); // <- Actualizar Sprite de B AQUI
-      Sub(&B->body.mask, &g_dummy_mask, Neg(delta)); 
+      Sub(&B->body.mask, &g_dummy_mask, delta); 
 
       return true;
 
@@ -181,6 +181,37 @@ bool Collide(Bullet_t *A, Bullet_t *B) {
   return false;
 }
 
+bool Collide(Bullet_t *A, Bunker_t *B) {
+  unsigned int res = Collide(&A->body, &B->body);
+
+  if (res > 0) { // Ha habido colision
+
+    Vector2_t delta = Sub(A->body.position, B->body.position);
+
+    Sub(&B->body.mask, &A->body.mask, delta);
+    Dead(A); // <- Actualizar Sprite de A AQUI
+    Sub(&B->body.mask, &A->body.mask, delta); 
+
+    return true;
+
+  }
+
+  return false;
+}
+
+bool Collide (Bullet_t *A, Alien_t *B) {
+  unsigned int res = Collide(&A->body, &B->body);
+
+  if (res > 0) { // Ha habido colision
+
+    A->active = false;
+
+    return true;
+
+  }
+
+  return false;
+}
 
 
 Vector2_t GetOverlap(Body_t *A, Body_t *B) {
