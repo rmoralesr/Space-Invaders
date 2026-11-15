@@ -7,7 +7,6 @@
 #include "../core/score.cc"
 
 void AlienArmy_Init();
-void Destruct(Alien_t* self);
 
 // Definiciones
 
@@ -112,6 +111,13 @@ int AlienArmy_PickBulletY(AlienArmy_t *alien_army, int col) {
         if (alien_army->aliens[row*11+col].active) return alien_army->aliens[row*11+col].body.position.y;
     }
     return -1;
+}
+
+Alien_t *AlienArmy_GetLowestAlienInColumn(AlienArmy_t *alien_army, int col) {
+    for (int row = 0; row < 5; row++) {
+        if (alien_army->aliens[row*11+col].active) return &alien_army->aliens[row*11+col];
+    }
+    return nullptr;
 }
 
 void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
@@ -234,15 +240,11 @@ void Dead(Alien_t *alien) {
         alien->active = false;
         alien->body.mask = g_assets.AlienExplosionMask;
         AddScore(AlienGetPoints(alien->type));
-    }
-}
+        AlienArmy_t *alien_army = &g_game.player[g_game.player_playing].alien_army;
 
-void Destruct(AlienArmy_t* self, int index) {
-    if (self->aliens[index].active) {
-        Dead(&self->aliens[index]);
-        self->aliens_alive--;
-        self->alien_explosion_tick = 16;
-        self->alien_died = index;
+        alien_army->aliens_alive--;
+        alien_army->alien_explosion_tick = 16;
+        alien_army->alien_died = alien - alien_army->aliens;
     }
 }
 

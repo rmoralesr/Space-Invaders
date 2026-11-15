@@ -67,11 +67,20 @@ void Destruct(Bullet_t* self) {
 
 void Dead(Bullet_t *self) {
   // Cambiar sprite
-  self->body.mask = g_assets.AlienBulletExplosionMask;
-
+  
   self->dying = true;
   self->body.can_collide = false;
-  self->step = self->type == kBulletType_Player ? 9 : 3; // Countdown para destruirse
+  
+  if (self->type == kBulletType_Player) {
+    self->body.mask = g_assets.AlienBulletExplosionMask;
+
+    self->step = 9;// Countdown para destruirse
+  } else {
+    self->body.mask = g_assets.AlienBulletExplosionMask;
+    self->body.position = Sum(self->body.position, {-1, 2}); // Pequeño offset para que la bala penetre
+
+    self->step = 3;
+  }
 }
 
 void Tick(Bullet_t *self, bool quick) {

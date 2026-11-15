@@ -16,7 +16,7 @@
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
 void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
-	Destruct(alien_army, g_tick%55);
+	Dead(&alien_army->aliens[g_tick%55]);
 }
 
 void MatarPlayer(Player_t *player, Game_t *game) { // TODO quitar
@@ -249,16 +249,30 @@ void PlayerLogic(Game_t *game) {
 	int i, j;
 
 	Bunker_t *bunker;
+	Alien_t *alien;
 	Bullet_t *bullet;
+
+	// Todo Bala jugador
 	Bullet_t *p_bullet = &Bullet_registry[kBulletType_Player];
 	if (p_bullet->active) {
 		Tick(p_bullet);
+		
+		Collide(p_bullet, &g_UFO);
+
+		// Bunkers
 		for (j = 0; j < kBunkerLimit; j++) {
 			bunker = &current_player->bunker[j];
 			Collide(p_bullet, bunker);
 		}
+
+		// Aliens
+		for (j = 0; j < 55; j++) {
+			alien = &current_player->alien_army.aliens[j];
+			if(alien->active) Collide(p_bullet, alien);
+		}
 	}
 
+	// Otras balas
 	for (i = 0; i < 3; i++) {
 		bullet = &Bullet_registry[i+1];
 		if (bullet->active) {
@@ -274,7 +288,16 @@ void PlayerLogic(Game_t *game) {
 		}
 	}
 
-
+	// Aliens con barreras
+	for (i = 0; i < 11; i++) {
+		alien = AlienArmy_GetLowestAlienInColumn(&current_player->alien_army, i);
+		if (alien != nullptr) {
+			for (j = 0; j < kBunkerLimit; j++) {
+				bunker = &current_player->bunker[j];
+				Collide(alien, bunker);
+			}
+		}
+	}
 
 
 
