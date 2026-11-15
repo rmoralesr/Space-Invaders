@@ -16,7 +16,7 @@
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
 void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
-	Destruct(alien_army, g_tick%55);
+	Dead(&alien_army->aliens[g_tick%55]);
 }
 
 void MatarPlayer(Player_t *player) { // TODO quitar
