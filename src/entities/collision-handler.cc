@@ -28,6 +28,7 @@ bool Collide(Bullet_t *A, Bullet_t *B);
 bool Collide(Bullet_t *A, Alien_t *B);
 bool Collide(Bullet_t *A, Bunker_t *B);
 bool Collide(Bullet_t *A, UFO_t *B);
+bool Collide(Bullet_t *A, Player_t *B);
 
 void Collide(Alien_t *A, UFO_t *B);
 
@@ -223,6 +224,22 @@ bool Collide(Bullet_t *A, UFO_t *B) {
       A->active = false;
 
       DestroyUFO();
+
+      return true;
+
+    }
+  }
+
+  return false;
+}
+
+bool Collide(Bullet_t *A, Player_t *B) {
+    if (A->body.can_collide && B->body.can_collide) {
+    if (QuickCollide(&A->body, &B->body)) {
+
+      A->active = false;
+
+      Dead(B, 1);
 
       return true;
 
