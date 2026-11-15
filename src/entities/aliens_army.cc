@@ -229,15 +229,19 @@ int AlienGetPoints(AlienType type) {
     return 0;
 }
 
-void Destruct(AlienArmy_t* self, int index) {
-    if (self->aliens[index].active) {
-        self->aliens[index].active = false;
-        self->aliens_alive--;
-        self->alien_explosion_tick = 16;
-        self->alien_died = index;
-        self->aliens[index].body.mask = g_assets.AlienExplosionMask;
-        AddScore(AlienGetPoints(self->aliens[index].type));
+void Alien_Dead(Alien_t *alien) {
+    if (alien->active) {
+        alien->active = false;
+        alien->body.mask = g_assets.AlienExplosionMask;
+        AddScore(AlienGetPoints(alien->type));
     }
+}
+
+void Destruct(AlienArmy_t* self, int index) {
+    Alien_Dead(&self->aliens[index]);
+    self->aliens_alive--;
+    self->alien_explosion_tick = 16;
+    self->alien_died = index;
 }
 
 #endif // ALIENS_ARMY_CC
