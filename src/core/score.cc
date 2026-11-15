@@ -19,12 +19,14 @@ void UpdateScore(){
 }
 void AddScore(int points, bool update_score = true){
     Player_t *player = &g_game.player[g_game.player_playing];
-    Vector2_t score_position;
-    if (!g_game.player_playing) score_position = kScore1NumberPosition;
-    else score_position = kScore2NumberPosition;
 
     player->score += points;
-    if(g_game.hiscore < player->score) g_game.hiscore = player->score;
+    if(g_game.hiscore < player->score) {
+        g_game.hiscore = player->score;
+        if (g_game.hiscore > 9999) g_game.hiscore %= 10000;
+    }
+    if (player->score > 9999) player->score %= 10000;
+
     if (update_score) UpdateScore();
 }
 

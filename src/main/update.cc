@@ -307,6 +307,8 @@ void PlayerLogic(Game_t *game) {
 				bunker = &current_player->bunker[j];
 				Collide(bullet, bunker);
 			}
+
+			Collide(bullet, current_player);
 		}
 	}
 
