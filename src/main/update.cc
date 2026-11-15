@@ -208,37 +208,59 @@ void PlayingInit(Game_t *game){
 }
 
 void PlayerLogic(Game_t *game) {
+	Player_t *current_player = &game->player[game->player_playing];
 
-	AlienArmyFlag alien_army_flag = AlienArmy_Control(&game->player[game->player_playing].alien_army, game->player[game->player_playing].score, game->player[game->player_playing].body.position.x);
+	AlienArmyFlag alien_army_flag = AlienArmy_Control(
+		&current_player->alien_army,
+		current_player->score, 
+		current_player->body.position.x
+	);
 	
 	// UFO
 	TickUFO();
 	if (g_tick == g_UFO.start_tick) GenerateUFO();
 
-	if (esat::IsKeyDown('M')) MatarAlien(&game->player[game->player_playing].alien_army); //TODO Quitar
-	if (esat::IsKeyDown('K')) MatarPlayer(&game->player[game->player_playing]); //TODO Quitar
-	if (esat::IsKeyDown('V')) game->player[game->player_playing].lives++; //TODO Quitar
+	if (esat::IsKeyDown('M')) MatarAlien(&current_player->alien_army); //TODO Quitar
+	if (esat::IsKeyDown('K')) MatarPlayer(current_player); //TODO Quitar
+	if (esat::IsKeyDown('V')) current_player->lives++; //TODO Quitar
 	if (esat::IsKeyDown('U')) DestroyUFO(); //TODO Quitar
 
 	if (game->input.two_player_button) {
 		Destruct(&Bullet_registry[1+g_tick%3]); //TODO Quitar
 	}
 
+	// Jugador
+	if(game->input.action_button) Shoot(current_player);
+
+	if (game->input.left_button) {
+		Move(current_player, {-1, 0});
+	} else if (game->input.right_button) {
+		Move(current_player, {+1, 0});
+	}
+
+
+	// Update Objetos
+	int i;
+
+	Bullet_t *bullet;
+	Bullet_t *p_bullet = &Bullet_registry[kBulletType_Player];
+	if (p_bullet->active) Tick(p_bullet);
+
+	for (i = 0; i < 3; i++) {
+		bullet = &Bullet_registry[i+1];
+		if (bullet->active) {
+			if (i == g_tick % 3) // Cada disparo (de alien) toma turnos para ser simulado
+				Tick(bullet, current_player->alien_army.aliens_alive <= 8);
+
+			Collide(p_bullet, bullet);
+		}
+	}
+
+	
+
 
 	// if (alien_army_flag == kAlienArmyFlag_invaded) Instant_Dead(&game->player[player]);
 	if (alien_army_flag == kAlienArmyFlag_exterminated) PlayingInit(game);
-	if (game->input.left_button) {
-		Move(&game->player[game->player_playing], {-1, 0});
-	} else if (game->input.right_button) {
-		Move(&game->player[game->player_playing], {+1, 0});
-	}
-}
-
-void DoGameCollisions() {
-	// Balas
-	Bullet_t *bulletA;
-	Bullet_t *bulletB;
-
 }
 
 void UpdateCredits(Game_t *game, int number_credits) {
@@ -365,12 +387,6 @@ void GameUpdate(Game_t *game) {
 			} else {
 				PlayingInit(game);
 			}
-
-			
-			// Jugador Disparo
-			if(game->input.action_button) Shoot(&game->player[game->player_playing]);
-			Bullet_Move();
-
 
 			break;
 		}

@@ -168,10 +168,10 @@ bool Collide(Bullet_t *A, Bullet_t *B) {
       g_dummy_mask = A->body.mask;
 
       Dead(A); // <- Actualizar Sprite de A AQUI
-      Sub(&A->body.mask, &B->body.mask, delta);
+      Sub(&A->body.mask, &B->body.mask, Neg(delta));
 
       Dead(B); // <- Actualizar Sprite de B AQUI
-      Sub(&B->body.mask, &g_dummy_mask, Neg(delta)); 
+      Sub(&B->body.mask, &g_dummy_mask, delta); 
 
       return true;
 

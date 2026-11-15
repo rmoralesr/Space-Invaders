@@ -6,13 +6,13 @@
 #include "../core/draw.cc"
 #include "body.cc"
 
-enum BulletType {
+/*enum BulletType { // Definido en asset-loader (ya que no estamos usando .h)
   kBulletType_Player,
 
   kBulletType_Squiggly,
   kBulletType_Plunger,
   kBulletType_Rolling // Esta te apunta a ti!
-};
+};*/
 
 struct Bullet_t {
   bool active = false;
@@ -34,7 +34,7 @@ Bullet_t Bullet_registry[4] = {0};
 Bullet_t* Bullet_Construct();
 void Destruct(Bullet_t* self);
 
-void Tick(Bullet_t *self); // Actualiza toda la logica. Se mueve hacia adelante y/o intenta colisionar (por ver), en este caso.
+void Tick(Bullet_t *self, bool quick = false); // Actualiza toda la logica. Se mueve hacia adelante y/o intenta colisionar (por ver), en este caso.
 void Dead(Bullet_t *self);
 
 void MoveTo(Bullet_t *self, Vector2_t pos);
@@ -67,31 +67,31 @@ void Destruct(Bullet_t* self) {
 
 void Dead(Bullet_t *self) {
   // Cambiar sprite
+  self->body.mask = g_assets.AlienBulletExplosionMask;
+
   self->dying = true;
   self->body.can_collide = false;
-  self->step = 3; // Countdown para destruirse
+  self->step = self->type == kBulletType_Player ? 9 : 3; // Countdown para destruirse
 }
 
-void Tick(Bullet_t *self) {
+void Tick(Bullet_t *self, bool quick) {
   if (!self->dying) {
-
+    
     if (self->type == kBulletType_Player) {
       Move(self, {0, -4});
     } else {
-      Move(self, {0, 4});
+      Move(self, {0, (quick ? 5 : 4)});
     }
     self->step++;
 
-    // Cambiar sprite (los aliens llaman a Tick() cada tres frames ya
-    // if (self->step % 3 == 0) {
-    //   //self->body.mask =
-    // }
-
-    if (self->type != kBulletType_Player) {
-      self->body.mask = g_assets.AlienBulletsMasks[self->type-1][self->current_frame];
-      self->current_frame = (self->current_frame + 1)%4;
+    if (self->type != kBulletType_Player) { // Cambia cada 3 frames
+      self->body.mask = g_assets.AlienBulletsMasks[self->type-1][self->step % 4];
     }
 
+    if (self->body.position.y != clamp(self->body.position.y, 32, 240)) { // TODO modificar valores para que sean accurate TIENEN QUE SER MULTIPLO DE 4
+      self->body.position.y = clamp(self->body.position.y, 32, 240);
+      Dead(self);
+    } 
   } else {
     
     self->step--;

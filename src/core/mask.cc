@@ -95,6 +95,7 @@ void FromFile(Mask_t *mask, const char *path,
 
   if (mx*my > kMask_WordCount*8) {
     printf("mask.cc > FromFile: %s es demasiado grande (%d x %d)", path, mx, my);
+    assert(false); // Abortamos porque probablemente escribiriamos en buffers ajenos
   }
   printf("%d, %d\n", mx, my);
 
@@ -117,25 +118,21 @@ void FromFile(Mask_t *mask, const char *path,
 
 /** @brief Substrae mask B de mask A */
 void Sub(Mask_t *A, Mask_t *B, Vector2_t offset = {0,0}) {
+  int ox = (int)offset.x;
+  int oy = (int)offset.y;
 
-  // min(aMax, bMax) - max(0, bMin)
-  Vector2_t overlap = {
-    min(A->size.x, B->size.x + offset.x) - offset.x,
-    min(A->size.y, B->size.y + offset.y) - offset.y
-  };
+  // Rango de cordenadas B locales dentro de A
+  int x0 = max(0, -ox);
+  int y0 = max(0, -oy);
+  int x1 = min((int)B->size.x, (int)A->size.x - ox);
+  int y1 = min((int)B->size.y, (int)A->size.y - oy);
 
-  if (overlap.x <= 0 || overlap.y <= 0) return; // Nada que hacer
-
-
-  for (int y = 0; y < overlap.y; y++) { // x,y son locales de B
-    for (int x = 0; x < overlap.x; x++) {
-
-      if (ReadBit(B, x,y))
-        WriteBit(A, offset.x + x, offset.y + y, 0);
-
+  for (int y = y0; y < y1; y++) {
+    for (int x = x0; x < x1; x++) {
+      if (ReadBit(B, x, y))
+        WriteBit(A, ox + x, oy + y, 0);
     }
   }
-
 }
 
 void Print(Mask_t *mask) {

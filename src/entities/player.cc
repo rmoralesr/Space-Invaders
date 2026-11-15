@@ -100,6 +100,7 @@ void Move(Player_t *self, Vector2_t delta) {
   }
 }
 
+// Obsoleta
 void Bullet_Move() {
   if (Bullet_registry[kBulletType_Player].active) {
     Tick(&Bullet_registry[kBulletType_Player]);
@@ -109,7 +110,7 @@ void Bullet_Move() {
 void Shoot(Player_t *self) {
   if (!Bullet_registry[kBulletType_Player].active) {
     Bullet_registry[kBulletType_Player] = *Bullet_Construct(kBulletType_Player);
-    Bullet_registry[kBulletType_Player].body.mask = g_assets.AlienBulletsMasks[1][0];
+    Bullet_registry[kBulletType_Player].body.mask = g_assets.PlayerBullet;
     MoveTo(&Bullet_registry[kBulletType_Player], {self->body.position.x, self->body.position.y});
   }
 }
