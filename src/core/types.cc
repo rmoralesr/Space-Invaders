@@ -68,6 +68,8 @@ struct AlienArmy_t {
 struct Player_t {
     bool active;
     bool dead;
+    bool dying;
+    int dying_tick;
     int score;
     int lives;
 
@@ -77,10 +79,12 @@ struct Player_t {
 };
 
 enum GameState {
-    kGameState_Playing,
     kGameState_Previewing,
     kGameState_ChoosingPlayers,
-    kGameState_AboutToPlay
+    kGameState_AboutToPlay,
+    kGameState_Playing,
+    kGameState_Death,
+    kGameState_GameOver
 };
 
 enum kUpdateID {
@@ -89,6 +93,8 @@ enum kUpdateID {
     kUpdateID_ChoosingPlayer,
     kUpdateID_AboutToPlay,
     kUpdateID_Playing,
+    kUpdateID_Death,
+    kUpdateID_GameOver,
 	kUpdateID_UpdateScore
 };
 

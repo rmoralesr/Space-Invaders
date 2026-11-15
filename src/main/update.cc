@@ -19,8 +19,9 @@ void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
 	Destruct(alien_army, g_tick%55);
 }
 
-void MatarPlayer(Player_t *player) { // TODO quitar
+void MatarPlayer(Player_t *player, Game_t *game) { // TODO quitar
 	Dead(player, 1);
+	game->game_state = kGameState_Death;
 }
 void ClearQueuedActions(){
 	for (int i = 0; i < Update_kQueueCapacity; i++){
@@ -207,6 +208,11 @@ void PlayingInit(Game_t *game){
 	Player_Reset(&game->player[game->player_playing]);
 }
 
+void GameOverInit() {
+	ClearUIContent();
+	GenerateText("game over",{81,59},g_tick, ProgressiveTextTickRate);
+}
+
 void PlayerLogic(Game_t *game) {
 
 	AlienArmyFlag alien_army_flag = AlienArmy_Control(&game->player[game->player_playing].alien_army, game->player[game->player_playing].score, game->player[game->player_playing].body.position.x);
@@ -216,7 +222,7 @@ void PlayerLogic(Game_t *game) {
 	if (g_tick == g_UFO.start_tick) GenerateUFO();
 
 	if (esat::IsKeyDown('M')) MatarAlien(&game->player[game->player_playing].alien_army); //TODO Quitar
-	if (esat::IsKeyDown('K')) MatarPlayer(&game->player[game->player_playing]); //TODO Quitar
+	if (esat::IsKeyDown('K')) MatarPlayer(&game->player[game->player_playing], game); //TODO Quitar
 	if (esat::IsKeyDown('V')) game->player[game->player_playing].lives++; //TODO Quitar
 	if (esat::IsKeyDown('U')) DestroyUFO(); //TODO Quitar
 
@@ -282,6 +288,7 @@ void GameUpdate(Game_t *game) {
 				case kUpdateID_Previewing :
 					g_wipe_screen.current_step = -1;
 					ClearUIContent();
+					game->game_state = kGameState_Previewing;
 					PreviewingInit();
 					break;
 				case kUpdateID_InsertCoin : 
@@ -292,6 +299,7 @@ void GameUpdate(Game_t *game) {
 				case kUpdateID_ChoosingPlayer : 
 					g_wipe_screen.current_step = -1;
 					ClearUIContent();
+					game->game_state = kGameState_ChoosingPlayers;
 					ChoosingPlayerInit(game);
 					break;
 				case kUpdateID_AboutToPlay : 
@@ -305,6 +313,12 @@ void GameUpdate(Game_t *game) {
 					ClearUIContent();
 					game->game_state = kGameState_Playing;
 					PlayingInit(game);
+					break;
+				case kUpdateID_GameOver :
+					// g_wipe_screen.current_step = -1;
+					// ClearUIContent();
+					game->game_state = kGameState_GameOver;
+					GameOverInit();
 					break;
 				case kUpdateID_UpdateScore:
 					UpdateScore();
@@ -349,19 +363,20 @@ void GameUpdate(Game_t *game) {
 
 			if(game->player[game->player_playing].active) {
 				PlayerLogic(game);
-			} else if(game->multiplayer && !game->player[!game->player_playing].dead) { // Si es multiplayer comprueba que el otro player aun siga vivo
-					game->player_playing = !game->player_playing; // Cambia al otro jugador
-					game->game_state = kGameState_AboutToPlay;
-					AboutToPlayInit(game);
-			} else if(game->player[game->player_playing].dead) {
-				if (game->credits > 0) {
-					game->game_state = kGameState_ChoosingPlayers;
-					ClearQueuedActions();
-					ChoosingPlayerInit(game);
-				} else {
-					game->game_state = kGameState_Previewing;
-					PreviewingInit();
-				}
+			// } else if(game->multiplayer && !game->player[!game->player_playing].dead) { // Si es multiplayer comprueba que el otro player aun siga vivo
+			// 	game->player_playing = !game->player_playing; // Cambia al otro jugador
+			// 	game->game_state = kGameState_AboutToPlay;
+			// 	AboutToPlayInit(game);
+			// } else if(game->player[game->player_playing].dead) {
+			// 	game->game_state = kGameState_Death;
+			// 	if (game->credits > 0) {
+			// 		game->game_state = kGameState_ChoosingPlayers;
+			// 		ClearQueuedActions();
+			// 		ChoosingPlayerInit(game);
+			// 	} else {
+			// 		game->game_state = kGameState_Previewing;
+			// 		PreviewingInit();
+			// 	}
 			} else {
 				PlayingInit(game);
 			}
@@ -372,6 +387,25 @@ void GameUpdate(Game_t *game) {
 			Bullet_Move();
 
 
+			break;
+			case kGameState_Death:
+				Dead_Animation(&game->player[game->player_playing]);
+
+				// if(!game->player[game->player_playing].dead || (game->multiplayer && !game->player[!game->player_playing].dead)) {
+				if(game->multiplayer && !game->player[!game->player_playing].dead) { // Si es multiplayer comprueba que el otro player aun siga vivo
+					QueueUpdate(kUpdateID_AboutToPlay, g_tick + 60);
+				} else if(!game->player[game->player_playing].dead) {
+					QueueUpdate(kUpdateID_Playing, g_tick + 60);
+				} else {
+					QueueUpdate(kUpdateID_GameOver, g_tick + 60);
+				}
+			break;
+			case kGameState_GameOver:
+				if (game->credits > 0) {
+					QueueUpdate(kUpdateID_ChoosingPlayer, g_tick + 180);
+				} else {
+					QueueUpdate(kUpdateID_Previewing, g_tick + 180);
+				}
 			break;
 		}
 	}

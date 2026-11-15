@@ -82,6 +82,15 @@ void GameRender(Game_t *game) {
             BulletRender();
             break;
         }
+        case kGameState_Death:
+            AliensRender(&game->player[game->player_playing].alien_army);
+            if (g_UFO.active) Draw(&g_UFO.body);
+            Draw(&game->player[game->player_playing]);
+        break;
+        case kGameState_GameOver:
+            AliensRender(&game->player[game->player_playing].alien_army);
+            if (g_UFO.active) Draw(&g_UFO.body);
+        break;
     }
 }
 
