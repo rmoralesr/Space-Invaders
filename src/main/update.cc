@@ -463,7 +463,7 @@ void GameUpdate(Game_t *game) {
 		}
 	}
 
-	// Timing checks
+	// UI Timing checks
 	for (int i = 0; i < UIElement_kRegistryCapacity; i++){
 		if (UIElement_registry[i].active && UIElement_registry[i].queued_tick == g_tick) 
 			EraseUIElement(UIElement_registry[i].body.position, i);

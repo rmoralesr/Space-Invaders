@@ -39,6 +39,7 @@ void GenerateUFO(){
 }
 void EscapeUFO(){
     g_UFO.active = false;
+    g_UFO.body.can_collide = false;
     g_UFO.start_tick = g_tick + 1200;
 }
 
