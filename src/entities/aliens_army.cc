@@ -116,7 +116,7 @@ int AlienArmy_PickBulletY(AlienArmy_t *alien_army, int col) {
     return -1;
 }
 
-void AlienArmy_SetRegeneration(AlienArmy_t *alien_army) { // TODO que ponga regenerating y los aliens en not showing
+void AlienArmy_SetRegeneration(AlienArmy_t *alien_army) {
     alien_army->regenerating = true;
     for (int i = 0; i < 55; i++) {
         alien_army->aliens[i].showing = false;
@@ -223,7 +223,7 @@ AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
             alien_army->last_alien_moved++;
             if (index == 54) alien_army->army_state = kAlienArmyState_descendingFalse;
         } else {
-            do { // TODO que se vayan poniendo en showing cada alien vivo en frames
+            do {
                 index = (alien_army->last_alien_showing + 1) % 55;
                 if (alien_army->aliens[index].active) {
                     alien_army->aliens[index].showing = true;
