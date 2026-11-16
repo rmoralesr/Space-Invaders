@@ -47,9 +47,9 @@ const Vector2_t kScore1NumberPosition = {10 + 8*2 , 9 + 8*2};
 const Vector2_t kScore2NumberPosition = {10 + 8*20, 9 + 8*2};
 const Vector2_t kHiScoreNumberPosition = {10 + 8*10, 9 + 8*2};
 const Vector2_t kLivesNumberPosition = {10, 240};
+const Vector2_t kTaitoCopPosition = {82,32};
 
 WipeScreen g_wipe_screen;
-bool g_alt_title_anim = false;
 
 Body_t g_bottomline = {};
 
@@ -226,8 +226,8 @@ void AdvanceWipeScreen(WipeScreen *wp){
     }
 }
 void WipeScreenToContent(WipeScreen *wp){
-    wp->position = {0,33};
-    wp->size = {kWindowSize.x, 206};
+    wp->position = {0,40};
+    wp->size = {kWindowSize.x, 200};
 }
 void WipeScreenToFull(WipeScreen *wp){
     wp->position = {0,0};
