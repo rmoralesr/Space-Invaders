@@ -77,6 +77,7 @@ struct Assets {
     Mask_t PlayerMask = {};
     Mask_t PlayerExplosion[2] = {};
     Mask_t PlayerBullet = {};
+    Mask_t PlayerBulletExplosion = {};
 
     Mask_t AlienBulletsMasks[3][4] = {};
     Mask_t AlienBulletExplosionMask;
@@ -130,6 +131,7 @@ void LoadAssets() {
         }
     }
 
+    //cargar explosion de los aliens
     FromFile(&g_assets.AlienExplosionMask, "../../assets/AlienExplosion.png");
     
     //cargar las balas de los aliens
@@ -160,7 +162,7 @@ void LoadAssets() {
         );
     }
 
-    //cargar la explosion del disparo
+    //cargar la explosion del disparo (aliens)
     FromFile(&g_assets.AlienBulletExplosionMask, "../../assets/disparo_explosion.png");
 
     //UFO
@@ -194,6 +196,9 @@ void LoadAssets() {
         {kPlayerWidth, kPlayerHeight}
         );
     }
+
+    //cargar la explosion del disparo (jugador)
+    FromFile(&g_assets.PlayerBulletExplosion, "../../assets/disparo_explosion.png");
 
     // ANIMACION Y
     //cargar los sprites de la animacion Y
