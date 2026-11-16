@@ -83,8 +83,10 @@ void Dead(Player_t *self, int damage) {
     self->dying_tick = 60;
     self->lives -= damage;
 
-    GenerateLives(self->lives);
-    g_game.game_state = kGameState_Death;
+    if (g_game.game_state != kGameState_Demo) {
+      g_game.game_state = kGameState_Death;
+      GenerateLives(self->lives);
+    } else g_game.game_state = kGameState_DemoDeath;
 
     if(self->lives <= 0) {
       self->lives = 0;
