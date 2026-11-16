@@ -118,10 +118,11 @@ void PlayerInput(Game_t *game){
 		}
 
 	} else if (game->game_state == kGameState_Demo){
-		if ( g_tick % 180 < 90){
-			if ( g_tick%360 < 180) Move(current_player, {+1, 0});
+		if ( g_tick % 180 < 140){
+			if ( g_tick%360 < 260) Move(current_player, {+1, 0});
 			else Move(current_player, {-1, 0});
 		}
+		if (  g_tick % 90 == 0 ) Shoot(current_player);
 	}
 }
 
