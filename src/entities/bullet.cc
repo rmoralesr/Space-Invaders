@@ -72,7 +72,7 @@ void Dead(Bullet_t *self) {
   self->body.can_collide = false;
   
   if (self->type == kBulletType_Player) {
-    self->body.mask = g_assets.AlienBulletExplosionMask;
+    self->body.mask = g_assets.PlayerBulletExplosion;
 
     self->step = 9;// Countdown para destruirse
   } else {

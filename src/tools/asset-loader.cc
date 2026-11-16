@@ -163,7 +163,7 @@ void LoadAssets() {
     }
 
     //cargar la explosion del disparo (aliens)
-    FromFile(&g_assets.AlienBulletExplosionMask, "../../assets/disparo_explosion.png");
+    FromFile(&g_assets.AlienBulletExplosionMask, "../../assets/disparo_explosion_aliens.png");
 
     //UFO
     //cargar los 2 sprites del UFO
