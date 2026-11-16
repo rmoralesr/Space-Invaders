@@ -115,12 +115,34 @@ void GameOverInit(Game_t *game) {
 		game->game_state = kGameState_GameOver;
 
 		ClearUIContent();
-		GenerateText("game over",{81,59},g_tick, ProgressiveTextTickRate);
 
-		WipeScreenToContent(&g_wipe_screen);
-		g_wipe_screen.queued_tick = g_tick + 180;
+		if (game->multiplayer && game->player[game->player_playing].dead) {
+			GenerateText("game over  player< >",{33,224},g_tick, ProgressiveTextTickRate);
+			GenerateText(game->player_playing ? "2" : "1",{177,224},g_tick + 140, ProgressiveTextTickRate);
+			
+			if(!game->player[!game->player_playing].dead){
+				WipeScreenToContent(&g_wipe_screen);
+				g_wipe_screen.queued_tick = g_tick + 180;
+				QueueUpdate(kUpdateID_AboutToPlay, g_tick + 180 + 22);
+			} else {
+				GenerateText("game over",{81,59},g_tick + 180, ProgressiveTextTickRate);
 
-		QueueUpdate(kUpdateID_OnGameOverEnd, g_tick + 180 + 22);
+				WipeScreenToContent(&g_wipe_screen);
+				g_wipe_screen.queued_tick = g_tick + 180 + 180;
+
+				QueueUpdate(kUpdateID_OnGameOverEnd, g_tick + 180 + 180 + 22);
+			}
+		} else if(game->player[game->player_playing].dead) {
+			GenerateText("game over",{81,59},g_tick, ProgressiveTextTickRate);
+			WipeScreenToContent(&g_wipe_screen);
+			g_wipe_screen.queued_tick = g_tick + 180;
+	
+			QueueUpdate(kUpdateID_OnGameOverEnd, g_tick + 180 + 22);
+		} else {
+			QueueUpdate(kUpdateID_AboutToPlay, g_tick + 40);
+		}
+
+
 	}
 }
 
@@ -328,15 +350,11 @@ void GameUpdate(Game_t *game) {
 			if (game->input.one_player_button && game->credits >= 1) { // TODO por ahora así, luego cambiar
 				game->multiplayer = false;
 				game->player_playing = false;
-				Player_Construct(&game->player[0]);
 				game->player_playing = 0;
 				UpdateCredits(game, -1);
 			} else if (game->input.two_player_button && game->credits >= 2) { // TODO por ahora así, luego cambiar
 				game->multiplayer = true;
 				game->player_playing = false;
-				for (int i = 0; i < 2; i++){
-					Player_Construct(&game->player[i]);
-				}
 				game->player_playing = 1;
 				UpdateCredits(game, -2);
 			}
@@ -347,20 +365,6 @@ void GameUpdate(Game_t *game) {
 
 			if(game->player[game->player_playing].active) {
 				PlayerLogic(game);
-			// } else if(game->multiplayer && !game->player[!game->player_playing].dead) { // Si es multiplayer comprueba que el otro player aun siga vivo
-			// 	game->player_playing = !game->player_playing; // Cambia al otro jugador
-			// 	game->game_state = kGameState_AboutToPlay;
-			// 	AboutToPlayInit(game);
-			// } else if(game->player[game->player_playing].dead) {
-			// 	game->game_state = kGameState_Death;
-			// 	if (game->credits > 0) {
-			// 		game->game_state = kGameState_ChoosingPlayers;
-			// 		ClearQueuedActions();
-			// 		ChoosingPlayerInit(game);
-			// 	} else {
-			// 		game->game_state = kGameState_Previewing;
-			// 		PreviewingInit();
-			// 	}
 			} else {
 				PlayingInit(game);
 			}
@@ -369,7 +373,6 @@ void GameUpdate(Game_t *game) {
 			break;
 			case kGameState_Death:
 				Dead_Animation(&game->player[game->player_playing]);
-				// if(!game->player[game->player_playing].dead || (game->multiplayer && !game->player[!game->player_playing].dead)) {
 			break;
 			case kGameState_GameOver:
 			break;
