@@ -35,5 +35,4 @@ void Move(Body_t* self, Vector2_t delta) {
 }
 
 
-
 #endif //BODY_CC

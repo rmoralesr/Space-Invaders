@@ -157,6 +157,8 @@ void PlayerLogic(Game_t *game) {
 	// Update Objetos
 	int i, j;
 
+	Body_t *body;
+	UIElement_t *uielement;
 	Bunker_t *bunker;
 	Alien_t *alien;
 	Bullet_t *bullet;
@@ -170,8 +172,8 @@ void PlayerLogic(Game_t *game) {
 
 		// Bunkers
 		for (j = 0; j < kBunkerLimit; j++) {
-			bunker = &current_player->bunker[j];
-			Collide(p_bullet, bunker);
+			body = &current_player->bunker[j].body;
+			Collide(p_bullet, body);
 		}
 
 		// Aliens
@@ -191,11 +193,26 @@ void PlayerLogic(Game_t *game) {
 			Collide(p_bullet, bullet);
 
 			for (j = 0; j < kBunkerLimit; j++) {
-				bunker = &current_player->bunker[j];
-				Collide(bullet, bunker);
+				body = &current_player->bunker[j].body;
+				Collide(bullet, body);
 			}
 
 			Collide(bullet, current_player);
+
+			if (!bullet->dying && bullet->body.position.y > 228) {
+				Dead(bullet);
+
+				if (bullet->dying) {
+					VisualCollide(&bullet->body, &g_bottomline);
+
+					for (j = 0; j < UIElement_kRegistryCapacity; j++) {
+						uielement = &UIElement_registry[j];
+						if (uielement->active)
+							VisualCollide(&bullet->body, &uielement->body);
+					}
+				}
+			}
+
 		}
 	}
 
