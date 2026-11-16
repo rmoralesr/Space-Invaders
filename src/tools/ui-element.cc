@@ -49,7 +49,6 @@ const Vector2_t kHiScoreNumberPosition = {10 + 8*10, 9 + 8*2};
 const Vector2_t kLivesNumberPosition = {10, 240};
 
 WipeScreen g_wipe_screen;
-bool g_alt_title_anim = false;
 
 Body_t g_bottomline = {};
 
