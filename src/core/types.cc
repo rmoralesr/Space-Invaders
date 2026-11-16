@@ -61,6 +61,7 @@ struct AlienArmy_t {
     int plunger_table_pos;
     int squiggly_table_pos;
     int left_x;
+    bool generating;
     BulletType bullet_to_move;
     AlienArmyState army_state;
 };
