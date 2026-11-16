@@ -47,6 +47,7 @@ enum AlienArmyFlag {
 struct Alien_t {
     Body_t body;
     bool active;
+    bool showing;
     AlienType type;
     int sprite_frame;
 };
@@ -57,11 +58,12 @@ struct AlienArmy_t {
     int alien_died;
     int alien_explosion_tick;
     int last_alien_moved;
+    int last_alien_showing;
     int direction;
     int plunger_table_pos;
     int squiggly_table_pos;
     int left_x;
-    bool generating;
+    bool regenerating;
     BulletType bullet_to_move;
     AlienArmyState army_state;
 };

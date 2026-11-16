@@ -35,6 +35,7 @@ void Alien_Init(Alien_t *alien, int row, int col) {
     alien->body.position.x = col * 16 + 24;
     alien->body.position.y = 136 - 8 - row * 16;
     alien->sprite_frame = 0;
+    alien->showing = true;
     AsignAlienMask(alien);
 }
 
@@ -48,6 +49,7 @@ void AlienArmy_Init(AlienArmy_t *alien_army) {
     alien_army->bullet_to_move = kBulletType_Squiggly;
     alien_army->plunger_table_pos = 0;
     alien_army->squiggly_table_pos = 6;
+    alien_army->regenerating = false;
     alien_army->left_x = 24 + kAlienWidth;
     for (int row = 0; row < 5; row++) {
         for (int col = 0; col < 11; col++) {
@@ -114,6 +116,14 @@ int AlienArmy_PickBulletY(AlienArmy_t *alien_army, int col) {
     return -1;
 }
 
+void AlienArmy_SetRegeneration(AlienArmy_t *alien_army) { // TODO que ponga regenerating y los aliens en not showing
+    alien_army->regenerating = true;
+    for (int i = 0; i < 55; i++) {
+        alien_army->aliens[i].showing = false;
+    }
+    alien_army->last_alien_showing = 54;
+}
+
 Alien_t *AlienArmy_GetLowestAlienInColumn(AlienArmy_t *alien_army, int col) {
     for (int row = 0; row < 5; row++) {
         if (alien_army->aliens[row*11+col].active) return &alien_army->aliens[row*11+col];
@@ -178,7 +188,7 @@ AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
     int index = (alien_army->last_alien_moved + 1) % 55;
     bool finished = false;
     if (alien_army->aliens_alive <= 0) return kAlienArmyFlag_exterminated;
-    if (alien_army->army_state != kAlienArmyState_generating) {
+    if (alien_army->army_state != kAlienArmyState_generating && !alien_army->regenerating) {
         do {
             if (index == 0) {
                 if (alien_army->army_state == kAlienArmyState_descendingWaiting) {
@@ -208,9 +218,23 @@ AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
         } while (!finished && alien_army->aliens_alive > 0);
         AlienArmy_ControlBullets(alien_army, score, playerX);
     } else {
-        alien_army->aliens[index].active = true;
-        alien_army->last_alien_moved++;
-        if (index == 54) alien_army->army_state = kAlienArmyState_descendingFalse;
+        if (alien_army->army_state == kAlienArmyState_generating) {
+            alien_army->aliens[index].active = true;
+            alien_army->last_alien_moved++;
+            if (index == 54) alien_army->army_state = kAlienArmyState_descendingFalse;
+        } else {
+            do { // TODO que se vayan poniendo en showing cada alien vivo en frames
+                index = (alien_army->last_alien_showing + 1) % 55;
+                if (alien_army->aliens[index].active) {
+                    alien_army->aliens[index].showing = true;
+                    finished = true;
+                } else {
+                    alien_army->last_alien_showing++;
+                }
+                if (index == 54) alien_army->regenerating = false;
+            } while (!finished);
+            alien_army->last_alien_showing++;
+        }
     }
     return kAlienArmyFlag_none;
 }
@@ -225,7 +249,7 @@ AlienArmyFlag AlienArmy_Control(AlienArmy_t *alien_army, int score, int playerX)
 
 void AliensRender(AlienArmy_t *alien_army) {
     for (int i = 0; i < 55; i++) {
-        if (alien_army->aliens[i].active) Draw(&alien_army->aliens[i].body);
+        if (alien_army->aliens[i].active && alien_army->aliens[i].showing) Draw(&alien_army->aliens[i].body);
     }
     if (alien_army->alien_explosion_tick > 0) Draw(&alien_army->aliens[alien_army->alien_died].body);
 }
