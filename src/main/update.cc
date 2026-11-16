@@ -104,7 +104,7 @@ void PlayingInit(Game_t *game){
 	if(game->multiplayer) GenerateNumber(game->player[1].score,4, kScore2NumberPosition);
 	
 	if(game->player[game->player_playing].lives == 0) AlienArmy_Init(&game->player[game->player_playing].alien_army);
-	else AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army);
+	else if(game->multiplayer) AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army);
 	UFO_Init();
 	Player_Reset(&game->player[game->player_playing]);
 
@@ -349,13 +349,10 @@ void GameUpdate(Game_t *game) {
 			}
 			if (game->input.one_player_button && game->credits >= 1) { // TODO por ahora así, luego cambiar
 				game->multiplayer = false;
-				game->player_playing = false;
-				game->player_playing = 0;
 				UpdateCredits(game, -1);
 			} else if (game->input.two_player_button && game->credits >= 2) { // TODO por ahora así, luego cambiar
 				game->multiplayer = true;
-				game->player_playing = false;
-				game->player_playing = 1;
+				game->player_playing = 1; // Todo modificar logica de muerte para no depende de poner el player 2 por defecto
 				UpdateCredits(game, -2);
 			}
 			break;
