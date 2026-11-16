@@ -31,56 +31,6 @@ void ClearQueuedActions(){
 	g_wipe_screen.queued_tick = 0;
 }
 
-void PreviewingInit(Game_t *game){
-	if (game->game_state != kGameState_Previewing){
-		game->game_state = kGameState_Previewing;
-
-		g_wipe_screen.current_step = -1;
-		ClearUIContent();
-		LoadPreviewingMenu();
-	}
-}
-
-void DemoInit(Game_t *game){
-	if (game->game_state != kGameState_Demo){
-		game->game_state = kGameState_Demo;
-
-		g_wipe_screen.current_step = -1;
-		ClearUIContent();
-
-		WipeScreenToContent(&g_wipe_screen);
-		g_wipe_screen.queued_tick = g_tick + 120;
-
-		GenerateText("*demo gameplay*", {50,200});
-
-		QueueUpdate(kUpdateID_InsertCoin, g_tick + 120 + 22);
-	}
-}
-
-void InsertCoinInit(Game_t *game){
-	if (game->game_state != kGameState_InsertCoin){
-		game->game_state = kGameState_InsertCoin;
-
-		g_wipe_screen.current_step = -1;
-		ClearUIContent();
-		LoadInsertCoinMenu();
-
-		g_alt_title_anim = !g_alt_title_anim;
-	}
-}
-
-void ChoosingPlayerInit(Game_t *game){
-	game->game_state = kGameState_ChoosingPlayers;
-
-	g_wipe_screen.current_step = -1;
-	ClearUIContent();
-	if (game->credits > 1){
-		LoadChoosingPlayerTwoMenu();
-	} else {
-		LoadChoosingPlayerOneMenu();
-	}
-}
-
 void AboutToPlayInit(Game_t *game){
 	ClearUIContent();
 	EraseText(kTaitoCopPosition, 9);
@@ -122,7 +72,23 @@ void GameOverInit(Game_t *game) {
 	}
 }
 
-void PlayerLogic(Game_t *game) {
+void PlayerInput(Game_t *game){
+	Player_t *current_player = &game->player[game->player_playing];
+
+	if (game->game_state == kGameState_Playing){
+		if(game->input.action_button) Shoot(current_player);
+
+		if (game->input.left_button) {
+			Move(current_player, {-1, 0});
+		} else if (game->input.right_button) {
+			Move(current_player, {+1, 0});
+		}
+	} else if (game->game_state == kGameState_Demo){
+
+	}
+}
+
+void PlayerLogic(Game_t *game){
 	Player_t *current_player = &game->player[game->player_playing];
 
 	AlienArmyFlag alien_army_flag = AlienArmy_Control(
@@ -140,18 +106,8 @@ void PlayerLogic(Game_t *game) {
 	if (esat::IsKeyDown('V')) current_player->lives++; //TODO Quitar
 	if (esat::IsKeyDown('U')) DestroyUFO(); //TODO Quitar
 
-	if (game->input.two_player_button) {
-		Destruct(&Bullet_registry[1+g_tick%3]); //TODO Quitar
-	}
-
 	// Jugador
-	if(game->input.action_button) Shoot(current_player);
-
-	if (game->input.left_button) {
-		Move(current_player, {-1, 0});
-	} else if (game->input.right_button) {
-		Move(current_player, {+1, 0});
-	}
+	PlayerInput(game);
 
 
 	// Update Objetos
@@ -212,7 +168,7 @@ void PlayerLogic(Game_t *game) {
 
 
 
-	if (alien_army_flag == kAlienArmyFlag_invaded) Dead(current_player, 4);
+	if (alien_army_flag == kAlienArmyFlag_invaded) Dead(current_player, current_player->lives);
 	if (alien_army_flag == kAlienArmyFlag_exterminated && current_player->lives > 0) {
 		AlienArmy_Init(&game->player[game->player_playing].alien_army);
 		UFO_Init();
@@ -225,6 +181,64 @@ void UpdateCredits(Game_t *game, int number_credits) {
 	WipeScreenToFull(&g_wipe_screen);
 	g_wipe_screen.queued_tick = g_tick + 1;
 	QueueUpdate(kUpdateID_AboutToPlay, g_tick + 22);
+}
+
+void PreviewingInit(Game_t *game){
+	if (game->game_state != kGameState_Previewing){
+		game->game_state = kGameState_Previewing;
+
+		g_wipe_screen.current_step = -1;
+		ClearUIContent();
+		LoadPreviewingMenu();
+	}
+}
+
+void DemoInit(Game_t *game){
+	if (game->game_state != kGameState_Demo){
+
+		GenerateLives(3);
+		game->multiplayer = false;
+		game->player_playing = 0;
+		game->player[0].lives = 0;
+
+		game->game_state = kGameState_Demo;
+
+		g_wipe_screen.current_step = -1;
+		ClearUIContent();
+
+		PlayingInit(game);
+		game->player[0].lives = 1;
+		/*WipeScreenToContent(&g_wipe_screen);
+		g_wipe_screen.queued_tick = g_tick + 120;
+
+		GenerateText("*demo gameplay*", {50,200});
+
+		QueueUpdate(kUpdateID_InsertCoin, g_tick + 120 + 22);*/
+	}
+}
+
+void InsertCoinInit(Game_t *game){
+	if (game->game_state != kGameState_InsertCoin){
+		game->game_state = kGameState_InsertCoin;
+
+		g_wipe_screen.current_step = -1;
+		ClearUIContent();
+		LoadInsertCoinMenu();
+
+		g_alt_title_anim = !g_alt_title_anim;
+	}
+}
+
+void ChoosingPlayerInit(Game_t *game){
+	game->game_state = kGameState_ChoosingPlayers;
+
+	g_wipe_screen.current_step = -1;
+	ClearUIContent();
+	if (game->credits > 1){
+		LoadChoosingPlayerTwoMenu();
+	} else {
+		LoadChoosingPlayerOneMenu();
+	}
 }
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
@@ -300,7 +314,6 @@ void GameUpdate(Game_t *game) {
 
 	switch (game->game_state) {
 		case kGameState_Previewing: 
-		case kGameState_Demo: 
 		case kGameState_InsertCoin: {
 			if (game->input.left_button && game->input.right_button){
 				GenerateText("taito cop", kTaitoCopPosition);
@@ -341,6 +354,7 @@ void GameUpdate(Game_t *game) {
 			break;
 		}
 		case kGameState_AboutToPlay: break;
+		case kGameState_Demo:
 		case kGameState_Playing: {
 
 			if(game->player[game->player_playing].active) {

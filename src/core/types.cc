@@ -81,6 +81,7 @@ struct Player_t {
 enum GameState {
     kGameState_Previewing,
     kGameState_Demo,
+    kGameState_DemoDeath,
     kGameState_InsertCoin,
     kGameState_ChoosingPlayers,
     kGameState_AboutToPlay,
