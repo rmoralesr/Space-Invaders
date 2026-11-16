@@ -32,6 +32,10 @@ void GameInit(Game_t *game) {
     GenerateText("credit", {140,240});
     GenerateNumber(game->credits,2, kCreditsNumberPosition);
 
+    for (int i = 0; i < 2; i++){
+        Player_Construct(&game->player[i]);
+    }
+
     game->game_state = kGameState_InsertCoin;
     PreviewingInit(game);
 }
