@@ -73,6 +73,7 @@ void Dead(Bullet_t *self) {
   
   if (self->type == kBulletType_Player) {
     self->body.mask = g_assets.PlayerBulletExplosion;
+    self->body.position = Sum(self->body.position, {-4, 3}); // El sprite de la explosion del jugador es par
 
     self->step = 9;// Countdown para destruirse
   } else {
