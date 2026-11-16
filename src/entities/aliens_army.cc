@@ -202,7 +202,7 @@ AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
             if (alien_army->aliens[index].active) {
                 if (alien_army->army_state == kAlienArmyState_descendingTrue) {
                     Alien_Move(&alien_army->aliens[index], {0, 8});
-                    if (alien_army->aliens[index].body.position.y >= 216) return kAlienArmyFlag_invaded;
+                    if (alien_army->aliens[index].body.position.y >= 208) return kAlienArmyFlag_invaded;
                 }
                 Alien_Move(&alien_army->aliens[index], {alien_army->direction*2, 0});
                 if (alien_army->aliens[index].body.position.x <= 8 || alien_army->aliens[index].body.position.x >= 208) {
