@@ -80,10 +80,10 @@ struct Player_t {
 
 enum GameState {
     kGameState_Previewing,
-    kGameState_ChoosingPlayers,
-    kGameState_AboutToPlay,
     kGameState_Demo,
     kGameState_InsertCoin,
+    kGameState_ChoosingPlayers,
+    kGameState_AboutToPlay,
     kGameState_Playing,
     kGameState_Death,
     kGameState_GameOver
@@ -91,6 +91,7 @@ enum GameState {
 
 enum kUpdateID {
 	kUpdateID_Previewing,
+    kUpdateID_Demo,
     kUpdateID_InsertCoin,
     kUpdateID_ChoosingPlayer,
     kUpdateID_AboutToPlay,

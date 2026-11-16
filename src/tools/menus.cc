@@ -86,7 +86,7 @@ void LoadPreviewingMenu(){
     g_wipe_screen.queued_tick = anim_tick;
 
     anim_tick += 22;
-    QueueUpdate(kUpdateID_InsertCoin, anim_tick);
+    QueueUpdate(kUpdateID_Demo, anim_tick);
 }
 
 void LoadInsertCoinMenu(){
@@ -107,14 +107,14 @@ void LoadInsertCoinMenu(){
         Mask_t anim1[kMaxAnimationExtraMasks] = {0};
         anim1[0] = g_assets.AlienMasks[2][1];
         GenerateAnimatedUIElement(
-            {false, {0,38}, g_assets.AlienMasks[2][0]},
+            {false, {0,40}, g_assets.AlienMasks[2][0]},
             anim_tick, anim_tick + 119,
             {1, 0},
             anim1, 2
         );
         anim_tick += 119;
 
-        GenerateUIElement({false, {119, 38}, g_assets.AlienMasks[2][1]}, anim_tick);
+        GenerateUIElement({false, {119, 40}, g_assets.AlienMasks[2][1]}, anim_tick);
         anim_tick += 6;
 
         Mask_t anim2[kMaxAnimationExtraMasks] = {0};

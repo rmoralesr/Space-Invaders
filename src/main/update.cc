@@ -41,6 +41,34 @@ void PreviewingInit(Game_t *game){
 	}
 }
 
+void DemoInit(Game_t *game){
+	if (game->game_state != kGameState_Demo){
+		game->game_state = kGameState_Demo;
+
+		g_wipe_screen.current_step = -1;
+		ClearUIContent();
+
+		WipeScreenToContent(&g_wipe_screen);
+		g_wipe_screen.queued_tick = g_tick + 120;
+
+		GenerateText("*demo gameplay*", {50,200});
+
+		QueueUpdate(kUpdateID_InsertCoin, g_tick + 120 + 22);
+	}
+}
+
+void InsertCoinInit(Game_t *game){
+	if (game->game_state != kGameState_InsertCoin){
+		game->game_state = kGameState_InsertCoin;
+
+		g_wipe_screen.current_step = -1;
+		ClearUIContent();
+		LoadInsertCoinMenu();
+
+		g_alt_title_anim = !g_alt_title_anim;
+	}
+}
+
 void ChoosingPlayerInit(Game_t *game){
 	game->game_state = kGameState_ChoosingPlayers;
 
@@ -55,6 +83,7 @@ void ChoosingPlayerInit(Game_t *game){
 
 void AboutToPlayInit(Game_t *game){
 	ClearUIContent();
+	EraseText(kTaitoCopPosition, 9);
 
 	if (game->multiplayer) {
 		if(game->multiplayer && !game->player[!game->player_playing].dead) game->player_playing = !game->player_playing;
@@ -62,18 +91,6 @@ void AboutToPlayInit(Game_t *game){
 		game->player_playing = 0;
 	}
 	LoadAboutToPlayMenu(game);
-}
-
-void InsertCoinInit(Game_t *game){
-	if (game->game_state != kGameState_InsertCoin){
-		game->game_state = kGameState_InsertCoin;
-
-		g_wipe_screen.current_step = -1;
-		ClearUIContent();
-		LoadInsertCoinMenu();
-
-		g_alt_title_anim = !g_alt_title_anim;
-	}
 }
 
 void PlayingInit(Game_t *game){
@@ -228,9 +245,6 @@ void GameUpdate(Game_t *game) {
 		}
 	}
 
-	if (g_tick == g_wipe_screen.queued_tick) g_wipe_screen.current_step = 0;
-	AdvanceWipeScreen(&g_wipe_screen);
-
 	// Queued Updates
 	for (int i = 0; i < Update_kQueueCapacity; i++){
 		if (Update_queue[i].active && Update_queue[i].queued_tick == g_tick){
@@ -238,6 +252,9 @@ void GameUpdate(Game_t *game) {
 			switch(Update_queue[i].id){
 				case kUpdateID_Previewing :
 					PreviewingInit(game);
+					break;
+				case kUpdateID_Demo :
+					DemoInit(game);
 					break;
 				case kUpdateID_InsertCoin :
 					InsertCoinInit(game);
@@ -279,18 +296,27 @@ void GameUpdate(Game_t *game) {
 
 	switch (game->game_state) {
 		case kGameState_Previewing: 
+		case kGameState_Demo: 
 		case kGameState_InsertCoin: {
+			if (game->input.left_button && game->input.right_button){
+				GenerateText("taito cop", kTaitoCopPosition);
+			}
+
 			if (game->credits > 0) {
-				game->game_state = kGameState_ChoosingPlayers;
 				ClearQueuedActions();
-				ChoosingPlayerInit(game);
+				game->game_state = kGameState_ChoosingPlayers;
+
+				WipeScreenToContent(&g_wipe_screen);
+				g_wipe_screen.queued_tick = g_tick;
+
+				QueueUpdate(kUpdateID_ChoosingPlayer, g_tick + 22);
 			}
 			break;
 		}
 		case kGameState_ChoosingPlayers: {
 			if (game->input.insert_credit && game->credits == 2) {
 				WipeScreenToContent(&g_wipe_screen);
-				g_wipe_screen.queued_tick = g_tick + 1;
+				g_wipe_screen.queued_tick = g_tick;
 				QueueUpdate(kUpdateID_ChoosingPlayer, g_tick + 22);
 			}
 			if (game->input.one_player_button && game->credits >= 1) { // TODO por ahora así, luego cambiar
@@ -345,11 +371,13 @@ void GameUpdate(Game_t *game) {
 	}
 
 	// UI Timing checks
+	if (g_tick == g_wipe_screen.queued_tick) g_wipe_screen.current_step = 0;
+	AdvanceWipeScreen(&g_wipe_screen);
+
 	for (int i = 0; i < UIElement_kRegistryCapacity; i++){
 		if (UIElement_registry[i].active && UIElement_registry[i].queued_tick == g_tick) 
 			EraseUIElement(UIElement_registry[i].body.position, i);
     }
-
 }
 
 #endif // UPDATE_CC
