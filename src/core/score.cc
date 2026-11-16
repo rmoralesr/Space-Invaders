@@ -20,14 +20,17 @@ void UpdateScore(){
 void AddScore(int points, bool update_score = true){
     Player_t *player = &g_game.player[g_game.player_playing];
 
+    if (player->score < 1500 && player->score + points >= 1500) {
+        player->lives++;
+        GenerateLives(player->lives);
+    }
+
     player->score += points;
     if(g_game.hiscore < player->score) {
         g_game.hiscore = player->score;
         if (g_game.hiscore > 9999) g_game.hiscore %= 10000;
     }
     if (player->score > 9999) player->score %= 10000;
-    
-    if (player->score > 1500) player->lives++;
 
     if (update_score) UpdateScore();
 }
