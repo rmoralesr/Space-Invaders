@@ -72,13 +72,14 @@ void Dead(Bullet_t *self) {
   self->body.can_collide = false;
   
   if (self->type == kBulletType_Player) {
-    self->body.mask = g_assets.AlienBulletExplosionMask;
+    self->body.mask = g_assets.PlayerBulletExplosion;
+    self->body.position = Sum(self->body.position, {-4, 3}); // El sprite de la explosion del jugador es par
 
     self->step = 9;// Countdown para destruirse
   } else {
     self->body.mask = g_assets.AlienBulletExplosionMask;
-    self->body.position = Sum(self->body.position, {-1, 2}); // Pequeño offset para que la bala penetre
-
+    self->body.position = Sum(self->body.position, {-1, 0}); // Pequeño offset para que la bala penetre
+    
     self->step = 3;
   }
 }

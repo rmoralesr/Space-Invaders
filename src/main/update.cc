@@ -54,7 +54,7 @@ void PlayingInit(Game_t *game){
 	if(game->multiplayer) GenerateNumber(game->player[1].score,4, kScore2NumberPosition);
 	
 	if(game->player[game->player_playing].lives == 0) AlienArmy_Init(&game->player[game->player_playing].alien_army);
-	else AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army);
+	else if(game->multiplayer) AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army);
 	UFO_Init();
 	Player_Reset(&game->player[game->player_playing]);
 
@@ -150,6 +150,8 @@ void PlayerLogic(Game_t *game){
 	// Update Objetos
 	int i, j;
 
+	Body_t *body;
+	UIElement_t *uielement;
 	Bunker_t *bunker;
 	Alien_t *alien;
 	Bullet_t *bullet;
@@ -163,8 +165,8 @@ void PlayerLogic(Game_t *game){
 
 		// Bunkers
 		for (j = 0; j < kBunkerLimit; j++) {
-			bunker = &current_player->bunker[j];
-			Collide(p_bullet, bunker);
+			body = &current_player->bunker[j].body;
+			Collide(p_bullet, body);
 		}
 
 		// Aliens
@@ -184,11 +186,26 @@ void PlayerLogic(Game_t *game){
 			Collide(p_bullet, bullet);
 
 			for (j = 0; j < kBunkerLimit; j++) {
-				bunker = &current_player->bunker[j];
-				Collide(bullet, bunker);
+				body = &current_player->bunker[j].body;
+				Collide(bullet, body);
 			}
 
 			Collide(bullet, current_player);
+
+			if (!bullet->dying && bullet->body.position.y > 228) {
+				Dead(bullet);
+
+				if (bullet->dying) {
+					VisualCollide(&bullet->body, &g_bottomline);
+
+					for (j = 0; j < UIElement_kRegistryCapacity; j++) {
+						uielement = &UIElement_registry[j];
+						if (uielement->active)
+							VisualCollide(&bullet->body, &uielement->body);
+					}
+				}
+			}
+
 		}
 	}
 
@@ -375,13 +392,10 @@ void GameUpdate(Game_t *game) {
 			}
 			if (game->input.one_player_button && game->credits >= 1) { // TODO por ahora así, luego cambiar
 				game->multiplayer = false;
-				game->player_playing = false;
-				game->player_playing = 0;
 				UpdateCredits(game, -1);
 			} else if (game->input.two_player_button && game->credits >= 2) { // TODO por ahora así, luego cambiar
 				game->multiplayer = true;
-				game->player_playing = false;
-				game->player_playing = 1;
+				game->player_playing = 1; // Todo modificar logica de muerte para no depende de poner el player 2 por defecto
 				UpdateCredits(game, -2);
 			}
 			break;

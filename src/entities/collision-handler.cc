@@ -5,6 +5,7 @@
 #include "body.cc"
 #include "bullet.cc"
 #include "player.cc"
+#include "../tools/ui-element.cc"
 #include "aliens_army.cc"
 #include "UFO.cc"
 
@@ -23,10 +24,14 @@ unsigned int Collide(
   Body_t *A, Body_t *B, 
   Body_t *out_body = nullptr
 );
+
+void VisualCollide(Body_t *A, Body_t *B);
+
 // Devuelve si han colisionado y ejecutan la logica por si mismos
+bool Collide(Bullet_t *A, Body_t *B);
 bool Collide(Bullet_t *A, Bullet_t *B);
 bool Collide(Bullet_t *A, Alien_t *B);
-bool Collide(Bullet_t *A, Bunker_t *B);
+//bool Collide(Bullet_t *A, Bunker_t *B);
 bool Collide(Bullet_t *A, UFO_t *B);
 bool Collide(Bullet_t *A, Player_t *B);
 
@@ -184,15 +189,15 @@ bool Collide(Bullet_t *A, Bullet_t *B) {
   return false;
 }
 
-bool Collide(Bullet_t *A, Bunker_t *B) {
-  if (A->body.can_collide) {
-    if (QuickCollide(&A->body, &B->body)) {
+bool Collide(Bullet_t *A, Body_t *B) {
+  if (A->body.can_collide && B->can_collide) {
+    if (QuickCollide(&A->body, B)) {
 
-      Sub(&B->body.mask, &A->body.mask, Sub(A->body.position, B->body.position));
+      Sub(&B->mask, &A->body.mask, Sub(A->body.position, B->position));
 
       Dead(A); // Se actualiza el sprite y la posicion
 
-      Sub(&B->body.mask, &A->body.mask, Sub(A->body.position, B->body.position)); 
+      Sub(&B->mask, &A->body.mask, Sub(A->body.position, B->position)); 
 
       return true;
 
@@ -256,6 +261,9 @@ void Collide(Alien_t *A, Bunker_t *B) {
     Sub(&B->body.mask, &g_dummy_body.mask, Sub(g_dummy_body.position, B->body.position)); 
 }
 
+void VisualCollide(Body_t *A, Body_t *B) {
+  Sub(&B->mask, &A->mask, Sub(A->position, B->position));
+}
 
 Vector2_t GetOverlap(Body_t *A, Body_t *B) {
   // min(aMax, bMax) - max(aMin, bMin)

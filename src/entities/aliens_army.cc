@@ -111,7 +111,7 @@ int AlienArmy_PickBulletX(AlienArmy_t *alien_army, int playerX, BulletType bulle
 
 int AlienArmy_PickBulletY(AlienArmy_t *alien_army, int col) {
     for (int row = 0; row < 5; row++) {
-        if (alien_army->aliens[row*11+col].active) return alien_army->aliens[row*11+col].body.position.y;
+        if (alien_army->aliens[row*11+col].active) return alien_army->aliens[row*11+col].body.position.y - 1;
     }
     return -1;
 }
@@ -131,6 +131,39 @@ Alien_t *AlienArmy_GetLowestAlienInColumn(AlienArmy_t *alien_army, int col) {
     return nullptr;
 }
 
+void AlienArmy_ShootRolling(AlienArmy_t *alien_army, int playerX) {
+    int y = AlienArmy_PickBulletY(alien_army, AlienArmy_GetColNearPlayer(alien_army, playerX));
+    int x = AlienArmy_PickBulletX(alien_army, playerX, kBulletType_Rolling);
+    if (y != -1) {
+        Bullet_registry[3] = *Bullet_Construct(kBulletType_Rolling);
+        Bullet_registry[3].body.mask = g_assets.AlienBulletsMasks[1][0];
+        MoveTo(&Bullet_registry[3], {x, y+8});
+        AdvanceUFOPointsIndex();
+    }
+}
+
+void AlienArmy_ShootSquiggly(AlienArmy_t *alien_army, int playerX) {
+    int y = AlienArmy_PickBulletY(alien_army, kAlienBulletsTable[alien_army->squiggly_table_pos] - 1);
+    int x = AlienArmy_PickBulletX(alien_army, playerX, kBulletType_Squiggly);
+    if (y != -1) {
+        Bullet_registry[1] = *Bullet_Construct(kBulletType_Squiggly);
+        Bullet_registry[1].body.mask = g_assets.AlienBulletsMasks[2][0];
+        MoveTo(&Bullet_registry[1], {x, y+8});
+        AdvanceUFOPointsIndex();
+    }
+}
+
+void AlienArmy_ShootPlunger(AlienArmy_t *alien_army, int playerX) {
+    int y = AlienArmy_PickBulletY(alien_army, kAlienBulletsTable[alien_army->plunger_table_pos] - 1);
+    int x = AlienArmy_PickBulletX(alien_army, playerX, kBulletType_Plunger);
+    if (y != -1) {
+        Bullet_registry[2] = *Bullet_Construct(kBulletType_Plunger);
+        Bullet_registry[2].body.mask = g_assets.AlienBulletsMasks[0][0];
+        MoveTo(&Bullet_registry[2], {x, y+8});
+        AdvanceUFOPointsIndex();
+    }
+}
+
 void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
     int y = -1;
     int x = -1;
@@ -138,14 +171,7 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
         case kBulletType_Squiggly:
             if (!Bullet_registry[kBulletType_Squiggly].active) {
                 if (AlienArmy_CanFire(alien_army, score, kBulletType_Squiggly)) {
-                    y = AlienArmy_PickBulletY(alien_army, kAlienBulletsTable[alien_army->squiggly_table_pos] - 1);
-                    x = AlienArmy_PickBulletX(alien_army, playerX, kBulletType_Squiggly);
-                    if (y != -1) {
-                        Bullet_registry[1] = *Bullet_Construct(kBulletType_Squiggly);
-                        Bullet_registry[1].body.mask = g_assets.AlienBulletsMasks[2][0];
-                        MoveTo(&Bullet_registry[1], {x, y+8});
-                        AdvanceUFOPointsIndex();
-                    }
+                    AlienArmy_ShootSquiggly(alien_army, playerX);
                 }
             }
             alien_army->bullet_to_move = kBulletType_Plunger;
@@ -153,14 +179,7 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
         case kBulletType_Plunger:
             if (!Bullet_registry[kBulletType_Plunger].active) {
                 if (AlienArmy_CanFire(alien_army, score, kBulletType_Plunger)) {
-                    y = AlienArmy_PickBulletY(alien_army, kAlienBulletsTable[alien_army->plunger_table_pos] - 1);
-                    x = AlienArmy_PickBulletX(alien_army, playerX, kBulletType_Plunger);
-                    if (y != -1) {
-                        Bullet_registry[2] = *Bullet_Construct(kBulletType_Plunger);
-                        Bullet_registry[2].body.mask = g_assets.AlienBulletsMasks[0][0];
-                        MoveTo(&Bullet_registry[2], {x, y+8});
-                        AdvanceUFOPointsIndex();
-                    }
+                    AlienArmy_ShootPlunger(alien_army, playerX);
                 }
             }
             alien_army->bullet_to_move = kBulletType_Rolling;
@@ -168,14 +187,7 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
         case kBulletType_Rolling:
             if (!Bullet_registry[kBulletType_Rolling].active) {
                 if (AlienArmy_CanFire(alien_army, score, kBulletType_Rolling)) {
-                    y = AlienArmy_PickBulletY(alien_army, AlienArmy_GetColNearPlayer(alien_army, playerX));
-                    x = AlienArmy_PickBulletX(alien_army, playerX, kBulletType_Rolling);
-                    if (y != -1) {
-                        Bullet_registry[3] = *Bullet_Construct(kBulletType_Rolling);
-                        Bullet_registry[3].body.mask = g_assets.AlienBulletsMasks[1][0];
-                        MoveTo(&Bullet_registry[3], {x, y+8});
-                        AdvanceUFOPointsIndex();
-                    }
+                    AlienArmy_ShootRolling(alien_army, playerX);
                 }
             }
             alien_army->bullet_to_move = kBulletType_Squiggly;
@@ -202,7 +214,7 @@ AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
             if (alien_army->aliens[index].active) {
                 if (alien_army->army_state == kAlienArmyState_descendingTrue) {
                     Alien_Move(&alien_army->aliens[index], {0, 8});
-                    if (alien_army->aliens[index].body.position.y >= 216) return kAlienArmyFlag_invaded;
+                    if (alien_army->aliens[index].body.position.y >= 208) return kAlienArmyFlag_invaded;
                 }
                 Alien_Move(&alien_army->aliens[index], {alien_army->direction*2, 0});
                 if (alien_army->aliens[index].body.position.x <= 8 || alien_army->aliens[index].body.position.x >= 208) {
