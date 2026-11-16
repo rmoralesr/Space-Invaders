@@ -77,8 +77,8 @@ void Dead(Bullet_t *self) {
     self->step = 9;// Countdown para destruirse
   } else {
     self->body.mask = g_assets.AlienBulletExplosionMask;
-    self->body.position = Sum(self->body.position, {-1, 2}); // Pequeño offset para que la bala penetre
-
+    self->body.position = Sum(self->body.position, {-1, 0}); // Pequeño offset para que la bala penetre
+    
     self->step = 3;
   }
 }

@@ -111,7 +111,7 @@ int AlienArmy_PickBulletX(AlienArmy_t *alien_army, int playerX, BulletType bulle
 
 int AlienArmy_PickBulletY(AlienArmy_t *alien_army, int col) {
     for (int row = 0; row < 5; row++) {
-        if (alien_army->aliens[row*11+col].active) return alien_army->aliens[row*11+col].body.position.y;
+        if (alien_army->aliens[row*11+col].active) return alien_army->aliens[row*11+col].body.position.y - 1;
     }
     return -1;
 }
