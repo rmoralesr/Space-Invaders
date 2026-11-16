@@ -104,8 +104,10 @@ void PlayingInit(Game_t *game){
 	if(game->multiplayer) GenerateNumber(game->player[1].score,4, kScore2NumberPosition);
 	
 	if(game->player[game->player_playing].lives == 0) AlienArmy_Init(&game->player[game->player_playing].alien_army);
+	else AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army);
 	UFO_Init();
 	Player_Reset(&game->player[game->player_playing]);
+
 }
 
 void GameOverInit(Game_t *game) {
