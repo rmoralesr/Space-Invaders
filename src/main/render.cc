@@ -79,6 +79,7 @@ void GameRender(Game_t *game) {
             Draw(&g_bottomline);
             AliensRender(&game->player[game->player_playing].alien_army);
             if (g_UFO.active) Draw(&g_UFO.body);
+            Draw_Bunkers(&game->player[game->player_playing]);
         break;
     }
 

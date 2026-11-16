@@ -32,9 +32,19 @@ void Draw(Player_t* self);
 void Player_Assets(Player_t *self_assets) {
   self_assets->body = {
     true,
-    {16, 224}, 
+    {16, 216}, 
     g_assets.PlayerMask
   };
+}
+
+void Player_Bunker_Assets(Player_t *self_assets) {
+  for(int i = 0; i < kBunkerLimit; i++) {
+    self_assets->bunker[i].body = {
+      true,
+      {32 + (g_assets.ShieldMask.size.x*2*i), 192}, 
+      g_assets.ShieldMask
+    };
+  }
 }
 
 void Player_Construct(Player_t *self) {
@@ -45,14 +55,6 @@ void Player_Construct(Player_t *self) {
     
     self->score = 0;
     self->lives = 0;
-
-    for(int i = 0; i < kBunkerLimit; i++) {
-      self->bunker[i].body = {
-        true,
-        {32 + (g_assets.ShieldMask.size.x*2*i), 192}, 
-        g_assets.ShieldMask
-      };
-    }
 
     Player_Assets(self);
 }
@@ -67,6 +69,7 @@ void Player_Reset(Player_t *self) {
     if (self->lives == 0) {
       self->score = 0;
       self->lives = 3;
+      Player_Bunker_Assets(self);
     }
     GenerateLives(self->lives);
 
@@ -81,17 +84,17 @@ void Dead(Player_t *self, int damage) {
     self->lives -= damage;
 
     GenerateLives(self->lives);
-
     g_game.game_state = kGameState_Death;
+
     if(self->lives <= 0) {
       self->lives = 0;
       self->dead = true;
     }
 
     if(g_game.multiplayer && !g_game.player[!g_game.player_playing].dead) { // Si es multiplayer comprueba que el otro player aun siga vivo
-      WipeScreenToContent(&g_wipe_screen);
-			g_wipe_screen.queued_tick = g_tick + 60;
-      QueueUpdate(kUpdateID_AboutToPlay, g_tick + 60 + 22);
+      // WipeScreenToContent(&g_wipe_screen);
+			// g_wipe_screen.queued_tick = g_tick + 60;
+      QueueUpdate(kUpdateID_GameOver, g_tick + 60 + 22);
     } else if(!self->dead) {
       QueueUpdate(kUpdateID_Playing, g_tick + 60);
     } else {
@@ -144,13 +147,15 @@ void Shoot(Player_t *self) {
   }
 }
 
+void Draw_Bunkers(Player_t *self_bunkers) {
+  for (int i = 0; i < kBunkerLimit; i++) {
+    Draw(&self_bunkers->bunker[i].body);
+  }
+}
+
 void Draw(Player_t *self) {
-  // if(self->active) {
-    for (int i = 0; i < kBunkerLimit; i++) {
-      Draw(&self->bunker[i].body);
-    }
-    Draw(&self->body);
-  // }
+  Draw_Bunkers(self);
+  Draw(&self->body);
 }
 
 #endif // PLAYER_CC

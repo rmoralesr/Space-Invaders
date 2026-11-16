@@ -14,7 +14,7 @@ enum BulletType {
   kBulletType_Rolling // Esta te apunta a ti!
 };
 
-// Player
+// PLAYER
 
 //Dimensiones del player
 constexpr int kPlayerWidth = 16; // Medida sin margenes 
@@ -23,7 +23,7 @@ constexpr int kPlayerHeight = 8; // Medida sin margenes
 //Separaciones
 constexpr int kPlayerSeparation = 5; // Separacion del margen
 
-//  Aliens
+//  ALIENS
 
 //Dimensiones de los enemigos
 constexpr int kAlienWidth = 12; // Medida sin margenes
@@ -41,18 +41,15 @@ constexpr int kAlienSeparationY = 1; // Separacion entre sprites
 constexpr int kUFOWidth = 16; // Medida sin margenes
 constexpr int kUFOHeight = 7; // Medida sin margenes
 
-constexpr int kUFOSeparation = 3;
+constexpr int kUFOSeparation = 3; // Separacion del margen
 
-constexpr int kUFOMarginTop = 2;
-constexpr int kUFOMarginLeft = 1;
-
-//  Shield
+//  SHIELD
 
 //Dimensiones del escudo
 constexpr int kShieldWidth = 36; // Medida sin margenes
 constexpr int kShieldHeight = 26; // Medida sin margenes
 
-//  Characters
+//  CHARACTERS
 
 //Dimensiones de los characters
 constexpr int kCharactersWidth = 5; // Medida de cada characters
@@ -64,6 +61,8 @@ constexpr int kNumCharacters = 42; // Numero de character
 //Separaciones de los characters
 constexpr int kCharacterSeparationX = 5; // Separacion entre sprites
 constexpr int kCharacterSeparationY = 3; // Separacion entre sprites
+
+// ANIMACION Y
 
 // Y anim
 constexpr int kYAnimSprites = 5;
@@ -101,6 +100,7 @@ Assets g_assets;
 
 void LoadAssets() {
 
+    //CARACTERES
     //cargar todos los caracteres
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 8; j++) {
@@ -115,6 +115,7 @@ void LoadAssets() {
         }
     }
 
+    //ALIENS
     //cargar 3 tipos de Aliens
     for (int i = 0; i < kNumAlienTypes; i++) {
         for (int j = 0; j < kAliensPerType; j++) {
@@ -132,7 +133,6 @@ void LoadAssets() {
     FromFile(&g_assets.AlienExplosionMask, "../../assets/AlienExplosion.png");
     
     //cargar las balas de los aliens
-
     for (int i = 0; i < 4; i++){
         FromFile(
             &g_assets.AlienBulletsMasks[kBulletType_Plunger-1][i],
@@ -163,13 +163,16 @@ void LoadAssets() {
     //cargar la explosion del disparo
     FromFile(&g_assets.AlienBulletExplosionMask, "../../assets/disparo_explosion.png");
 
+    //UFO
     //cargar los 2 sprites del UFO
     FromFile(&g_assets.UFOMasks[0], "../../assets/UFO.png");
     FromFile(&g_assets.UFOMasks[1], "../../assets/UFOExplosion.png");
 
+    //SHIELD
     //cargar el sprite del Shield
     FromFile(&g_assets.ShieldMask, "../../assets/Shield.png");
     
+    //PLAYER
     //cargar los sprites de Player
     FromFile(&g_assets.PlayerMask, "../../assets/player.png"); 
 
@@ -192,6 +195,7 @@ void LoadAssets() {
         );
     }
 
+    // ANIMACION Y
     //cargar los sprites de la animacion Y
     for (int i = 0; i < kYAnimSprites; i++){
        FromFile(&g_assets.YAnimMasks[i],

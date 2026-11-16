@@ -28,6 +28,8 @@ void AddScore(int points, bool update_score = true){
         if (g_game.hiscore > 9999) g_game.hiscore %= 10000;
     }
     if (player->score > 9999) player->score %= 10000;
+    
+    if (player->score > 1500) player->lives++;
 
     if (update_score) UpdateScore();
 }
