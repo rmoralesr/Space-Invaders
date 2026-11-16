@@ -247,7 +247,7 @@ void GameOverInit(Game_t *game) {
 		ClearUIContent();
 
 		if (game->multiplayer && game->player[game->player_playing].dead) {
-			GenerateText("game over player<2>",{50,224},g_tick, ProgressiveTextTickRate);
+			GenerateText("game over player<2>",{38,224},g_tick, ProgressiveTextTickRate);
 			
 			if(!game->player[!game->player_playing].dead){
 				WipeScreenToContent(&g_wipe_screen);
