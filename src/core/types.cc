@@ -50,6 +50,7 @@ struct Alien_t {
     bool showing;
     AlienType type;
     int sprite_frame;
+    int id;
 };
 
 struct AlienArmy_t {
