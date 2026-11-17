@@ -12,6 +12,7 @@
 #include "../tools/ui-element.cc"
 #include "update.cc"
 #include "render.cc"
+#include "../sound/sound.cc"
 
 /** @brief Controla el maximo de frames por segundo */
 void FrameWait(double last_time);
@@ -45,6 +46,19 @@ int esat::main(int argc, char **argv) {
     WindowSetMouseVisibility(true);
 
     GameInit(&g_game);
+    g_Soloud.init();
+    g_AlienExplosion.load("../sound/alienkilled.ogg");
+    g_PlayerExplosion.load("../sound/explosion.ogg");
+    g_shoot.load("../sound/shoot.ogg");
+    g_UFOflying.load("../sound/ufo_highpitch.ogg");
+    g_UFOdead.load("../sound/ufo_lowpitch.ogg");
+    g_ExtraLife.load("../sound/extendedPlay.ogg");
+    g_AlienSounds[0].load("../sound/fastinvader1.ogg");
+    g_AlienSounds[1].load("../sound/fastinvader2.ogg");
+    g_AlienSounds[2].load("../sound/fastinvader3.ogg");
+    g_AlienSounds[3].load("../sound/fastinvader4.ogg");
+    
+
 
     while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
         double last_time = esat::Time();
@@ -64,7 +78,7 @@ int esat::main(int argc, char **argv) {
     }
 
     esat::SpriteRelease(g_assets.ColorMask);
-
+    g_Soloud.deinit();
     esat::WindowDestroy();
     return 0;
 }

@@ -54,6 +54,7 @@ struct Alien_t {
 
 struct AlienArmy_t {
     Alien_t aliens[55];
+    int sound_index=0;
     int aliens_alive;
     int alien_died;
     int alien_explosion_tick;
@@ -66,6 +67,7 @@ struct AlienArmy_t {
     bool regenerating;
     BulletType bullet_to_move;
     AlienArmyState army_state;
+
 };
 
 struct Player_t {
