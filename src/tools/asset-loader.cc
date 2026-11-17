@@ -87,7 +87,6 @@ struct Assets {
     Mask_t ShieldMask = {};
 
     Mask_t CharacterMasks[kNumCharacters] = {};
-    Mask_t ExtraCharacterMasks[kNumCharacters] = {};
 
     Mask_t YAnimMasks[kYAnimSprites] = {};
 
