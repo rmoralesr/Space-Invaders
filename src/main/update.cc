@@ -298,6 +298,7 @@ void ChoosingPlayerInit(Game_t *game){
 
 /** @brief Actualiza los datos del juego y pinta los necesarios */
 void GameUpdate(Game_t *game) {
+	
 
 	g_tick++;
 
