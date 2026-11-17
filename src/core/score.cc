@@ -1,4 +1,3 @@
-// AUN NO ESTA TERMINADO
 
 #ifndef SCORE_CC
 #define SCORE_CC
@@ -7,6 +6,12 @@
 #include "../tools/ui-element.cc"
 #include "types.cc"
 #include <stdio.h>
+#include <esat_extra/soloud/soloud.h>
+#include <esat_extra/soloud/soloud_wav.h>
+
+extern SoLoud::Soloud g_Soloud;
+extern SoLoud::Wav g_ExtraLife;
+
 
 
 void UpdateScore(){
@@ -24,6 +29,7 @@ void AddScore(int points, bool update_score = true){
         Player_t *player = &g_game.player[g_game.player_playing];
 
         if (player->score < 1500 && player->score + points >= 1500) {
+            g_Soloud.play(g_ExtraLife);
             player->lives++;
             GenerateLives(player->lives);
         }

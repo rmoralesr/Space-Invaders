@@ -54,6 +54,12 @@ int esat::main(int argc, char **argv) {
     g_shoot.load("../sound/shoot.ogg");
     g_UFOflying.load("../sound/ufo_highpitch.ogg");
     g_UFOdead.load("../sound/ufo_lowpitch.ogg");
+    g_ExtraLife.load("../sound/extendedPlay.ogg");
+    g_AlienSounds[0].load("../sound/fastinvader1.ogg");
+    g_AlienSounds[1].load("../sound/fastinvader2.ogg");
+    g_AlienSounds[2].load("../sound/fastinvader3.ogg");
+    g_AlienSounds[3].load("../sound/fastinvader4.ogg");
+    
 
 
     while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {

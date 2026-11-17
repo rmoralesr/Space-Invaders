@@ -12,6 +12,7 @@
 
 extern SoLoud::Soloud g_Soloud;
 extern SoLoud::Wav g_AlienExplosion;
+extern SoLoud::Wav g_AlienSounds[4];
 
 
 void AlienArmy_Init();
@@ -68,7 +69,13 @@ void AlienArmy_Init(AlienArmy_t *alien_army) {
 void Alien_Move(Alien_t *alien, Vector2_t delta) {
     Move(&alien->body, delta);
     alien->sprite_frame = (alien->sprite_frame+1)%2;
+    for( int i=0; i<3; i++){
+        g_Soloud.play(g_AlienSounds[i]);
+        i=(i+1)%4;
+    }
     AsignAlienMask(alien);
+    
+   
 }
 
 int AlienArmy_ReloadRate(int score) {
