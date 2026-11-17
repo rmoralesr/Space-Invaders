@@ -19,8 +19,6 @@ void FrameWait(double last_time);
 
 /** @brief Inicializa las variables necesarias para el juego */
 void GameInit(Game_t *game) {
-    // TODO
-    
     game->credits = 0;
     game->player_playing = 0;
 
