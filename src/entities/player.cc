@@ -49,9 +49,10 @@ void Player_Bunker_Assets(Player_t *self_assets) {
 
 void Player_Construct(Player_t *self) {
     self->active = false;
-    self->pause = true; //TODO
+    self->pause = true; /// TODO Pause (Si se tiene que pausar o no)
     self->dead = false;
     self->dying = false;
+    self->pause_tick = 1; /// TODO Pause (Contar ticks de pausa)
     self->dying_tick = 0;
     
     self->score = 0;
@@ -65,9 +66,10 @@ void Player_Reset(Player_t *self) {
     self->active = true;
     self->dead = false;
     self->dying = false;
+    self->pause_tick = 1; /// TODO Pause (Contar ticks de pausa)
     self->dying_tick = 0;
 
-    if (self->lives == 0) {
+    if (self->lives == 0) {      
       self->score = 0;
       self->lives = 3;
       Player_Bunker_Assets(self);
@@ -78,9 +80,14 @@ void Player_Reset(Player_t *self) {
   }
 }
 
+void Player_Bunker_Reset() {
+    Player_Bunker_Assets(&g_game.player[g_game.player_playing]);
+}
+
 void Dead(Player_t *self, int damage) {
   if (self->active) {
     self->active = false;
+    self->dead_tick = g_tick; /// TODO Pause
     self->dying_tick = 60;
     self->lives -= damage;
 
@@ -99,7 +106,7 @@ void Dead(Player_t *self, int damage) {
 			// g_wipe_screen.queued_tick = g_tick + 60;
       QueueUpdate(kUpdateID_GameOver, g_tick + 60 + 22);
     } else if(!self->dead) {
-      QueueUpdate(kUpdateID_Playing, g_tick + 60);
+      QueueUpdate(kUpdateID_Afterdeath, g_tick + 60);
     } else {
       QueueUpdate(kUpdateID_GameOver, g_tick + 60);
     }
@@ -158,7 +165,7 @@ void Draw_Bunkers(Player_t *self_bunkers) {
 
 void Draw(Player_t *self) {
   Draw_Bunkers(self);
-  if(!self->pause) Draw(&self->body); //TODO
+  if(!self->pause) Draw(&self->body); /// TODO Si no está en pause se dibuja
 }
 
 #endif // PLAYER_CC

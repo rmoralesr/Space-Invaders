@@ -90,7 +90,9 @@ void GameOverInit(Game_t *game) {
 
 				QueueUpdate(kUpdateID_OnGameOverEnd, g_tick + 180 + 22);
 			} else {
-				QueueUpdate(kUpdateID_Afterdeath, g_tick + 40);
+				WipeScreenToContent(&g_wipe_screen);
+				g_wipe_screen.queued_tick = g_tick + 40;
+				QueueUpdate(kUpdateID_Afterdeath, g_tick + 80);
 			}
 		}
 
@@ -102,7 +104,10 @@ void GameOverInit(Game_t *game) {
 void PlayerInput(Game_t *game){
 	Player_t *current_player = &game->player[game->player_playing];
 
-	if (game->game_state == kGameState_Playing){
+	if(current_player->pause_tick % 140 == 0) current_player->pause = false; /// TODO Pause (Tiempo que esta el player desaparecido pero sigue siendo targeteable)
+	else current_player->pause_tick++;
+
+	if (game->game_state == kGameState_Playing && !current_player->pause){
 		if(game->input.action_button) Shoot(current_player);
 
 		if (game->input.left_button) {
@@ -133,10 +138,10 @@ void PlayerLogic(Game_t *game){
 	TickUFO();
 	if (g_tick == g_UFO.start_tick) GenerateUFO();
 	
-	if (esat::IsKeyDown('M')) MatarAlien(&current_player->alien_army); //TODO Quitar
-	if (esat::IsKeyDown('K')) MatarPlayer(current_player, game); //TODO Quitar
-	if (esat::IsKeyDown('V')) current_player->lives++; //TODO Quitar
-	if (esat::IsKeyDown('U')) DestroyUFO(); //TODO Quitar
+	if (esat::IsKeyDown('M')) MatarAlien(&current_player->alien_army); // TODO Quitar
+	if (esat::IsKeyDown('K')) MatarPlayer(current_player, game); // TODO Quitar
+	if (esat::IsKeyDown('V')) current_player->lives++; // TODO Quitar
+	if (esat::IsKeyDown('U')) DestroyUFO(); // TODO Quitar
 
 	// Jugador
 	PlayerInput(game);
@@ -343,11 +348,14 @@ void GameUpdate(Game_t *game) {
 					game->game_state = kGameState_Playing;
 					PlayingInit(game);
 					break;
-				case kUpdateID_Afterdeath :
-					if(game->multiplayer && !game->player[!game->player_playing].dead) game->player_playing = !game->player_playing;
-					if(!game->multiplayer && game->player[!game->player_playing].dead) game->player[game->player_playing].pause = true; //TODO
+				case kUpdateID_Afterdeath : 
+					if(game->multiplayer && !game->player[!game->player_playing].dead) {
+						game->player_playing = !game->player_playing;
+						QueueUpdate(kUpdateID_AboutToPlay, g_tick + 1);
+					} else {
+						QueueUpdate(kUpdateID_Playing, g_tick + 100); /// TODO Pause (Tiempo de pantalla congelada antes del respawn)
+					}
 
-					QueueUpdate(kUpdateID_AboutToPlay, g_tick + 1);
 					break;
 				case kUpdateID_GameOver :
 					// g_wipe_screen.current_step = -1;
@@ -355,7 +363,11 @@ void GameUpdate(Game_t *game) {
 					GameOverInit(game);
 					break;
 				case kUpdateID_OnGameOverEnd :
-					for(int i = 0; i < 2; i++) Player_Reset(&game->player[i]); // TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
+					for(int i = 0; i < 2; i++) {	
+						if(game->player[game->player_playing].lives == 0) AlienArmy_Init(&game->player[game->player_playing].alien_army); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
+						else if(game->multiplayer) AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
+						Player_Reset(&game->player[i]); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
+					}
 					game->player_playing = 0; // TODO
 
 					if (game->credits > 0) {
@@ -389,16 +401,18 @@ void GameUpdate(Game_t *game) {
 			break;
 		}
 		case kGameState_ChoosingPlayers: {
+			game->player[0].pause = true; /// TODO Pause (Seteo inicial del pause para que no se salte la pausa)
 			if (game->input.insert_credit && game->credits == 2) {
 				WipeScreenToContent(&g_wipe_screen);
 				g_wipe_screen.queued_tick = g_tick;
 				QueueUpdate(kUpdateID_ChoosingPlayer, g_tick + 22);
 			}
-			if (game->input.one_player_button && game->credits >= 1) { // TODO por ahora así, luego cambiar
+			if (game->input.one_player_button && game->credits >= 1) {
 				game->multiplayer = false;
 				UpdateCredits(game, -1);
-			} else if (game->input.two_player_button && game->credits >= 2) { // TODO por ahora así, luego cambiar
+			} else if (game->input.two_player_button && game->credits >= 2) {
 				game->multiplayer = true;
+				game->player[1].pause = false; /// TODO Pause (Para que no salga la pausa en el player 2)
 				UpdateCredits(game, -2);
 			}
 			break;

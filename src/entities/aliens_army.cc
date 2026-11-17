@@ -5,6 +5,7 @@
 #include "../core/types.cc"
 #include "../tools/asset-loader.cc"
 #include "../core/score.cc"
+#include "../entities/player.cc"
 #include "../entities/UFO.cc"
 
 void AlienArmy_Init();
@@ -199,7 +200,10 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
 AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
     int index = (alien_army->last_alien_moved + 1) % 55;
     bool finished = false;
-    if (alien_army->aliens_alive <= 0) return kAlienArmyFlag_exterminated;
+    if (alien_army->aliens_alive <= 0) {
+        Player_Bunker_Reset(); // TODO antes del reset del bunker que se limpie la pantalla
+        return kAlienArmyFlag_exterminated;
+    }
     if (alien_army->army_state != kAlienArmyState_generating && !alien_army->regenerating) {
         do {
             if (index == 0) {

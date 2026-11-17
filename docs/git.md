@@ -2,7 +2,7 @@
 
 ## Flujo de trabajo (resumen)
 
-//TODO Añadir imagen Carmina conflictos
+// TODO Añadir imagen Carmina conflictos
 
 **Trabajar en nuestra rama**
 
