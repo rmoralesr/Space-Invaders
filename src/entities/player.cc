@@ -49,6 +49,7 @@ void Player_Bunker_Assets(Player_t *self_assets) {
 
 void Player_Construct(Player_t *self) {
     self->active = false;
+    self->pause = true; //TODO
     self->dead = false;
     self->dying = false;
     self->dying_tick = 0;
@@ -155,7 +156,7 @@ void Draw_Bunkers(Player_t *self_bunkers) {
 
 void Draw(Player_t *self) {
   Draw_Bunkers(self);
-  Draw(&self->body);
+  if(!self->pause) Draw(&self->body); //TODO
 }
 
 #endif // PLAYER_CC

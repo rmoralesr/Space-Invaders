@@ -70,6 +70,7 @@ struct AlienArmy_t {
 
 struct Player_t {
     bool active;
+    bool pause; //TODO
     bool dead;
     bool dying;
     int dying_tick;
@@ -99,7 +100,7 @@ enum kUpdateID {
     kUpdateID_ChoosingPlayer,
     kUpdateID_AboutToPlay,
     kUpdateID_Playing,
-    kUpdateID_Death,
+    kUpdateID_Afterdeath,
     kUpdateID_GameOver,
     kUpdateID_OnGameOverEnd,
 	kUpdateID_UpdateScore

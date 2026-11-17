@@ -89,11 +89,6 @@ void AboutToPlayInit(Game_t *game){
 		Bullet_registry[i].active = false;
 	}
 
-	if (game->multiplayer) {
-		if(game->multiplayer && !game->player[!game->player_playing].dead) game->player_playing = !game->player_playing;
-	} else {
-		game->player_playing = 0;
-	}
 	LoadAboutToPlayMenu(game);
 }
 
@@ -123,7 +118,7 @@ void GameOverInit(Game_t *game) {
 			if(!game->player[!game->player_playing].dead){
 				WipeScreenToContent(&g_wipe_screen);
 				g_wipe_screen.queued_tick = g_tick + 180;
-				QueueUpdate(kUpdateID_AboutToPlay, g_tick + 180 + 22);
+				QueueUpdate(kUpdateID_Afterdeath, g_tick + 180 + 22);
 			} else {
 				GenerateText("game over",{81,59},g_tick + 180, ProgressiveTextTickRate);
 
@@ -139,7 +134,7 @@ void GameOverInit(Game_t *game) {
 	
 			QueueUpdate(kUpdateID_OnGameOverEnd, g_tick + 180 + 22);
 		} else {
-			QueueUpdate(kUpdateID_AboutToPlay, g_tick + 40);
+			QueueUpdate(kUpdateID_Afterdeath, g_tick + 40);
 		}
 
 
@@ -158,7 +153,7 @@ void PlayerLogic(Game_t *game) {
 	// UFO
 	TickUFO();
 	if (g_tick == g_UFO.start_tick) GenerateUFO();
-
+	
 	if (esat::IsKeyDown('M')) MatarAlien(&current_player->alien_army); //TODO Quitar
 	if (esat::IsKeyDown('K')) MatarPlayer(current_player, game); //TODO Quitar
 	if (esat::IsKeyDown('V')) current_player->lives++; //TODO Quitar
@@ -170,6 +165,7 @@ void PlayerLogic(Game_t *game) {
 
 	// Jugador
 	if(game->input.action_button) Shoot(current_player);
+	if(g_tick != 0 && g_tick % 150 == 0) current_player->pause = false; //TODO
 
 	if (game->input.left_button) {
 		Move(current_player, {-1, 0});
@@ -321,12 +317,21 @@ void GameUpdate(Game_t *game) {
 					game->game_state = kGameState_Playing;
 					PlayingInit(game);
 					break;
+				case kUpdateID_Afterdeath :
+					if(game->multiplayer && !game->player[!game->player_playing].dead) game->player_playing = !game->player_playing;
+					if(!game->multiplayer && game->player[!game->player_playing].dead) game->player[game->player_playing].pause = true; //TODO
+
+					QueueUpdate(kUpdateID_AboutToPlay, g_tick + 1);
+					break;
 				case kUpdateID_GameOver :
 					// g_wipe_screen.current_step = -1;
 					// ClearUIContent();
 					GameOverInit(game);
 					break;
 				case kUpdateID_OnGameOverEnd :
+					for(int i = 0; i < 2; i++) Player_Reset(&game->player[i]); // TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
+					game->player_playing = 0; // TODO
+
 					if (game->credits > 0) {
 						ChoosingPlayerInit(game);
 					} else {
@@ -369,7 +374,6 @@ void GameUpdate(Game_t *game) {
 				UpdateCredits(game, -1);
 			} else if (game->input.two_player_button && game->credits >= 2) { // TODO por ahora así, luego cambiar
 				game->multiplayer = true;
-				game->player_playing = 1; // Todo modificar logica de muerte para no depende de poner el player 2 por defecto
 				UpdateCredits(game, -2);
 			}
 			break;
