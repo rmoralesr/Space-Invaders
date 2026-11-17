@@ -186,7 +186,7 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
             break;
         case kBulletType_Rolling:
             if (!Bullet_registry[kBulletType_Rolling].active) {
-                if (AlienArmy_CanFire(alien_army, score, kBulletType_Rolling)) {
+                if (AlienArmy_CanFire(alien_army, score, kBulletType_Rolling) || g_game.game_state == kGameState_Demo) {
                     AlienArmy_ShootRolling(alien_army, playerX);
                 }
             }
