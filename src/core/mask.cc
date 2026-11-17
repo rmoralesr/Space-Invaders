@@ -1,22 +1,4 @@
-#ifndef GAME_MASK_CC
-#define GAME_MASK_CC 1
-
-
-#include <stdio.h>
-#include <esat/sprite.h>
-#include <assert.h> // Borrar en release
-
-#include "cirno.cc"
-
-
-constexpr unsigned int kMask_WordCount = 70;
-
-struct Mask_t {
-  Vector2_t size = {0,0};
-  unsigned char matrix[kMask_WordCount] = {0}; // Uso unsigned char porque no necesitamos el signo y el size de char NO varia entre compiladores
-};
-
-void Print(Mask_t *mask);
+#include "mask.hh"
 
 bool IsValidPosition(Mask_t *mask, unsigned int x, unsigned int y) {
   return (
@@ -66,13 +48,9 @@ void WriteBit(Mask_t *mask, unsigned int x, unsigned int y, unsigned char v) {
   );
 }
 
-/**  @brief Crea una mask dado el path de un sprite
-  Opcionalmente se le puede dar una sub posicion y un sub tamaño,
-  entonces utilizará el sub Sprite dado por esas dimensiones
-*/
 void FromFile(Mask_t *mask, const char *path, 
-  Vector2_t sub_position = {0,0},
-  Vector2_t sub_size = {0,0}
+  Vector2_t sub_position,
+  Vector2_t sub_size
 ) {
   esat::SpriteHandle sprite = esat::SpriteFromFile(path);
 
@@ -94,7 +72,7 @@ void FromFile(Mask_t *mask, const char *path,
   int my = esat::SpriteHeight(sprite);
 
   if (mx*my > kMask_WordCount*8) {
-    printf("mask.cc > FromFile: %s es demasiado grande (%d x %d)", path, mx, my);
+    printf("FromFile: %s es demasiado grande (%d x %d)", path, mx, my);
     assert(false); // Abortamos porque probablemente escribiriamos en buffers ajenos
   }
   printf("%d, %d\n", mx, my);
@@ -116,8 +94,7 @@ void FromFile(Mask_t *mask, const char *path,
   esat::SpriteRelease(sprite);
 }
 
-/** @brief Substrae mask B de mask A */
-void Sub(Mask_t *A, Mask_t *B, Vector2_t offset = {0,0}) {
+void Sub(Mask_t *A, Mask_t *B, Vector2_t offset) {
   int ox = (int)offset.x;
   int oy = (int)offset.y;
 
@@ -150,6 +127,3 @@ void Print(Mask_t *mask) {
   }
 
 }
-
-
-#endif //GAME_MASK_CC

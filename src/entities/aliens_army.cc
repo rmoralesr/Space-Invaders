@@ -1,11 +1,11 @@
 #ifndef ALIENS_ARMY_CC
 #define ALIENS_ARMY_CC 1
 
-#include "body.cc"
+#include "body.hh"
 #include "../core/types.cc"
-#include "../tools/asset-loader.cc"
-#include "../core/score.cc"
-#include "../entities/UFO.cc"
+#include "../tools/asset-loader.hh"
+#include "../core/score.hh"
+#include "../entities/UFO.hh"
 
 void AlienArmy_Init();
 

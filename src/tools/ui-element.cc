@@ -1,10 +1,10 @@
 #ifndef UI_ELEMENT_CC
 #define UI_ELEMENT_CC 1
 
-#include "../core/cirno.cc"
+#include "../core/cirno.hh"
 #include "../core/types.cc"
-#include "../entities/body.cc"
-#include "asset-loader.cc"
+#include "../entities/body.hh"
+#include "asset-loader.hh"
 
 // FUNCIONES PARA LA INTERFAZ DEL JUEGO
 

@@ -1,10 +1,11 @@
 #ifndef TYPES_CC
 #define TYPES_CC 1
 
-#include "../tools/input.cc"
-#include "../entities/body.cc"
-#include "../entities/bullet.cc"
-#include "cirno.cc"
+#include "cirno.hh"
+#include "../entities/body.hh"
+#include "../entities/bullet.hh"
+#include "../entities/player.hh"
+#include "../tools/input.hh"
 
 // AQUÍ ESTÁN TODOS LOS TIPOS DE DATOS GENERALES QUE SE VAN A USAR EN EL JUEGO
 
@@ -34,9 +35,7 @@ enum AlienArmyState {
     kAlienArmyState_descendingTrue
 };
 
-struct Bunker_t {
-    Body_t body;
-};
+
 
 enum AlienArmyFlag {
     kAlienArmyFlag_none,
@@ -68,18 +67,7 @@ struct AlienArmy_t {
     AlienArmyState army_state;
 };
 
-struct Player_t {
-    bool active;
-    bool dead;
-    bool dying;
-    int dying_tick;
-    int score;
-    int lives;
 
-    Body_t body;
-    Bunker_t bunker[kBunkerLimit];
-    AlienArmy_t alien_army;
-};
 
 enum GameState {
     kGameState_Previewing,

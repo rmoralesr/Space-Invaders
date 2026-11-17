@@ -1,13 +1,6 @@
+#include "score.hh"
+
 // AUN NO ESTA TERMINADO
-
-#ifndef SCORE_CC
-#define SCORE_CC
-
-#include "cirno.cc"
-#include "../tools/ui-element.cc"
-#include "types.cc"
-#include <stdio.h>
-
 
 void UpdateScore(){
     if (g_game.game_state != kGameState_Demo){
@@ -19,7 +12,8 @@ void UpdateScore(){
         GenerateNumber(g_game.hiscore, 4, kHiScoreNumberPosition);
     }
 }
-void AddScore(int points, bool update_score = true){
+
+void AddScore(int points, bool update_score){
     if (g_game.game_state != kGameState_Demo){
         Player_t *player = &g_game.player[g_game.player_playing];
 
@@ -38,6 +32,3 @@ void AddScore(int points, bool update_score = true){
         if (update_score) UpdateScore();
     }
 }
-
-#endif //SCORE_CC
-

@@ -1,33 +1,4 @@
-#ifndef PLAYER_CC
-#define PLAYER_CC 1
-
-#include "../core/cirno.cc"
-#include "../core/mask.cc"
-#include "../core/draw.cc"
-#include "../core/types.cc"
-#include "../tools/asset-loader.cc"
-#include "../tools/ui-element.cc"
-#include "body.cc"
-#include "bullet.cc"
-#include "UFO.cc"
-
-// Prototipaje
-
-void Player_Construct(Player_t *self);
-void Player_Reset(Player_t *self);
-
-void Dead(Player_t *self, int damage);
-void Dead_Animation(Player_t *self);
-void Destruct(Player_t* self);
-
-void MoveTo(Player_t* self, Vector2_t pos);
-void Move(Player_t* self, Vector2_t delta);
-
-void Tick(Player_t* self); // Actualiza toda la logica. Se mueve hacia adelante y/o intenta colisionar (por ver), en este caso.
-
-void Draw(Player_t* self);
-
-// Definiciones
+#include "player.hh"
 
 void Player_Assets(Player_t *self_assets) {
   self_assets->body = {
@@ -159,5 +130,3 @@ void Draw(Player_t *self) {
   Draw_Bunkers(self);
   Draw(&self->body);
 }
-
-#endif // PLAYER_CC

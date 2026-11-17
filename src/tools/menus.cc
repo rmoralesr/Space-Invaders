@@ -1,11 +1,4 @@
-
-
-#include "../core/types.cc"
-#include "../entities/body.cc"
-#include "../tools/ui-element.cc"
-#include "../tools/asset-loader.cc"
-
-bool g_alt_title_anim = false;
+#include "menus.hh"
 
 void LoadPreviewingMenu(){
     long long int anim_tick = g_tick;

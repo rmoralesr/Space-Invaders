@@ -3,16 +3,16 @@
 
 #include <esat/draw.h>
 #include "../core/types.cc"
-#include "../entities/body.cc"
+#include "../entities/body.hh"
 #include "../tools/ui-element.cc"
-#include "../tools/asset-loader.cc"
-#include "../tools/input.cc"
+#include "../tools/asset-loader.hh"
+#include "../tools/input.hh"
 #include "../tools/menus.cc"
 #include "../entities/aliens_army.cc"
-#include "../entities/UFO.cc"
-#include "../entities/player.cc"
-#include "../entities/collision-handler.cc"
-#include "../core/score.cc"
+#include "../entities/UFO.hh"
+#include "../entities/player.hh"
+#include "../entities/collision-handler.hh"
+#include "../core/score.hh"
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 

@@ -5,10 +5,10 @@
 #include <esat/time.h>
 
 // LOS INCLUDES DEBEN ESTAR EN ORDEN, LOS QUE NECESITAN OTROS QUE SE PONGAN DEBAJO DE ELLOS
-#include "../core/cirno.cc"
+#include "../core/cirno.hh"
 #include "../core/types.cc"
-#include "../core/mask.cc"
-#include "../entities/body.cc"
+#include "../core/mask.hh"
+#include "../entities/body.hh"
 #include "../tools/ui-element.cc"
 #include "update.cc"
 #include "render.cc"
