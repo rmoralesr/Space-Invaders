@@ -6,6 +6,13 @@
 #include "../tools/asset-loader.cc"
 #include "../core/score.cc"
 #include "../entities/UFO.cc"
+#include <esat_extra/soloud/soloud.h>
+#include <esat_extra/soloud/soloud_wav.h>
+
+
+extern SoLoud::Soloud g_Soloud;
+extern SoLoud::Wav g_AlienExplosion;
+
 
 void AlienArmy_Init();
 
@@ -278,6 +285,7 @@ int AlienGetPoints(AlienType type) {
 void Dead(Alien_t *alien) {
     if (alien->active) {
         alien->active = false;
+        g_Soloud.play(g_AlienExplosion);
         alien->body.mask = g_assets.AlienExplosionMask;
         AddScore(AlienGetPoints(alien->type));
         AlienArmy_t *alien_army = &g_game.player[g_game.player_playing].alien_army;

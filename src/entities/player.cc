@@ -10,6 +10,11 @@
 #include "body.cc"
 #include "bullet.cc"
 #include "UFO.cc"
+#include <esat_extra/soloud/soloud.h>
+#include <esat_extra/soloud/soloud_wav.h>
+
+extern SoLoud::Soloud g_Soloud;
+extern SoLoud::Wav g_PlayerExplosion;
 
 // Prototipaje
 
@@ -80,6 +85,7 @@ void Player_Reset(Player_t *self) {
 void Dead(Player_t *self, int damage) {
   if (self->active) {
     self->active = false;
+    g_Soloud.play(g_PlayerExplosion);
     self->dying_tick = 60;
     self->lives -= damage;
 
