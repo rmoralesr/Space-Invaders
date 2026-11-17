@@ -1,4 +1,7 @@
 #include "menus.hh"
+#include "..\core\game.hh"
+
+bool g_alt_title_anim = false;
 
 void LoadPreviewingMenu(){
     long long int anim_tick = g_tick;

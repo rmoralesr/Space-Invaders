@@ -3,7 +3,6 @@
 
 #include <esat/sprite.h>
 
-#include "../core/types.cc"
 #include "../core/cirno.hh"
 #include "../core/mask.hh"
 #include "../entities/bullet.hh"
@@ -90,7 +89,7 @@ struct Assets {
     esat::SpriteHandle ColorMask;
 };
 
-Assets g_assets;
+extern Assets g_assets;
 
 void LoadAssets();
 

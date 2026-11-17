@@ -1,5 +1,9 @@
 #include "mask.hh"
 
+#include <stdio.h>
+#include <esat/sprite.h>
+#include <assert.h> // Borrar en release
+
 bool IsValidPosition(Mask_t *mask, unsigned int x, unsigned int y) {
   return (
     x < (unsigned int)mask->size.x

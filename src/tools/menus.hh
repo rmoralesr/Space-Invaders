@@ -2,11 +2,12 @@
 #define MENUS_HH 1
 
 #include "../entities/body.hh"
-#include "../tools/ui-element.cc"
+#include "../tools/ui-element.hh"
 #include "../tools/asset-loader.hh"
-#include "../core/types.cc"
 
-bool g_alt_title_anim = false;
+struct Game_t;
+
+extern bool g_alt_title_anim;
 
 void LoadPreviewingMenu();
 

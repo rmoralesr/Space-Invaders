@@ -1,21 +1,9 @@
-#ifndef ALIENS_ARMY_CC
-#define ALIENS_ARMY_CC 1
-
-#include "body.hh"
-#include "../core/types.cc"
-#include "../tools/asset-loader.hh"
-#include "../core/score.hh"
-#include "../entities/UFO.hh"
-
-void AlienArmy_Init();
-
-// Definiciones
+#include "aliens_army.hh"
+#include "..\core\game.hh"
 
 void AsignAlienMask(Alien_t *alien) {
     alien->body.mask = g_assets.AlienMasks[alien->type][alien->sprite_frame];
 }
-
-const int kAlienBulletsTable[] = {1,7,1,1,1,4,11,1,6,3,1,1,11,9,2,8,2,11,4,7,10};
 
 AlienType GetAlienType(int row) {
     if (row < 2) {
@@ -287,5 +275,3 @@ void Dead(Alien_t *alien) {
         alien_army->alien_died = alien - alien_army->aliens;
     }
 }
-
-#endif // ALIENS_ARMY_CC

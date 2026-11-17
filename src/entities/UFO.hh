@@ -2,9 +2,8 @@
 #define UFO_HH 1
 
 #include "body.hh"
-#include "../core/types.cc"
 #include "../core/score.hh"
-#include "../tools/ui-element.cc"
+#include "../tools/ui-element.hh"
 #include "../tools/asset-loader.hh"
 
 const int kUFOpoints[16] = {100, 50, 50,100,
@@ -21,7 +20,7 @@ struct UFO_t {
     int anim_tick_progress = 0;
 };
 
-UFO_t g_UFO;
+extern UFO_t g_UFO;
 
 void UFO_Init();
 

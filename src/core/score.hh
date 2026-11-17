@@ -1,10 +1,8 @@
-
 #ifndef SCORE_HH
 #define SCORE_HH 1
 
 #include "cirno.hh"
-#include "../tools/ui-element.cc"
-#include "types.cc"
+#include "../tools/ui-element.hh"
 #include <stdio.h>
 
 // AUN NO ESTA TERMINADO

@@ -1,4 +1,5 @@
 #include "score.hh"
+#include "game.hh"
 
 // AUN NO ESTA TERMINADO
 

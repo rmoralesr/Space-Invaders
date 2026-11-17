@@ -5,12 +5,10 @@
 #include "body.hh"
 #include "bullet.hh"
 #include "player.hh"
-#include "../tools/ui-element.cc"
-#include "aliens_army.cc"
+#include "../tools/ui-element.hh"
+#include "aliens_army.hh"
 #include "UFO.hh"
 
-Body_t g_dummy_body; // Usado para no construir y deconstruir un body por colision
-Mask_t g_dummy_mask;
 
 /** @brief Devuelve el AABB overlap de los dos bodies */
 Vector2_t GetOverlap(Body_t *A, Body_t *B);

@@ -1,14 +1,12 @@
-#ifndef UPDATE_CC
-#define UPDATE_CC 1
+#include "update.hh"
 
-#include <esat/draw.h>
-#include "../core/types.cc"
+#include "../core/game.hh"
 #include "../entities/body.hh"
-#include "../tools/ui-element.cc"
+#include "../tools/ui-element.hh"
 #include "../tools/asset-loader.hh"
 #include "../tools/input.hh"
-#include "../tools/menus.cc"
-#include "../entities/aliens_army.cc"
+#include "../tools/menus.hh"
+#include "../entities/aliens_army.hh"
 #include "../entities/UFO.hh"
 #include "../entities/player.hh"
 #include "../entities/collision-handler.hh"
@@ -16,13 +14,6 @@
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
-void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
-	Dead(&alien_army->aliens[g_tick%55]);
-}
-
-void MatarPlayer(Player_t *player, Game_t *game) { // TODO quitar
-	Dead(player, 1);
-}
 void ClearQueuedActions(){
 	for (int i = 0; i < Update_kQueueCapacity; i++){
 		Update_queue[i].active = false;
@@ -139,10 +130,10 @@ void PlayerLogic(Game_t *game){
 	TickUFO();
 	if (g_tick == g_UFO.start_tick) GenerateUFO();
 
-	if (esat::IsKeyDown('M')) MatarAlien(&current_player->alien_army); //TODO Quitar
-	if (esat::IsKeyDown('K')) MatarPlayer(current_player, game); //TODO Quitar
-	if (esat::IsKeyDown('V')) current_player->lives++; //TODO Quitar
-	if (esat::IsKeyDown('U')) DestroyUFO(); //TODO Quitar
+	//if (esat::IsKeyDown('M')) MatarAlien(&current_player->alien_army); //TODO Quitar
+	//if (esat::IsKeyDown('K')) MatarPlayer(current_player, game); //TODO Quitar
+	//if (esat::IsKeyDown('V')) current_player->lives++; //TODO Quitar
+	//if (esat::IsKeyDown('U')) DestroyUFO(); //TODO Quitar
 
 	// Jugador
 	PlayerInput(game);
@@ -432,5 +423,3 @@ void GameUpdate(Game_t *game) {
 			EraseUIElement(UIElement_registry[i].body.position, i);
     }
 }
-
-#endif // UPDATE_CC

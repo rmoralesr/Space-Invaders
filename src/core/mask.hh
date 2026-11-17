@@ -2,10 +2,6 @@
 #define MASK_HH 1
 
 
-#include <stdio.h>
-#include <esat/sprite.h>
-#include <assert.h> // Borrar en release
-
 #include "cirno.hh"
 
 

@@ -1,5 +1,8 @@
 #include "collision-handler.hh"
 
+Body_t g_dummy_body; // Usado para no construir y deconstruir un body por colision
+Mask_t g_dummy_mask;
+
 bool QuickCollide(Body_t *A, Body_t *B) {
 
   Vector2_t overlap = GetOverlap(A, B);

@@ -1,5 +1,8 @@
 #include "bullet.hh"
 
+extern signed int Bullet_registry_active_count = 0;
+extern Bullet_t Bullet_registry[4] = {0};
+
 Bullet_t* Bullet_Construct(BulletType type) { // Cambiar puntero por referencia
   Bullet_t *self = &Bullet_registry[type];
 

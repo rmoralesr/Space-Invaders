@@ -1,4 +1,7 @@
 #include "UFO.hh"
+#include "..\core\game.hh"
+
+UFO_t g_UFO;
 
 void UFO_Init(){
     g_UFO.active = false;

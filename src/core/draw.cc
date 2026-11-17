@@ -25,9 +25,7 @@ void DrawRectangle(Vector2_t position, Vector2_t size, unsigned char RGBA[4]){
 }
 
 void GetPositionColor(unsigned char RGBA[4], unsigned int x, unsigned int y) {
-
     esat::SpriteGetPixel(g_assets.ColorMask, x/8,y/8, RGBA);
-    
 }
 
 void SetToBlack(unsigned char RGBA[4]) {

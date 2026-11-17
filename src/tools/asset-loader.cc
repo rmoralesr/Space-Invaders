@@ -1,5 +1,7 @@
 #include "asset-loader.hh"
 
+Assets g_assets;
+
 void LoadAssets() {
 
     //CARACTERES

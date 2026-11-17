@@ -1,4 +1,5 @@
 # Others
+*.patch
 *.bat
 .idea
 *.ini

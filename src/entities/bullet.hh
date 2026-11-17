@@ -26,8 +26,8 @@ struct Bullet_t {
   Body_t body;
 }; 
 
-unsigned int Bullet_registry_active_count = 0;
-Bullet_t Bullet_registry[4] = {0};
+extern signed int Bullet_registry_active_count;
+extern Bullet_t Bullet_registry[4];
 
 
 Bullet_t* Bullet_Construct(BulletType type);

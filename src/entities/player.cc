@@ -1,4 +1,5 @@
 #include "player.hh"
+#include "..\core\game.hh"
 
 void Player_Assets(Player_t *self_assets) {
   self_assets->body = {

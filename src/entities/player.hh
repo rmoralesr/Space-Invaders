@@ -4,13 +4,13 @@
 #include "../core/cirno.hh"
 #include "../core/mask.hh"
 #include "../core/draw.hh"
-#include "../core/types.cc"
 #include "../tools/asset-loader.hh"
-#include "../tools/ui-element.cc"
+#include "../tools/ui-element.hh"
 #include "body.hh"
 #include "bullet.hh"
-#include "UFO.hh"
-#include "aliens_army.cc"
+#include "aliens_army.hh"
+
+const int kBunkerLimit = 4;
 
 struct Bunker_t {
     Body_t body;

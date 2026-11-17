@@ -1,17 +1,14 @@
-#ifndef RENDER_CC
-#define RENDER_CC 1
+#include "render.hh"
 
-#include <esat/draw.h>
-
-#include "../core/types.cc"
+#include "../core/game.hh"
 #include "../core/cirno.hh"
 #include "../core/mask.hh"
 #include "../core/draw.hh"
 #include "../entities/body.hh"
-#include "../entities/aliens_army.cc"
+#include "../entities/aliens_army.hh"
 #include "../entities/UFO.hh"
 #include "../entities/player.hh"
-#include "../tools/ui-element.cc"
+#include "../tools/ui-element.hh"
 
 // FUNCIONES DE RENDERIZADO
 
@@ -93,5 +90,3 @@ void GameRender(Game_t *game) {
     }
 
 }
-
-#endif // RENDER_CC
