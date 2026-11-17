@@ -39,7 +39,5 @@ void AddScore(int points, bool update_score = true){
     }
 }
 
-
-
 #endif //SCORE_CC
 
