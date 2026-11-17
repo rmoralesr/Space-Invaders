@@ -69,10 +69,6 @@ void AlienArmy_Init(AlienArmy_t *alien_army) {
 void Alien_Move(Alien_t *alien, Vector2_t delta) {
     Move(&alien->body, delta);
     alien->sprite_frame = (alien->sprite_frame+1)%2;
-    for( int i=0; i<3; i++){
-        g_Soloud.play(g_AlienSounds[i]);
-        i=(i+1)%4;
-    }
     AsignAlienMask(alien);
     
    
@@ -242,6 +238,11 @@ AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
             if (alien_army->aliens[index].active) finished = true;
             else index = (index + 1) % 55;
         } while (!finished && alien_army->aliens_alive > 0);
+        int sound_interval = alien_army->aliens_alive / 2 + 4; // lento con muchos, rápido con pocos
+        if (g_tick % sound_interval == 0) {
+        g_Soloud.play(g_AlienSounds[alien_army->sound_index]);
+        alien_army->sound_index = (alien_army->sound_index + 1) % 4;
+        }
         AlienArmy_ControlBullets(alien_army, score, playerX);
     } else {
         if (alien_army->army_state == kAlienArmyState_generating) {
