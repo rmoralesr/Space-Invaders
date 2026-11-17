@@ -238,7 +238,7 @@ AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
             if (alien_army->aliens[index].active) finished = true;
             else index = (index + 1) % 55;
         } while (!finished && alien_army->aliens_alive > 0);
-        int sound_interval = alien_army->aliens_alive / 2 + 4; // lento con muchos, rápido con pocos
+        int sound_interval = alien_army->aliens_alive / 2 + 4; // lento con muchos, rapido con pocos
         if (g_tick % sound_interval == 0) {
         g_Soloud.play(g_AlienSounds[alien_army->sound_index]);
         alien_army->sound_index = (alien_army->sound_index + 1) % 4;
