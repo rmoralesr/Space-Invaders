@@ -23,10 +23,6 @@ void BulletRender() {
     }
 }
 
-void PreviewRender() {
-
-}
-
 void GameRender(Game_t *game) {
 
     //UI
@@ -55,7 +51,6 @@ void GameRender(Game_t *game) {
 
     switch (game->game_state) {
         case kGameState_Previewing: {
-            PreviewRender();
             break;
         }
         case kGameState_ChoosingPlayers: {
@@ -64,6 +59,7 @@ void GameRender(Game_t *game) {
         case kGameState_AboutToPlay: {
             break;
         }
+        case kGameState_Demo:
         case kGameState_Playing: {
             Draw(&g_bottomline);
             AliensRender(&game->player[game->player_playing].alien_army);
@@ -72,6 +68,7 @@ void GameRender(Game_t *game) {
             BulletRender();
             break;
         }
+        case kGameState_DemoDeath:
         case kGameState_Death:
             Draw(&g_bottomline);
             AliensRender(&game->player[game->player_playing].alien_army);
