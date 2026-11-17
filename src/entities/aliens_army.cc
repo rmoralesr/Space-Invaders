@@ -5,6 +5,7 @@
 #include "../core/types.cc"
 #include "../tools/asset-loader.cc"
 #include "../core/score.cc"
+#include "../entities/player.cc"
 #include "../entities/UFO.cc"
 #include <esat_extra/soloud/soloud.h>
 #include <esat_extra/soloud/soloud_wav.h>
@@ -12,6 +13,7 @@
 
 extern SoLoud::Soloud g_Soloud;
 extern SoLoud::Wav g_AlienExplosion;
+extern SoLoud::Wav g_AlienSounds[4];
 
 
 void AlienArmy_Init();
@@ -69,6 +71,8 @@ void Alien_Move(Alien_t *alien, Vector2_t delta) {
     Move(&alien->body, delta);
     alien->sprite_frame = (alien->sprite_frame+1)%2;
     AsignAlienMask(alien);
+    
+   
 }
 
 int AlienArmy_ReloadRate(int score) {
@@ -206,7 +210,10 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
 AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
     int index = (alien_army->last_alien_moved + 1) % 55;
     bool finished = false;
-    if (alien_army->aliens_alive <= 0) return kAlienArmyFlag_exterminated;
+    if (alien_army->aliens_alive <= 0) {
+        Player_Bunker_Reset(); // TODO antes del reset del bunker que se limpie la pantalla
+        return kAlienArmyFlag_exterminated;
+    }
     if (alien_army->army_state != kAlienArmyState_generating && !alien_army->regenerating) {
         do {
             if (index == 0) {
@@ -235,6 +242,11 @@ AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
             if (alien_army->aliens[index].active) finished = true;
             else index = (index + 1) % 55;
         } while (!finished && alien_army->aliens_alive > 0);
+        int sound_interval = alien_army->aliens_alive / 2 + 4; // lento con muchos, rapido con pocos
+        if (g_tick % sound_interval == 0) {
+        g_Soloud.play(g_AlienSounds[alien_army->sound_index]);
+        alien_army->sound_index = (alien_army->sound_index + 1) % 4;
+        }
         AlienArmy_ControlBullets(alien_army, score, playerX);
     } else {
         if (alien_army->army_state == kAlienArmyState_generating) {

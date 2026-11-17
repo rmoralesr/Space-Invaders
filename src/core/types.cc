@@ -54,6 +54,7 @@ struct Alien_t {
 
 struct AlienArmy_t {
     Alien_t aliens[55];
+    int sound_index=0;
     int aliens_alive;
     int alien_died;
     int alien_explosion_tick;
@@ -66,12 +67,16 @@ struct AlienArmy_t {
     bool regenerating;
     BulletType bullet_to_move;
     AlienArmyState army_state;
+
 };
 
 struct Player_t {
     bool active;
+    bool pause; // TODO
     bool dead;
     bool dying;
+    int pause_tick; /// TODO Pause (Contar ticks de pausa)
+    int dead_tick; /// TODO Pause (Guardar tick de muerte)
     int dying_tick;
     int score;
     int lives;
@@ -100,7 +105,7 @@ enum kUpdateID {
     kUpdateID_ChoosingPlayer,
     kUpdateID_AboutToPlay,
     kUpdateID_Playing,
-    kUpdateID_Death,
+    kUpdateID_Afterdeath,
     kUpdateID_GameOver,
     kUpdateID_OnGameOverEnd,
 	kUpdateID_UpdateScore
