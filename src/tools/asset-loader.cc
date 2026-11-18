@@ -188,12 +188,6 @@ void LoadAssets() {
         {kPlayerWidth * i, 0},
         {kPlayerWidth, kPlayerHeight}
         );
-        FromFile(
-        &g_assets.PlayerExplosion[i],
-        "../../assets/PlayerExplosion.png",
-        {kPlayerWidth * i, 0},
-        {kPlayerWidth, kPlayerHeight}
-        );
     }
 
     //cargar la explosion del disparo (jugador)
