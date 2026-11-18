@@ -1,9 +1,5 @@
-
-
-#include "../core/types.cc"
-#include "../entities/body.cc"
-#include "../tools/ui-element.cc"
-#include "../tools/asset-loader.cc"
+#include "menus.hh"
+#include "..\core\game.hh"
 
 bool g_alt_title_anim = false;
 

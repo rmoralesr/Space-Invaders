@@ -5,14 +5,14 @@
 #include <esat/time.h>
 
 // LOS INCLUDES DEBEN ESTAR EN ORDEN, LOS QUE NECESITAN OTROS QUE SE PONGAN DEBAJO DE ELLOS
-#include "../core/cirno.cc"
-#include "../core/types.cc"
-#include "../core/mask.cc"
-#include "../entities/body.cc"
-#include "../tools/ui-element.cc"
-#include "update.cc"
-#include "render.cc"
-#include "../tools/sound.cc"
+#include "../core/cirno.hh"
+#include "../core/mask.hh"
+#include "../entities/body.hh"
+#include "../tools/ui-element.hh"
+#include "../core/game.hh"
+#include "update.hh"
+#include "render.hh"
+#include "../tools/sound.hh"
 
 /** @brief Controla el maximo de frames por segundo */
 void FrameWait(double last_time);
