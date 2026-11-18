@@ -24,11 +24,11 @@ struct Bunker_t {
 
 struct Player_t {
     bool active;
-    bool pause; // TODO
+    bool pause;
     bool dead;
     bool dying;
-    int pause_tick; /// TODO Pause (Contar ticks de pausa)
-    int dead_tick; /// TODO Pause (Guardar tick de muerte)
+    int pause_tick;
+    int dead_tick;
     int dying_tick;
     int score;
     int lives;
@@ -52,8 +52,6 @@ void PlayerSetUp(Player_t *self);
 void Player_Reset(Player_t *self);
 
 void Dead(Player_t *self, int damage);
-
-// 2s de animación alternando frame a frame los dos sprites. 
 void Dead_Animation(Player_t *self);
 
 void MoveTo(Player_t *self, Vector2_t pos);
