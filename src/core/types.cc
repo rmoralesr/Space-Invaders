@@ -50,6 +50,7 @@ struct Alien_t {
     bool showing;
     AlienType type;
     int sprite_frame;
+    int id;
 };
 
 struct AlienArmy_t {
@@ -80,6 +81,7 @@ struct Player_t {
     int dying_tick;
     int score;
     int lives;
+    int rounds;
 
     Body_t body;
     Bunker_t bunker[kBunkerLimit];

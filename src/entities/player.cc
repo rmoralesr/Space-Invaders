@@ -62,6 +62,7 @@ void Player_Construct(Player_t *self) {
     
     self->score = 0;
     self->lives = 0;
+    self->rounds = 0;
 
     Player_Assets(self);
 }
@@ -77,6 +78,7 @@ void Player_Reset(Player_t *self) {
     if (self->lives == 0) {      
       self->score = 0;
       self->lives = 3;
+      self->rounds = 0;
       Player_Bunker_Assets(self);
     }
     GenerateLives(self->lives);

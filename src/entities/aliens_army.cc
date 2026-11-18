@@ -36,14 +36,38 @@ AlienType GetAlienType(int row) {
     return kAlienType_squid;
 }
 
+int AlienArmy_GetStartingY(int rounds) {
+    switch (rounds) {
+        case 0: return 136;
+            break;
+        case 1: return 160;
+            break;
+        case 2: return 176;
+            break;
+        case 3:
+        case 4:
+        case 5:
+            return 184;
+            break;
+        case 6:
+        case 7:
+        case 8:
+            return 192;
+            break;
+        default: break;
+    }
+    return 136;
+}
+
 void Alien_Init(Alien_t *alien, int row, int col) {
     alien->type = GetAlienType(row);
     alien->active = false;
     alien->body.can_collide = true;
     alien->body.mask = {};
     alien->body.position.x = col * 16 + 24;
-    alien->body.position.y = 136 - 8 - row * 16;
+    alien->body.position.y = AlienArmy_GetStartingY(g_game.player[g_game.player_playing].rounds) - 8 - row * 16;
     alien->sprite_frame = 0;
+    alien->id = row*11+col;
     alien->showing = true;
     AsignAlienMask(alien);
 }
@@ -83,7 +107,7 @@ int AlienArmy_ReloadRate(int score) {
     return 7;
 }
 
-bool AlienArmy_CanFire(AlienArmy_t *alien_army, int score, BulletType bullet) {
+bool AlienArmy_CanFire(AlienArmy_t *alien_army, int score, BulletType bullet) { // TODO mas condicionales
     int rate = AlienArmy_ReloadRate(score);
     for (int i = 1; i < 4; i++) {
         if (bullet != i && Bullet_registry[i].step <= rate && Bullet_registry[i].active) return false;
@@ -176,8 +200,6 @@ void AlienArmy_ShootPlunger(AlienArmy_t *alien_army, int playerX) {
 }
 
 void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
-    int y = -1;
-    int x = -1;
     switch (alien_army->bullet_to_move) {
         case kBulletType_Squiggly:
             if (!Bullet_registry[kBulletType_Squiggly].active) {
@@ -312,7 +334,8 @@ void Dead(Alien_t *alien) {
 
         alien_army->aliens_alive--;
         alien_army->alien_explosion_tick = 16;
-        alien_army->alien_died = alien - alien_army->aliens;
+        // alien_army->alien_died = alien - alien_army->aliens;
+        alien_army->alien_died = alien->id;
     }
 }
 
