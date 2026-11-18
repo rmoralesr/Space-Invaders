@@ -2,7 +2,6 @@
 #define UPDATE_HH 1
 #include "../core/game.hh"
 
-void ClearQueuedActions();
 void AboutToPlayInit(Game_t *game);
 
 void PlayingInit(Game_t *game);

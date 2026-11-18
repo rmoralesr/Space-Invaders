@@ -84,6 +84,7 @@ bool AlienArmy_CanFire(AlienArmy_t *alien_army, int score, BulletType bullet);
 
 Alien_t *AlienArmy_GetLowestAlienInColumn(AlienArmy_t *alien_army, int col);
 int AlienArmy_GetColNearPlayer(AlienArmy_t *alien_army, int playerX);
+int AlienArmy_GetStartingY(int rounds);
 
 int AlienArmy_PickBulletX(AlienArmy_t *alien_army, int playerX, BulletType bullet_type);
 int AlienArmy_PickBulletY(AlienArmy_t *alien_army, int col);

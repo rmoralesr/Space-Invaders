@@ -14,12 +14,17 @@
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
-void ClearQueuedActions(){
-	for (int i = 0; i < Update_kQueueCapacity; i++){
-		Update_queue[i].active = false;
+void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
+	for (int i = 0; i < 55; i++) {
+		if (alien_army->aliens[(g_tick+i)%55].active) {
+			Dead(&alien_army->aliens[(g_tick+i)%55]);
+			return;
+		}
 	}
-	g_wipe_screen.current_step = -1;
-	g_wipe_screen.queued_tick = 0;
+}
+
+void MatarPlayer(Player_t *player, Game_t *game) { // TODO quitar
+	Dead(player, 1);
 }
 
 void AboutToPlayInit(Game_t *game){
@@ -84,6 +89,16 @@ void PlayerInput(Game_t *game){
 	}
 }
 
+void NextRound(Game_t *game) {
+	g_wipe_screen.current_step = -1;
+	Player_Bunker_Reset(); // TODO antes del reset del bunker que se limpie la pantalla
+	game->player[game->player_playing].pause = true;
+	game->player[game->player_playing].rounds++;
+	if (game->player[game->player_playing].rounds >= 9) game->player[game->player_playing].rounds = 1;
+	AlienArmy_Init(&game->player[game->player_playing].alien_army);
+	UFO_Init();
+}
+
 void PlayerLogic(Game_t *game){
 
 	AlienArmyFlag alien_army_flag = AlienArmy_Control(
@@ -99,6 +114,10 @@ void PlayerLogic(Game_t *game){
 	// Jugador
 	PlayerInput(game);
 
+	if (esat::IsKeyDown('M')) MatarAlien(&game->player[game->player_playing].alien_army); //TODO Quitar
+	if (esat::IsKeyDown('K')) MatarPlayer(&game->player[game->player_playing], game); //TODO Quitar
+	if (esat::IsKeyDown('V')) game->player[game->player_playing].lives++; //TODO Quitar
+	if (esat::IsKeyDown('U')) DestroyUFO(); //TODO Quitar
 
 	// Update Objetos
 	int i, j;
@@ -174,11 +193,14 @@ void PlayerLogic(Game_t *game){
 	}
 
 	if (alien_army_flag == kAlienArmyFlag_invaded) Dead(&game->player[game->player_playing], game->player[game->player_playing].lives);
-	if (alien_army_flag == kAlienArmyFlag_exterminated && game->player[game->player_playing].lives > 0) {
-		game->player[game->player_playing].rounds++;
-		if (game->player[game->player_playing].rounds >= 9) game->player[game->player_playing].rounds = 1;
-		AlienArmy_Init(&game->player[game->player_playing].alien_army);
-		UFO_Init();
+	if (alien_army_flag == kAlienArmyFlag_exterminated &&
+		game->player[game->player_playing].lives > 0 && !IsActionQueued(kUpdateID_NextRound)) {
+
+
+		WipeScreenToContent(&g_wipe_screen);
+		g_wipe_screen.queued_tick = g_tick + 1;
+
+		QueueUpdate(kUpdateID_NextRound, g_tick+22);
 	}
 }
 
@@ -324,8 +346,12 @@ void GameUpdate(Game_t *game) {
 					} else {
 						PreviewingInit(game);
 					}
+					break;
 				case kUpdateID_UpdateScore:
 					UpdateScore();
+					break;
+				case kUpdateID_NextRound:
+					NextRound(game);
 					break;
 			}
 		}
