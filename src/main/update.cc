@@ -145,7 +145,7 @@ void PlayerLogic(Game_t *game){
 
 			Collide(bullet, &game->player[game->player_playing]);
 
-			if (!bullet->dying && bullet->body.position.y > 228) {
+			if (!bullet->dying && bullet->body.position.y > 226) {
 				Dead(bullet);
 
 				if (bullet->dying) {
