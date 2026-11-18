@@ -328,8 +328,6 @@ void GameUpdate(Game_t *game) {
 
 					break;
 				case kUpdateID_GameOver :
-					// g_wipe_screen.current_step = -1;
-					// ClearUIContent();
 					GameOverInit(game);
 					break;
 				case kUpdateID_OnGameOverEnd :
