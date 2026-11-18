@@ -109,12 +109,6 @@ void Dead_Animation(Player_t *self) {
   if(self->dying_tick%4 == 0) self->dying = !self->dying;
 }
 
-void Destruct(Player_t *self) {
-  if (self->active) {
-    self->active = false;
-  }
-}
-
 void MoveTo(Player_t *self, Vector2_t pos) {
   MoveTo(&self->body, pos);
 }

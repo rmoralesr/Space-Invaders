@@ -46,7 +46,6 @@ void Player_Bunker_Assets(Player_t *self_assets);
 void Player_Bunker_Reset();
 
 void Player_Construct(Player_t *self);
-void Destruct(Player_t *self);
 
 void PlayerSetUp(Player_t *self);
 void Player_Reset(Player_t *self);
