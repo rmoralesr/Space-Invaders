@@ -64,7 +64,7 @@ void Tick(Bullet_t *self, bool quick) {
       self->body.mask = g_assets.AlienBulletsMasks[self->type-1][self->step % 4];
     }
 
-    if (self->body.position.y != clamp(self->body.position.y, 32, 240)) { // TODO modificar valores para que sean accurate TIENEN QUE SER MULTIPLO DE 4
+    if (self->body.position.y != clamp(self->body.position.y, 32, 240)) {
       self->body.position.y = clamp(self->body.position.y, 32, 240);
       Dead(self);
     } 

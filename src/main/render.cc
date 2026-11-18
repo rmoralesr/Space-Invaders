@@ -71,8 +71,8 @@ void GameRender(Game_t *game) {
             AliensRender(&game->player[game->player_playing].alien_army);
             if (g_UFO.active) Draw(&g_UFO.body);
 
-            if(g_tick - game->player[game->player_playing].dead_tick < 60) Draw(&game->player[game->player_playing]); /// TODO Pause (Solo sale la animación de muerte durante 60 ticks)
-            else Draw_Bunkers(&game->player[game->player_playing]); /// TODO Pause (Cuando termina la animación tienen que seguir los bunkers)
+            if(g_tick - game->player[game->player_playing].dead_tick < 60) Draw(&game->player[game->player_playing]);
+            else Draw_Bunkers(&game->player[game->player_playing]);
         break;
         case kGameState_GameOver:
             Draw(&g_bottomline);

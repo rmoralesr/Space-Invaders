@@ -17,7 +17,7 @@ bool QuickCollide(Body_t *A, Body_t *B) {
     Vector2_t local_corner_A = Sub(corner, A->position);
     Vector2_t local_corner_B = Sub(corner, B->position);
 
-    Vector2_t local_pos_A; // En release refactorizar todo esto porque será basicamente innecesario
+    Vector2_t local_pos_A;
     Vector2_t local_pos_B;
 
     for (int y = 0; y < overlap.y; y++) {
@@ -81,7 +81,7 @@ unsigned int Collide(Body_t *A, Body_t *B, Body_t *out_body) {
     Vector2_t local_corner_A = Sub(corner, A->position);
     Vector2_t local_corner_B = Sub(corner, B->position);
 
-    Vector2_t local_pos_A; // En release refactorizar todo esto porque será basicamente innecesario
+    Vector2_t local_pos_A;
     Vector2_t local_pos_B;
 
     for (int y = 0; y < overlap.y; y++) {

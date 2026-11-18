@@ -23,10 +23,10 @@ void Player_Bunker_Assets(Player_t *self_assets) {
 
 void Player_Construct(Player_t *self) {
     self->active = false;
-    self->pause = true; /// TODO Pause (Si se tiene que pausar o no)
+    self->pause = true;
     self->dead = false;
     self->dying = false;
-    self->pause_tick = 1; /// TODO Pause (Contar ticks de pausa)
+    self->pause_tick = 1;
     self->dying_tick = 0;
     
     self->score = 0;
@@ -53,7 +53,7 @@ void Player_Reset(Player_t *self) {
     self->active = true;
     self->dead = false;
     self->dying = false;
-    self->pause_tick = 1; /// TODO Pause (Contar ticks de pausa)
+    self->pause_tick = 1;
     self->dying_tick = 0;
 
     GenerateLives(self->lives);
@@ -69,7 +69,7 @@ void Player_Bunker_Reset() {
 void Dead(Player_t *self, int damage) {
   if (self->active) {
     self->active = false;
-    self->dead_tick = g_tick; /// TODO Pause
+    self->dead_tick = g_tick;
     self->dying_tick = 60;
     self->lives -= damage;
 
@@ -157,5 +157,5 @@ void Draw_Bunkers(Player_t *self_bunkers) {
 
 void Draw(Player_t *self) {
   Draw_Bunkers(self);
-  if(!self->pause) Draw(&self->body); /// TODO Si no está en pause se dibuja
+  if(!self->pause) Draw(&self->body);
 }

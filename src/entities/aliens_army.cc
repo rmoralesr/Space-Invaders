@@ -88,7 +88,7 @@ int AlienArmy_ReloadRate(int score) {
     return 7;
 }
 
-bool AlienArmy_CanFire(AlienArmy_t *alien_army, int score, BulletType bullet) { // TODO mas condicionales
+bool AlienArmy_CanFire(AlienArmy_t *alien_army, int score, BulletType bullet) {
     if (g_game.player[g_game.player_playing].pause) return false;
 
     int rate = AlienArmy_ReloadRate(score);
