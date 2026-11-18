@@ -12,7 +12,7 @@
 #include "../tools/ui-element.cc"
 #include "update.cc"
 #include "render.cc"
-#include "../sound/sound.cc"
+#include "../tools/sound.cc"
 
 /** @brief Controla el maximo de frames por segundo */
 void FrameWait(double last_time);
@@ -46,16 +46,16 @@ int esat::main(int argc, char **argv) {
 
     GameInit(&g_game);
     g_Soloud.init();
-    g_AlienExplosion.load("../sound/alienkilled.ogg");
-    g_PlayerExplosion.load("../sound/explosion.ogg");
-    g_shoot.load("../sound/shoot.ogg");
-    g_UFOflying.load("../sound/ufo_highpitch.ogg");
-    g_UFOdead.load("../sound/ufo_lowpitch.ogg");
-    g_ExtraLife.load("../sound/extendedPlay.ogg");
-    g_AlienSounds[0].load("../sound/fastinvader1.ogg");
-    g_AlienSounds[1].load("../sound/fastinvader2.ogg");
-    g_AlienSounds[2].load("../sound/fastinvader3.ogg");
-    g_AlienSounds[3].load("../sound/fastinvader4.ogg");
+    g_AlienExplosion.load("../../assets/sounds/alienkilled.ogg");
+    g_PlayerExplosion.load("../../assets/sounds/explosion.ogg");
+    g_shoot.load("../../assets/sounds/shoot.ogg");
+    g_UFOflying.load("../../assets/sounds/ufo_highpitch.ogg");
+    g_UFOdead.load("../../assets/sounds/ufo_lowpitch.ogg");
+    g_ExtraLife.load("../../assets/sounds/extendedPlay.ogg");
+    g_AlienSounds[0].load("../../assets/sounds/fastinvader1.ogg");
+    g_AlienSounds[1].load("../../assets/sounds/fastinvader2.ogg");
+    g_AlienSounds[2].load("../../assets/sounds/fastinvader3.ogg");
+    g_AlienSounds[3].load("../../assets/sounds/fastinvader4.ogg");
     
 
 
