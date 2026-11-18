@@ -57,6 +57,7 @@ void Dead(Alien_t *alien);
 // AlienArmy
 
 struct AlienArmy_t {
+    bool active;
     Alien_t aliens[55];
     int sound_index = 0;
     int aliens_alive;

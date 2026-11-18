@@ -53,6 +53,7 @@ void Alien_Init(Alien_t *alien, int row, int col) {
 }
 
 void AlienArmy_Init(AlienArmy_t *alien_army) {
+    alien_army->active = false;
     alien_army->aliens_alive = 55;
     alien_army->last_alien_moved = 54;
     alien_army->alien_died = -1;
@@ -200,7 +201,8 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
             break;
         case kBulletType_Rolling:
             if (!Bullet_registry[kBulletType_Rolling].active) {
-                if (AlienArmy_CanFire(alien_army, score, kBulletType_Rolling) || g_game.game_state == kGameState_Demo) {
+                if (AlienArmy_CanFire(alien_army, score, kBulletType_Rolling) || 
+                (g_game.game_state == kGameState_Demo && !g_game.player[g_game.player_playing].pause)) {
                     AlienArmy_ShootRolling(alien_army, playerX);
                 }
             }
@@ -258,7 +260,10 @@ AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
         if (alien_army->army_state == kAlienArmyState_generating) {
             alien_army->aliens[index].active = true;
             alien_army->last_alien_moved++;
-            if (index == 54) alien_army->army_state = kAlienArmyState_descendingFalse;
+            if (index == 54) {
+                alien_army->army_state = kAlienArmyState_descendingFalse;
+                alien_army->active = true;
+            }
         } else {
             do {
                 index = (alien_army->last_alien_showing + 1) % 55;

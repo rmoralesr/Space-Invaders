@@ -31,9 +31,8 @@ void AboutToPlayInit(Game_t *game){
 	ClearUIContent();
 	EraseText(kTaitoCopPosition, 9);
 
-	for (int i = 0; i < 4; i++) {
-		Bullet_registry[i].active = false;
-	}
+	if(game->player[game->player_playing].alien_army.active) 
+		AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army);
 
 	LoadAboutToPlayMenu(game);
 }
@@ -44,7 +43,7 @@ void PlayingInit(Game_t *game){
 	GenerateNumber(game->player[0].score,4, kScore1NumberPosition);
 	if(game->multiplayer) GenerateNumber(game->player[1].score,4, kScore2NumberPosition);
 	
-	if(game->multiplayer) AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army);
+	// if(game->multiplayer) AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army);
 	UFO_Init();
 	Player_Reset(&game->player[game->player_playing]);
 
@@ -202,6 +201,9 @@ void PlayerLogic(Game_t *game){
 }
 
 void ResetGame(Game_t *game) {
+	for (int i = 0; i < 4; i++) {
+		Bullet_registry[i].active = false;
+	}
 	for(int i = 0; i < 2; i++) {
 		PlayerSetUp(&game->player[i]); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
 		AlienArmy_Init(&game->player[i].alien_army); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
