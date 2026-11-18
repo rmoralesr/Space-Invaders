@@ -1,32 +1,5 @@
-#ifndef UFO_CC
-#define UFO_CC 1
-
-#include "body.cc"
-#include "../core/types.cc"
-#include "../core/score.cc"
-#include "../tools/ui-element.cc"
-#include "../tools/asset-loader.cc"
-#include <esat_extra/soloud/soloud.h>
-#include <esat_extra/soloud/soloud_wav.h>
-
-extern SoLoud::Soloud g_Soloud;
-extern SoLoud::Wav g_UFOflying;
-extern SoLoud::Wav g_UFOdead;
-
-const int kUFOpoints[16] = {100, 50, 50,100,
-                            150,100,100, 50,
-                            300,100,100,100,
-                            50,150,100, 50};
-
-struct UFO_t {
-    bool active;
-    Body_t body;
-    int points_index = 0;
-    bool dir = true;
-    long long int start_tick;
-    int anim_tick_progress = 0;
-    SoLoud::handle flyingHandle = 0;
-};
+#include "UFO.hh"
+#include "..\core\game.hh"
 
 UFO_t g_UFO;
 
@@ -97,5 +70,3 @@ void AdvanceUFOPointsIndex(){
     g_UFO.points_index++;
     if (g_UFO.points_index > 15) g_UFO.points_index = 0;
 }
-
-#endif // UFO_CC

@@ -1,24 +1,21 @@
-#ifndef RENDER_CC
-#define RENDER_CC 1
+#include "render.hh"
 
-#include <esat/draw.h>
-
-#include "../core/types.cc"
-#include "../core/cirno.cc"
-#include "../core/mask.cc"
-#include "../core/draw.cc"
-#include "../entities/body.cc"
-#include "../entities/aliens_army.cc"
-#include "../entities/UFO.cc"
-#include "../entities/player.cc"
-#include "../tools/ui-element.cc"
+#include "../core/game.hh"
+#include "../core/cirno.hh"
+#include "../core/mask.hh"
+#include "../core/draw.hh"
+#include "../entities/body.hh"
+#include "../entities/aliens_army.hh"
+#include "../entities/UFO.hh"
+#include "../entities/player.hh"
+#include "../tools/ui-element.hh"
 
 // FUNCIONES DE RENDERIZADO
 
 void BulletRender() {
     for (int i = 0; i < 4; i++) {
         if (Bullet_registry[i].active) {
-            Draw(&Bullet_registry[i].body);
+            Draw(&Bullet_registry[i]);
         }
     }
 }
@@ -95,5 +92,3 @@ void GameRender(Game_t *game) {
     }
 
 }
-
-#endif // RENDER_CC

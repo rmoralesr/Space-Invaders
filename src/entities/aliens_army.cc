@@ -1,30 +1,13 @@
-#ifndef ALIENS_ARMY_CC
-#define ALIENS_ARMY_CC 1
-
-#include "body.cc"
-#include "../core/types.cc"
-#include "../tools/asset-loader.cc"
-#include "../core/score.cc"
-#include "../entities/player.cc"
-#include "../entities/UFO.cc"
-#include <esat_extra/soloud/soloud.h>
-#include <esat_extra/soloud/soloud_wav.h>
-
+#include "aliens_army.hh"
+#include "..\core\game.hh"
 
 extern SoLoud::Soloud g_Soloud;
 extern SoLoud::Wav g_AlienExplosion;
 extern SoLoud::Wav g_AlienSounds[4];
 
-
-void AlienArmy_Init();
-
-// Definiciones
-
 void AsignAlienMask(Alien_t *alien) {
     alien->body.mask = g_assets.AlienMasks[alien->type][alien->sprite_frame];
 }
-
-const int kAlienBulletsTable[] = {1,7,1,1,1,4,11,1,6,3,1,1,11,9,2,8,2,11,4,7,10};
 
 AlienType GetAlienType(int row) {
     if (row < 2) {
@@ -338,5 +321,3 @@ void Dead(Alien_t *alien) {
         alien_army->alien_died = alien->id;
     }
 }
-
-#endif // ALIENS_ARMY_CC

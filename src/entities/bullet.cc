@@ -1,8 +1,6 @@
 #ifndef BULLET_CC
 #define BULLET_CC 1
 
-#include "../core/types.cc"
-#include "../tools/asset-loader.cc"
 #include "../core/cirno.cc"
 #include "../core/mask.cc"
 #include "../core/draw.cc"
@@ -132,5 +130,3 @@ void Move(Bullet_t *self, Vector2_t delta) {
 void Draw(Bullet_t *self) {
   Draw(&self->body);
 }
-
-#endif // BULLET_CC
