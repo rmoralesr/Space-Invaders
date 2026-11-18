@@ -90,6 +90,7 @@ int AlienArmy_ReloadRate(int score) {
 
 bool AlienArmy_CanFire(AlienArmy_t *alien_army, int score, BulletType bullet) { // TODO mas condicionales
     if (g_game.player[g_game.player_playing].pause) return false;
+
     int rate = AlienArmy_ReloadRate(score);
     for (int i = 1; i < 4; i++) {
         if (bullet != i && Bullet_registry[i].step <= rate && Bullet_registry[i].active) return false;
@@ -201,8 +202,7 @@ void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
             break;
         case kBulletType_Rolling:
             if (!Bullet_registry[kBulletType_Rolling].active) {
-                if (AlienArmy_CanFire(alien_army, score, kBulletType_Rolling) || 
-                (g_game.game_state == kGameState_Demo && !g_game.player[g_game.player_playing].pause)) {
+                if (AlienArmy_CanFire(alien_army, score, kBulletType_Rolling)) {
                     AlienArmy_ShootRolling(alien_army, playerX);
                 }
             }
