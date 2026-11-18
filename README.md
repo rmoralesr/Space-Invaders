@@ -44,4 +44,8 @@ endlocal
 @echo  Proceso por lotes finalizado.
 @echo ---------------------------------------------------
 
+
+
+compilacion.bat C: && cd ../src/main && main && cd ../../.compiled
+
 https://archive.org/details/arcade_invaders#
