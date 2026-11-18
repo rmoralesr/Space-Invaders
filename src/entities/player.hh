@@ -49,11 +49,10 @@ void Player_Construct(Player_t *self);
 
 void PlayerSetUp(Player_t *self);
 void Player_Reset(Player_t *self);
+void Player_Bunker_Reset();
 
 void Dead(Player_t *self, int damage);
 void Dead_Animation(Player_t *self);
-
-void MoveTo(Player_t *self, Vector2_t pos);
 
 void Move(Player_t *self, Vector2_t delta);
 
