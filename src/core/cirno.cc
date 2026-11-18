@@ -1,22 +1,11 @@
-#ifndef CIRNO_PERFECT_MATH_CC
-#define CIRNO_PERFECT_MATH_CC 1
-
-#include <math.h>
 #include <stdio.h>
 
+#include "cirno.hh"
 
 int clamp(int x, int lower, int upper) {
   if (x > upper) return upper;
   if (x < lower) return lower;
   return x;
-}
-
-int min(int a, int b) {
-  return a < b ? a : b;
-}
-
-int max(int a, int b) {
-  return a > b ? a : b;
 }
 
 int sign(int x) {
@@ -29,7 +18,7 @@ int pow(int base, int exp) {
   return value;
 }
 
-int log(unsigned int n, unsigned int base = 2) {
+int log(unsigned int n, unsigned int base) {
   if (base < 2) return 0;
 
   int c = 0;
@@ -40,12 +29,6 @@ int log(unsigned int n, unsigned int base = 2) {
 
   return c;
 }
-
-struct Vector2_t {
-  int x,y;
-};
-
-const Vector2_t Vector2_kZero = {0,0};
 
 bool isZero(Vector2_t v) {
   return v.x == 0 && v.y == 0;
@@ -97,13 +80,6 @@ Vector2_t Neg(Vector2_t v) {
   return {-v.x, -v.y};
 }
 
-// float Magnitude(Vector2_t v) {
-//   return sqrt(v.x*v.x + v.y*v.y);
-// }
-
 void Print(Vector2_t v) {
   printf("{ %d, %d }\n", v.x, v.y);
 }
-
-
-#endif // CIRNO_PERFECT_MATH_CC

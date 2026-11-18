@@ -1,18 +1,10 @@
-
-#ifndef SCORE_CC
-#define SCORE_CC
-
-#include "cirno.cc"
-#include "../tools/ui-element.cc"
-#include "types.cc"
 #include <stdio.h>
-#include <esat_extra/soloud/soloud.h>
-#include <esat_extra/soloud/soloud_wav.h>
 
-extern SoLoud::Soloud g_Soloud;
-extern SoLoud::Wav g_ExtraLife;
+#include "score.hh"
 
-
+#include "game.hh"
+#include "../tools/ui-element.hh"
+#include "../tools/sound.hh"
 
 void UpdateScore(){
     if (g_game.game_state != kGameState_Demo){
@@ -24,7 +16,8 @@ void UpdateScore(){
         GenerateNumber(g_game.hiscore, 4, kHiScoreNumberPosition);
     }
 }
-void AddScore(int points, bool update_score = true){
+
+void AddScore(int points, bool update_score){
     if (g_game.game_state != kGameState_Demo){
         Player_t *player = &g_game.player[g_game.player_playing];
 
@@ -44,6 +37,3 @@ void AddScore(int points, bool update_score = true){
         if (update_score) UpdateScore();
     }
 }
-
-#endif //SCORE_CC
-

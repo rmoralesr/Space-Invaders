@@ -1,38 +1,7 @@
-#ifndef PLAYER_CC
-#define PLAYER_CC 1
+#include "player.hh"
 
-#include "../core/cirno.cc"
-#include "../core/mask.cc"
-#include "../core/draw.cc"
-#include "../core/types.cc"
-#include "../tools/asset-loader.cc"
-#include "../tools/ui-element.cc"
-#include "body.cc"
-#include "bullet.cc"
-#include "UFO.cc"
-#include <esat_extra/soloud/soloud.h>
-#include <esat_extra/soloud/soloud_wav.h>
+#include "..\core\game.hh"
 
-extern SoLoud::Soloud g_Soloud;
-extern SoLoud::Wav g_PlayerExplosion;
-
-// Prototipaje
-
-void Player_Construct(Player_t *self);
-void Player_Reset(Player_t *self);
-
-void Dead(Player_t *self, int damage);
-void Dead_Animation(Player_t *self);
-void Destruct(Player_t* self);
-
-void MoveTo(Player_t* self, Vector2_t pos);
-void Move(Player_t* self, Vector2_t delta);
-
-void Tick(Player_t* self); // Actualiza toda la logica. Se mueve hacia adelante y/o intenta colisionar (por ver), en este caso.
-
-void Draw(Player_t* self);
-
-// Definiciones
 
 void Player_Assets(Player_t *self_assets) {
   self_assets->body = {
@@ -62,8 +31,21 @@ void Player_Construct(Player_t *self) {
     
     self->score = 0;
     self->lives = 0;
+    self->rounds = 0;
 
     Player_Assets(self);
+}
+
+void PlayerSetUp(Player_t *self) { 
+  self->pause = true;
+  self->dead = false;
+  self->score = 0;
+  self->lives = 3;
+  self->rounds = 0;
+  self->pause_tick = 1;
+  
+  Player_Bunker_Assets(self);
+  Player_Assets(self);
 }
 
 void Player_Reset(Player_t *self) {
@@ -74,11 +56,6 @@ void Player_Reset(Player_t *self) {
     self->pause_tick = 1; /// TODO Pause (Contar ticks de pausa)
     self->dying_tick = 0;
 
-    if (self->lives == 0) {      
-      self->score = 0;
-      self->lives = 3;
-      Player_Bunker_Assets(self);
-    }
     GenerateLives(self->lives);
 
     Player_Assets(self);
@@ -102,7 +79,10 @@ void Dead(Player_t *self, int damage) {
       GenerateLives(self->lives);
       g_Soloud.play(g_PlayerExplosion);
 
-    } else g_game.game_state = kGameState_DemoDeath;
+    } else {
+      g_game.game_state = kGameState_DemoDeath;
+      self->lives = 0;
+    }
 
     if(self->lives <= 0) {
       self->lives = 0;
@@ -179,5 +159,3 @@ void Draw(Player_t *self) {
   Draw_Bunkers(self);
   if(!self->pause) Draw(&self->body); /// TODO Si no está en pause se dibuja
 }
-
-#endif // PLAYER_CC
