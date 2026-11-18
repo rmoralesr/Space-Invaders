@@ -6,6 +6,12 @@
 #include "../core/score.cc"
 #include "../tools/ui-element.cc"
 #include "../tools/asset-loader.cc"
+#include <esat_extra/soloud/soloud.h>
+#include <esat_extra/soloud/soloud_wav.h>
+
+extern SoLoud::Soloud g_Soloud;
+extern SoLoud::Wav g_UFOflying;
+extern SoLoud::Wav g_UFOdead;
 
 const int kUFOpoints[16] = {100, 50, 50,100,
                             150,100,100, 50,
@@ -19,11 +25,13 @@ struct UFO_t {
     bool dir = true;
     long long int start_tick;
     int anim_tick_progress = 0;
+    SoLoud::handle flyingHandle = 0;
 };
 
 UFO_t g_UFO;
 
 void UFO_Init(){
+    g_Soloud.stop(g_UFO.flyingHandle);
     g_UFO.active = false;
     g_UFO.anim_tick_progress = 0;
     g_UFO.points_index = 0;
@@ -37,14 +45,25 @@ void GenerateUFO(){
     else x = 196;
     g_UFO.anim_tick_progress = 0;
     g_UFO.body = {true, {x,42}, g_assets.UFOMasks[0]};
+
+    if (g_game.game_state == kGameState_Playing){
+        g_UFO.flyingHandle = g_Soloud.play(g_UFOflying);  // ← arranca
+        g_Soloud.setLooping(g_UFO.flyingHandle, true);
+    }
 }
 void EscapeUFO(){
     g_UFO.active = false;
     g_UFO.body.can_collide = false;
     g_UFO.start_tick = g_tick + 1200;
+    g_Soloud.stop(g_UFO.flyingHandle);
 }
 
 void DestroyUFO(){
+    if (g_game.game_state == kGameState_Playing){
+        g_Soloud.stop(g_UFO.flyingHandle);  // ← para el bucle
+        g_Soloud.play(g_UFOdead);
+    }
+
     g_UFO.body.can_collide = false;
     g_UFO.body.mask = g_assets.UFOMasks[1];
     g_UFO.anim_tick_progress = 16;

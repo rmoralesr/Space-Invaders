@@ -7,6 +7,14 @@
 #include "../core/score.cc"
 #include "../entities/player.cc"
 #include "../entities/UFO.cc"
+#include <esat_extra/soloud/soloud.h>
+#include <esat_extra/soloud/soloud_wav.h>
+
+
+extern SoLoud::Soloud g_Soloud;
+extern SoLoud::Wav g_AlienExplosion;
+extern SoLoud::Wav g_AlienSounds[4];
+
 
 void AlienArmy_Init();
 
@@ -63,6 +71,8 @@ void Alien_Move(Alien_t *alien, Vector2_t delta) {
     Move(&alien->body, delta);
     alien->sprite_frame = (alien->sprite_frame+1)%2;
     AsignAlienMask(alien);
+    
+   
 }
 
 int AlienArmy_ReloadRate(int score) {
@@ -232,6 +242,15 @@ AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
             if (alien_army->aliens[index].active) finished = true;
             else index = (index + 1) % 55;
         } while (!finished && alien_army->aliens_alive > 0);
+        
+        if (g_game.game_state == kGameState_Playing){
+            int sound_interval = alien_army->aliens_alive / 2 + 4; // lento con muchos, rapido con pocos
+            if (g_tick % sound_interval == 0) {
+                g_Soloud.play(g_AlienSounds[alien_army->sound_index]);
+                alien_army->sound_index = (alien_army->sound_index + 1) % 4;
+            }
+        }
+
         AlienArmy_ControlBullets(alien_army, score, playerX);
     } else {
         if (alien_army->army_state == kAlienArmyState_generating) {
@@ -282,6 +301,11 @@ int AlienGetPoints(AlienType type) {
 void Dead(Alien_t *alien) {
     if (alien->active) {
         alien->active = false;
+
+        if (g_game.game_state == kGameState_Playing){
+            g_Soloud.play(g_AlienExplosion);
+        }
+
         alien->body.mask = g_assets.AlienExplosionMask;
         AddScore(AlienGetPoints(alien->type));
         AlienArmy_t *alien_army = &g_game.player[g_game.player_playing].alien_army;

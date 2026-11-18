@@ -10,6 +10,11 @@
 #include "body.cc"
 #include "bullet.cc"
 #include "UFO.cc"
+#include <esat_extra/soloud/soloud.h>
+#include <esat_extra/soloud/soloud_wav.h>
+
+extern SoLoud::Soloud g_Soloud;
+extern SoLoud::Wav g_PlayerExplosion;
 
 // Prototipaje
 
@@ -92,8 +97,11 @@ void Dead(Player_t *self, int damage) {
     self->lives -= damage;
 
     if (g_game.game_state != kGameState_Demo) {
+
       g_game.game_state = kGameState_Death;
       GenerateLives(self->lives);
+      g_Soloud.play(g_PlayerExplosion);
+
     } else g_game.game_state = kGameState_DemoDeath;
 
     if(self->lives <= 0) {
@@ -154,6 +162,10 @@ void Shoot(Player_t *self) {
     MoveTo(&Bullet_registry[kBulletType_Player], {self->body.position.x + self->body.mask.size.x/2 - g_assets.PlayerBullet.size.x/2, self->body.position.y});
   
     if (!g_UFO.active) g_UFO.dir = !g_UFO.dir;
+
+    if (g_game.game_state != kGameState_Demo){
+        g_Soloud.play(g_shoot);
+    }
   }
 }
 

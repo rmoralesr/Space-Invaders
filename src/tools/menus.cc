@@ -171,3 +171,41 @@ void LoadAboutToPlayMenu(Game_t *game){
 	
 	QueueUpdate(kUpdateID_Playing, g_tick + 120 + 22);
 }
+
+void LoadGameOverMenu(Game_t *game){
+    if (game->game_state == kGameState_DemoDeath){
+
+        WipeScreenToContent(&g_wipe_screen);
+        g_wipe_screen.queued_tick = g_tick;
+        QueueUpdate(kUpdateID_InsertCoin, g_tick + 22);
+
+    } else {
+        if (game->multiplayer && game->player[game->player_playing].dead) {
+            GenerateText("game over  player< >",{33,224},g_tick, ProgressiveTextTickRate);
+            GenerateText(game->player_playing ? "2" : "1",{177,224},g_tick + 140, ProgressiveTextTickRate);
+            
+            if(!game->player[!game->player_playing].dead){
+                WipeScreenToContent(&g_wipe_screen);
+                g_wipe_screen.queued_tick = g_tick + 180;
+                QueueUpdate(kUpdateID_Afterdeath, g_tick + 180 + 22);
+            } else {
+                GenerateText("game over",{81,59},g_tick + 180, ProgressiveTextTickRate);
+
+                WipeScreenToContent(&g_wipe_screen);
+                g_wipe_screen.queued_tick = g_tick + 180 + 180;
+
+                QueueUpdate(kUpdateID_OnGameOverEnd, g_tick + 180 + 180 + 22);
+            }
+        } else if(game->player[game->player_playing].dead) {
+            GenerateText("game over",{81,59},g_tick, ProgressiveTextTickRate);
+            WipeScreenToContent(&g_wipe_screen);
+            g_wipe_screen.queued_tick = g_tick + 180;
+
+            QueueUpdate(kUpdateID_OnGameOverEnd, g_tick + 180 + 22);
+        } else {
+            WipeScreenToContent(&g_wipe_screen);
+            g_wipe_screen.queued_tick = g_tick + 40;
+            QueueUpdate(kUpdateID_Afterdeath, g_tick + 80);
+        }
+    }
+}

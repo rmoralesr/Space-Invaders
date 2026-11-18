@@ -1,10 +1,17 @@
 #ifndef BULLET_CC
 #define BULLET_CC 1
 
+#include "../core/types.cc"
+#include "../tools/asset-loader.cc"
 #include "../core/cirno.cc"
 #include "../core/mask.cc"
 #include "../core/draw.cc"
 #include "body.cc"
+#include <esat_extra/soloud/soloud.h>
+#include <esat_extra/soloud/soloud_wav.h>
+
+extern SoLoud::Soloud g_Soloud;
+extern SoLoud::Wav g_shoot;
 
 /*enum BulletType { // Definido en asset-loader (ya que no estamos usando .h)
   kBulletType_Player,
@@ -49,6 +56,10 @@ Bullet_t* Bullet_Construct(BulletType type) { // Cambiar puntero por referencia
     Bullet_registry[type] = {};
     self->active = true;
     self->type = type;
+
+    if (type == kBulletType_Player && g_game.game_state != kGameState_Demo){
+        g_Soloud.play(g_shoot);
+    }
 
     Bullet_registry_active_count++;
 
