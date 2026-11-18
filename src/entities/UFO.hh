@@ -1,10 +1,17 @@
 #ifndef UFO_HH
 #define UFO_HH 1
 
+#include <esat_extra/soloud/soloud.h>
+#include <esat_extra/soloud/soloud_wav.h>
+
 #include "body.hh"
 #include "../core/score.hh"
 #include "../tools/ui-element.hh"
 #include "../tools/asset-loader.hh"
+
+extern SoLoud::Soloud g_Soloud;
+extern SoLoud::Wav g_UFOflying;
+extern SoLoud::Wav g_UFOdead;
 
 const int kUFOpoints[16] = {100, 50, 50,100,
                             150,100,100, 50,
@@ -18,6 +25,7 @@ struct UFO_t {
     bool dir = true;
     long long int start_tick;
     int anim_tick_progress = 0;
+    SoLoud::handle flyingHandle = 0;
 };
 
 extern UFO_t g_UFO;

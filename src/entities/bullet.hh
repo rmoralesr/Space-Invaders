@@ -1,10 +1,16 @@
 #ifndef BULLET_HH
 #define BULLET_HH 1
 
+#include <esat_extra/soloud/soloud.h>
+#include <esat_extra/soloud/soloud_wav.h>
+
 #include "../core/cirno.hh"
 #include "../core/mask.hh"
 #include "../core/draw.hh"
 #include "body.hh"
+
+extern SoLoud::Soloud g_Soloud;
+extern SoLoud::Wav g_shoot;
 
 enum BulletType {
   kBulletType_Player,

@@ -1,11 +1,7 @@
 #include "player.hh"
 
 #include "..\core\game.hh"
-#include <esat_extra/soloud/soloud.h>
-#include <esat_extra/soloud/soloud_wav.h>
 
-extern SoLoud::Soloud g_Soloud;
-extern SoLoud::Wav g_PlayerExplosion;
 
 void Player_Assets(Player_t *self_assets) {
   self_assets->body = {

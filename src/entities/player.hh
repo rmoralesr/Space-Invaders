@@ -1,6 +1,9 @@
 #ifndef PLAYER_HH
 #define PLAYER_HH 1
 
+#include <esat_extra/soloud/soloud.h>
+#include <esat_extra/soloud/soloud_wav.h>
+
 #include "../core/cirno.hh"
 #include "../core/mask.hh"
 #include "../core/draw.hh"
@@ -10,6 +13,9 @@
 #include "bullet.hh"
 #include "aliens_army.hh"
 
+extern SoLoud::Soloud g_Soloud;
+extern SoLoud::Wav g_PlayerExplosion;
+
 const int kBunkerLimit = 4;
 
 struct Bunker_t {
@@ -18,11 +24,15 @@ struct Bunker_t {
 
 struct Player_t {
     bool active;
+    bool pause; // TODO
     bool dead;
     bool dying;
+    int pause_tick; /// TODO Pause (Contar ticks de pausa)
+    int dead_tick; /// TODO Pause (Guardar tick de muerte)
     int dying_tick;
     int score;
     int lives;
+    int rounds;
 
     Body_t body;
     Bunker_t bunker[kBunkerLimit];

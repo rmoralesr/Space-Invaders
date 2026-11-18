@@ -5,11 +5,7 @@
 #include "../core/mask.cc"
 #include "../core/draw.cc"
 #include "body.cc"
-#include <esat_extra/soloud/soloud.h>
-#include <esat_extra/soloud/soloud_wav.h>
 
-extern SoLoud::Soloud g_Soloud;
-extern SoLoud::Wav g_shoot;
 
 /*enum BulletType { // Definido en asset-loader (ya que no estamos usando .h)
   kBulletType_Player,

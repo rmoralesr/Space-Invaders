@@ -28,7 +28,7 @@ enum kUpdateID {
     kUpdateID_ChoosingPlayer,
     kUpdateID_AboutToPlay,
     kUpdateID_Playing,
-    kUpdateID_Death,
+    kUpdateID_Afterdeath,
     kUpdateID_GameOver,
     kUpdateID_OnGameOverEnd,
 	kUpdateID_UpdateScore

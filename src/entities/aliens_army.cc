@@ -1,10 +1,6 @@
 #include "aliens_army.hh"
 #include "..\core\game.hh"
 
-extern SoLoud::Soloud g_Soloud;
-extern SoLoud::Wav g_AlienExplosion;
-extern SoLoud::Wav g_AlienSounds[4];
-
 void AsignAlienMask(Alien_t *alien) {
     alien->body.mask = g_assets.AlienMasks[alien->type][alien->sprite_frame];
 }

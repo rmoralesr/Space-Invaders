@@ -4,12 +4,6 @@
 #include "game.hh"
 #include "../tools/ui-element.hh"
 
-#include <esat_extra/soloud/soloud.h>
-#include <esat_extra/soloud/soloud_wav.h>
-
-extern SoLoud::Soloud g_Soloud;
-extern SoLoud::Wav g_ExtraLife;
-
 void UpdateScore(){
     if (g_game.game_state != kGameState_Demo){
         Player_t *player = &g_game.player[g_game.player_playing];
