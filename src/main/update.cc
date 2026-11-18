@@ -31,6 +31,9 @@ void AboutToPlayInit(Game_t *game){
 	ClearUIContent();
 	EraseText(kTaitoCopPosition, 9);
 
+	for (int i = 0; i < 4; i++) {
+		Bullet_registry[i].active = false;
+	}
 	if(game->player[game->player_playing].alien_army.active) 
 		AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army);
 
