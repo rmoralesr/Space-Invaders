@@ -2,8 +2,6 @@
 #define CIRNO_PERFECT_MATH_HH 1
 
 int clamp(int x, int lower, int upper);
-int min(int a, int b);
-int max(int a, int b);
 int sign(int x);
 int pow(int base, int exp);
 int log(unsigned int n, unsigned int base = 2);

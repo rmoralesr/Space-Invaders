@@ -1,9 +1,8 @@
 #ifndef MASK_HH
 #define MASK_HH 1
 
-
+#include <windows.h>
 #include "cirno.hh"
-
 
 constexpr unsigned int kMask_WordCount = 70;
 

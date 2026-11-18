@@ -12,7 +12,7 @@
 #include "../core/game.hh"
 #include "update.hh"
 #include "render.hh"
-#include "../tools/sound.cc"
+#include "../tools/sound.hh"
 
 /** @brief Controla el maximo de frames por segundo */
 void FrameWait(double last_time);

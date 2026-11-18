@@ -1,5 +1,6 @@
 #include "aliens_army.hh"
 #include "..\core\game.hh"
+#include "player.hh"
 
 void AsignAlienMask(Alien_t *alien) {
     alien->body.mask = g_assets.AlienMasks[alien->type][alien->sprite_frame];

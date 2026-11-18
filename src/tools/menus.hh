@@ -17,5 +17,6 @@ void LoadChoosingPlayerOneMenu();
 void LoadChoosingPlayerTwoMenu();
 
 void LoadAboutToPlayMenu(Game_t *game);
+void LoadGameOverMenu(Game_t *game);
 
 #endif // MENUS_HH

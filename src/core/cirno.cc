@@ -9,14 +9,6 @@ int clamp(int x, int lower, int upper) {
   return x;
 }
 
-int min(int a, int b) {
-  return a < b ? a : b;
-}
-
-int max(int a, int b) {
-  return a > b ? a : b;
-}
-
 int sign(int x) {
   return x < 0 ? -1 : 1;
 }

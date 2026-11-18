@@ -1,8 +1,10 @@
+#include <stdio.h>
+
 #include "score.hh"
 
-#include <stdio.h>
 #include "game.hh"
 #include "../tools/ui-element.hh"
+#include "../tools/sound.hh"
 
 void UpdateScore(){
     if (g_game.game_state != kGameState_Demo){

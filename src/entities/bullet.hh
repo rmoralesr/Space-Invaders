@@ -32,7 +32,7 @@ struct Bullet_t {
   Body_t body;
 }; 
 
-extern signed int Bullet_registry_active_count;
+extern unsigned int Bullet_registry_active_count;
 extern Bullet_t Bullet_registry[4];
 
 

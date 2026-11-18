@@ -43,6 +43,7 @@ struct Player_t {
 void Player_Assets(Player_t *self_assets);
 
 void Player_Bunker_Assets(Player_t *self_assets);
+void Player_Bunker_Reset();
 
 void Player_Construct(Player_t *self);
 void Destruct(Player_t *self);
