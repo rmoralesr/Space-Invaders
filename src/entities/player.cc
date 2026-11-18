@@ -118,13 +118,6 @@ void Move(Player_t *self, Vector2_t delta) {
   }
 }
 
-// Obsoleta
-void Bullet_Move() {
-  if (Bullet_registry[kBulletType_Player].active) {
-    Tick(&Bullet_registry[kBulletType_Player]);
-  }
-}
-
 void Shoot(Player_t *self) {
   if (!Bullet_registry[kBulletType_Player].active) {
     Bullet_registry[kBulletType_Player] = *Bullet_Construct(kBulletType_Player);
