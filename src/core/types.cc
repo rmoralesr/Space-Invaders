@@ -3,7 +3,7 @@
 
 #include "../tools/input.cc"
 #include "../entities/body.cc"
-#include "../entities/bullet.cc"
+#include "../tools/asset-loader.cc"
 #include "cirno.cc"
 
 // AQUÍ ESTÁN TODOS LOS TIPOS DE DATOS GENERALES QUE SE VAN A USAR EN EL JUEGO

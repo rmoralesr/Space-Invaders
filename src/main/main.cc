@@ -24,7 +24,6 @@ void GameInit(Game_t *game) {
     game->player_playing = 0;
 
     LoadAssets();
-    GenerateLives(3);
     GenerateText("score<1> hi-score score<2>", {10,9});
     GenerateNumber(game->player[0].score,4, kScore1NumberPosition);
     GenerateNumber(game->player[1].score,4, kScore2NumberPosition);

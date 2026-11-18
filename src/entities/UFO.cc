@@ -45,8 +45,11 @@ void GenerateUFO(){
     else x = 196;
     g_UFO.anim_tick_progress = 0;
     g_UFO.body = {true, {x,42}, g_assets.UFOMasks[0]};
-    g_UFO.flyingHandle = g_Soloud.play(g_UFOflying);  // ← arranca
-    g_Soloud.setLooping(g_UFO.flyingHandle, true);
+
+    if (g_game.game_state == kGameState_Playing){
+        g_UFO.flyingHandle = g_Soloud.play(g_UFOflying);  // ← arranca
+        g_Soloud.setLooping(g_UFO.flyingHandle, true);
+    }
 }
 void EscapeUFO(){
     g_UFO.active = false;
@@ -56,8 +59,11 @@ void EscapeUFO(){
 }
 
 void DestroyUFO(){
-    g_Soloud.stop(g_UFO.flyingHandle);  // ← para el bucle
-    g_Soloud.play(g_UFOdead);
+    if (g_game.game_state == kGameState_Playing){
+        g_Soloud.stop(g_UFO.flyingHandle);  // ← para el bucle
+        g_Soloud.play(g_UFOdead);
+    }
+
     g_UFO.body.can_collide = false;
     g_UFO.body.mask = g_assets.UFOMasks[1];
     g_UFO.anim_tick_progress = 16;
