@@ -31,7 +31,8 @@ enum kUpdateID {
     kUpdateID_Afterdeath,
     kUpdateID_GameOver,
     kUpdateID_OnGameOverEnd,
-	kUpdateID_UpdateScore
+	kUpdateID_UpdateScore,
+	kUpdateID_NextRound
 };
 
 // Game
@@ -60,5 +61,7 @@ const unsigned int Update_kQueueCapacity = 10;
 extern QueuedUpdate Update_queue[Update_kQueueCapacity];
 
 void QueueUpdate(int id, long long int tick);
+void ClearQueuedActions();
+bool IsActionQueued(int id);
 
 #endif // GAME_HH

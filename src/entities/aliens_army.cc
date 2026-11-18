@@ -88,6 +88,7 @@ int AlienArmy_ReloadRate(int score) {
 }
 
 bool AlienArmy_CanFire(AlienArmy_t *alien_army, int score, BulletType bullet) { // TODO mas condicionales
+    if (g_game.player[g_game.player_playing].pause) return false;
     int rate = AlienArmy_ReloadRate(score);
     for (int i = 1; i < 4; i++) {
         if (bullet != i && Bullet_registry[i].step <= rate && Bullet_registry[i].active) return false;
@@ -126,7 +127,7 @@ int AlienArmy_PickBulletX(AlienArmy_t *alien_army, int playerX, BulletType bulle
 
 int AlienArmy_PickBulletY(AlienArmy_t *alien_army, int col) {
     for (int row = 0; row < 5; row++) {
-        if (alien_army->aliens[row*11+col].active) return alien_army->aliens[row*11+col].body.position.y - 1;
+        if (alien_army->aliens[row*11+col].active) return alien_army->aliens[row*11+col].body.position.y;
     }
     return -1;
 }
@@ -213,7 +214,6 @@ AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
     int index = (alien_army->last_alien_moved + 1) % 55;
     bool finished = false;
     if (alien_army->aliens_alive <= 0) {
-        Player_Bunker_Reset(); // TODO antes del reset del bunker que se limpie la pantalla
         return kAlienArmyFlag_exterminated;
     }
     if (alien_army->army_state != kAlienArmyState_generating && !alien_army->regenerating) {

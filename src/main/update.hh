@@ -2,7 +2,6 @@
 #define UPDATE_HH 1
 #include "../core/game.hh"
 
-void ClearQueuedActions();
 void AboutToPlayInit(Game_t *game);
 
 void PlayingInit(Game_t *game);
@@ -15,7 +14,7 @@ void PlayerLogic(Game_t *game);
 void ResetGame(Game_t *game);
 
 void CheckCredits(Game_t *game);
-void UpdateCredits(Game_t *game, int number_credits);
+void SpendCredits(Game_t *game, int number_credits);
 
 void PreviewingInit(Game_t *game);
 void DemoInit(Game_t *game);

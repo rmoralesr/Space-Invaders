@@ -14,12 +14,17 @@
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
-void ClearQueuedActions(){
-	for (int i = 0; i < Update_kQueueCapacity; i++){
-		Update_queue[i].active = false;
+void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
+	for (int i = 0; i < 55; i++) {
+		if (alien_army->aliens[(g_tick+i)%55].active) {
+			Dead(&alien_army->aliens[(g_tick+i)%55]);
+			return;
+		}
 	}
-	g_wipe_screen.current_step = -1;
-	g_wipe_screen.queued_tick = 0;
+}
+
+void MatarPlayer(Player_t *player, Game_t *game) { // TODO quitar
+	Dead(player, 1);
 }
 
 void AboutToPlayInit(Game_t *game){
@@ -58,29 +63,37 @@ void GameOverInit(Game_t *game) {
 }
 
 void PlayerInput(Game_t *game){
-	Player_t *current_player = &game->player[game->player_playing];
+	if(game->player[game->player_playing].pause_tick % 140 == 0) game->player[game->player_playing].pause = false; /// TODO Pause (Tiempo que esta el player desaparecido pero sigue siendo targeteable)
+	else game->player[game->player_playing].pause_tick++;
 
-	if(current_player->pause_tick % 140 == 0) current_player->pause = false; /// TODO Pause (Tiempo que esta el player desaparecido pero sigue siendo targeteable)
-	else current_player->pause_tick++;
-
-	if (!current_player->pause){
+	if (!game->player[game->player_playing].pause){
 		if (game->game_state == kGameState_Playing){
-			if(game->input.action_button) Shoot(current_player);
+			if(game->input.action_button) Shoot(&game->player[game->player_playing]);
 
 			if (game->input.left_button) {
-				Move(current_player, {-1, 0});
+				Move(&game->player[game->player_playing], {-1, 0});
 			} else if (game->input.right_button) {
-				Move(current_player, {+1, 0});
+				Move(&game->player[game->player_playing], {+1, 0});
 			}
 
 		} else if (game->game_state == kGameState_Demo){
 			if ( g_tick % 180 < 140){
-				if ( g_tick%360 < 260) Move(current_player, {+1, 0});
-				else Move(current_player, {-1, 0});
+				if ( g_tick%360 < 260) Move(&game->player[game->player_playing], {+1, 0});
+				else Move(&game->player[game->player_playing], {-1, 0});
 			}
-			if (  g_tick % 90 == 0 ) Shoot(current_player);
+			if (  g_tick % 90 == 0 ) Shoot(&game->player[game->player_playing]);
 		}
 	}
+}
+
+void NextRound(Game_t *game) {
+	g_wipe_screen.current_step = -1;
+	Player_Bunker_Reset(); // TODO antes del reset del bunker que se limpie la pantalla
+	game->player[game->player_playing].pause = true;
+	game->player[game->player_playing].rounds++;
+	if (game->player[game->player_playing].rounds >= 9) game->player[game->player_playing].rounds = 1;
+	AlienArmy_Init(&game->player[game->player_playing].alien_army);
+	UFO_Init();
 }
 
 void PlayerLogic(Game_t *game){
@@ -98,6 +111,10 @@ void PlayerLogic(Game_t *game){
 	// Jugador
 	PlayerInput(game);
 
+	if (esat::IsKeyDown('M')) MatarAlien(&game->player[game->player_playing].alien_army); //TODO Quitar
+	if (esat::IsKeyDown('K')) MatarPlayer(&game->player[game->player_playing], game); //TODO Quitar
+	if (esat::IsKeyDown('V')) game->player[game->player_playing].lives++; //TODO Quitar
+	if (esat::IsKeyDown('U')) DestroyUFO(); //TODO Quitar
 
 	// Update Objetos
 	int i, j;
@@ -144,7 +161,7 @@ void PlayerLogic(Game_t *game){
 
 			Collide(bullet, &game->player[game->player_playing]);
 
-			if (!bullet->dying && bullet->body.position.y > 228) {
+			if (!bullet->dying && bullet->body.position.y > 226) {
 				Dead(bullet);
 
 				if (bullet->dying) {
@@ -173,11 +190,14 @@ void PlayerLogic(Game_t *game){
 	}
 
 	if (alien_army_flag == kAlienArmyFlag_invaded) Dead(&game->player[game->player_playing], game->player[game->player_playing].lives);
-	if (alien_army_flag == kAlienArmyFlag_exterminated && game->player[game->player_playing].lives > 0) {
-		game->player[game->player_playing].rounds++;
-		if (game->player[game->player_playing].rounds >= 9) game->player[game->player_playing].rounds = 1;
-		AlienArmy_Init(&game->player[game->player_playing].alien_army);
-		UFO_Init();
+	if (alien_army_flag == kAlienArmyFlag_exterminated &&
+		game->player[game->player_playing].lives > 0 && !IsActionQueued(kUpdateID_NextRound)) {
+
+
+		WipeScreenToContent(&g_wipe_screen);
+		g_wipe_screen.queued_tick = g_tick + 1;
+
+		QueueUpdate(kUpdateID_NextRound, g_tick+22);
 	}
 }
 
@@ -201,8 +221,8 @@ void CheckCredits(Game_t *game) {
 	}
 }
 
-void UpdateCredits(Game_t *game, int number_credits) {
-	game->credits+=number_credits;
+void SpendCredits(Game_t *game, int number_credits) {
+	game->credits -= number_credits;
 	GenerateNumber(game->credits,2, kCreditsNumberPosition);
 	WipeScreenToFull(&g_wipe_screen);
 	g_wipe_screen.queued_tick = g_tick + 1;
@@ -334,8 +354,12 @@ void GameUpdate(Game_t *game) {
 					} else {
 						PreviewingInit(game);
 					}
+					break;
 				case kUpdateID_UpdateScore:
 					UpdateScore();
+					break;
+				case kUpdateID_NextRound:
+					NextRound(game);
 					break;
 			}
 		}
@@ -360,12 +384,12 @@ void GameUpdate(Game_t *game) {
 			if (game->input.one_player_button && game->credits >= 1) {
 				game->multiplayer = false;
 				ResetGame(game);
-				UpdateCredits(game, -1);
+				SpendCredits(game, 1);
 			} else if (game->input.two_player_button && game->credits >= 2) {
 				game->multiplayer = true;
 				ResetGame(game);
 				game->player[1].pause = false; /// TODO Pause (Para que no salga la pausa en el player 2)
-				UpdateCredits(game, -2);
+				SpendCredits(game, 2);
 			}
 			break;
 		}
