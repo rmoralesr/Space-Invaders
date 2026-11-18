@@ -64,27 +64,25 @@ void GameOverInit(Game_t *game) {
 }
 
 void PlayerInput(Game_t *game){
-	Player_t *current_player = &game->player[game->player_playing];
+	if(game->player[game->player_playing].pause_tick % 140 == 0) game->player[game->player_playing].pause = false; /// TODO Pause (Tiempo que esta el player desaparecido pero sigue siendo targeteable)
+	else game->player[game->player_playing].pause_tick++;
 
-	if(current_player->pause_tick % 140 == 0) current_player->pause = false; /// TODO Pause (Tiempo que esta el player desaparecido pero sigue siendo targeteable)
-	else current_player->pause_tick++;
-
-	if (!current_player->pause){
+	if (!game->player[game->player_playing].pause){
 		if (game->game_state == kGameState_Playing){
-			if(game->input.action_button) Shoot(current_player);
+			if(game->input.action_button) Shoot(&game->player[game->player_playing]);
 
 			if (game->input.left_button) {
-				Move(current_player, {-1, 0});
+				Move(&game->player[game->player_playing], {-1, 0});
 			} else if (game->input.right_button) {
-				Move(current_player, {+1, 0});
+				Move(&game->player[game->player_playing], {+1, 0});
 			}
 
 		} else if (game->game_state == kGameState_Demo){
 			if ( g_tick % 180 < 140){
-				if ( g_tick%360 < 260) Move(current_player, {+1, 0});
-				else Move(current_player, {-1, 0});
+				if ( g_tick%360 < 260) Move(&game->player[game->player_playing], {+1, 0});
+				else Move(&game->player[game->player_playing], {-1, 0});
 			}
-			if (  g_tick % 90 == 0 ) Shoot(current_player);
+			if (  g_tick % 90 == 0 ) Shoot(&game->player[game->player_playing]);
 		}
 	}
 }
