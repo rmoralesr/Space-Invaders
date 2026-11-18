@@ -17,3 +17,18 @@ void QueueUpdate(int id, long long int tick){
 		Update_queue[n].queued_tick = tick;
 	}
 }
+
+void ClearQueuedActions(){
+	for (int i = 0; i < Update_kQueueCapacity; i++){
+		Update_queue[i].active = false;
+	}
+	g_wipe_screen.current_step = -1;
+	g_wipe_screen.queued_tick = 0;
+}
+
+bool IsActionQueued(int id) {
+	for (int i = 0; i < Update_kQueueCapacity; i++){
+		if (Update_queue[i].active && Update_queue[i].id == id) return true;
+	}
+	return false;
+}
