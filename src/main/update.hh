@@ -11,7 +11,7 @@ void PlayerInput(Game_t *game);
 
 void PlayerLogic(Game_t *game);
 
-void UpdateCredits(Game_t *game, int number_credits);
+void SpendCredits(Game_t *game, int number_credits);
 
 void PreviewingInit(Game_t *game);
 void DemoInit(Game_t *game);

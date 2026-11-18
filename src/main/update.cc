@@ -202,8 +202,8 @@ void PlayerLogic(Game_t *game){
 	}
 }
 
-void UpdateCredits(Game_t *game, int number_credits) {
-	game->credits+=number_credits;
+void SpendCredits(Game_t *game, int number_credits) {
+	game->credits -= number_credits;
 	GenerateNumber(game->credits,2, kCreditsNumberPosition);
 	WipeScreenToFull(&g_wipe_screen);
 	g_wipe_screen.queued_tick = g_tick + 1;
@@ -382,11 +382,11 @@ void GameUpdate(Game_t *game) {
 			}
 			if (game->input.one_player_button && game->credits >= 1) {
 				game->multiplayer = false;
-				UpdateCredits(game, -1);
+				SpendCredits(game, 1);
 			} else if (game->input.two_player_button && game->credits >= 2) {
 				game->multiplayer = true;
 				game->player[1].pause = false; /// TODO Pause (Para que no salga la pausa en el player 2)
-				UpdateCredits(game, -2);
+				SpendCredits(game, 2);
 			}
 			break;
 		}
