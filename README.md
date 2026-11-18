@@ -1,10 +1,4 @@
 # ORGANIZACIÓN
-## GENERAL
-
-- Siempre se compila desde el archivo `main.cc`.
-- En `main.cc` no se deben añadir funciones a menos que sea una función que controle el juego general.
-- Los `#include` en `main.cc` deben ir en orden de menor a mayor, si un archivo necesita otro, su include va después de el include del otro.
-- La strcut `Game` es la más alta de la jerarquía y todo lo demás cuelga de ella, solo las funciones directoras y las más importantes deberían acceder a ella.
 
 ## TRABAJO EN EQUIPO Y ORGANIZACIÓN EN GRUPO
 
@@ -21,10 +15,37 @@
 - La rama main no se debe tocar a menos que se sepa que todo lo que está hecho funciona y compila sin errores, y no está a medias.
 - Se sube el trabajo a la rama features general cuando al menos no tiene errores de compilación.
 
-## POR CONFIRMAR
+## COMPILACION
 
-- Todos los tipos y constantes que se usen en más de un módulo del juego deben estar declarados en `types.cc`.
-- Si un tipo o constante no se va a usar en más de un módulo, puede declararse dentro del archivo de ese módulo.
-- No deben haber variables globales, las funciones obtienen lo que necesitan por parámetros, de forma jerárquica.
+- Crear el archivo compilacion.bat dentro de una carpeta llamada .compiled para que no llenar main de basura
+@REM Compilación y Enlace con biblioteca gráfica.
+@cls
+@echo ---------------------------------------------------
+@echo  ESAT Curso 2025-2026 Asignatura PRG Primero
+@echo ---------------------------------------------------
+@echo  Proceso por lotes iniciado.
+@echo ---------------------------------------------------
+@echo off
+
+setlocal enabledelayedexpansion
+
+set "SOURCES="
+
+for /r "..\src" %%f in (*cc) do (
+    set "SOURCES=!SOURCES! %%f"
+)
+
+cl /nologo /Zi /GR- /EHs /MD /Fe:..\src\main\main.exe %SOURCES% ^
+-I ..\Lib_Graph\ESAT_rev248\include ..\Lib_Graph\ESAT_rev248\bin\ESAT.lib   opengl32.lib user32.lib gdi32.lib shell32.lib Ws2_32.lib
+
+endlocal
+
+@echo ---------------------------------------------------
+@echo  Proceso por lotes finalizado.
+@echo ---------------------------------------------------
+
+
+
+compilacion.bat C: && cd ../src/main && main && cd ../../.compiled
 
 https://archive.org/details/arcade_invaders#

@@ -1,30 +1,10 @@
-#ifndef ALIENS_ARMY_CC
-#define ALIENS_ARMY_CC 1
-
-#include "body.cc"
-#include "../core/types.cc"
-#include "../tools/asset-loader.cc"
-#include "../core/score.cc"
-#include "../entities/player.cc"
-#include "../entities/UFO.cc"
-#include <esat_extra/soloud/soloud.h>
-#include <esat_extra/soloud/soloud_wav.h>
-
-
-extern SoLoud::Soloud g_Soloud;
-extern SoLoud::Wav g_AlienExplosion;
-extern SoLoud::Wav g_AlienSounds[4];
-
-
-void AlienArmy_Init();
-
-// Definiciones
+#include "aliens_army.hh"
+#include "..\core\game.hh"
+#include "player.hh"
 
 void AsignAlienMask(Alien_t *alien) {
     alien->body.mask = g_assets.AlienMasks[alien->type][alien->sprite_frame];
 }
-
-const int kAlienBulletsTable[] = {1,7,1,1,1,4,11,1,6,3,1,1,11,9,2,8,2,11,4,7,10};
 
 AlienType GetAlienType(int row) {
     if (row < 2) {
@@ -36,14 +16,38 @@ AlienType GetAlienType(int row) {
     return kAlienType_squid;
 }
 
+int AlienArmy_GetStartingY(int rounds) {
+    switch (rounds) {
+        case 0: return 136;
+            break;
+        case 1: return 160;
+            break;
+        case 2: return 176;
+            break;
+        case 3:
+        case 4:
+        case 5:
+            return 184;
+            break;
+        case 6:
+        case 7:
+        case 8:
+            return 192;
+            break;
+        default: break;
+    }
+    return 136;
+}
+
 void Alien_Init(Alien_t *alien, int row, int col) {
     alien->type = GetAlienType(row);
     alien->active = false;
     alien->body.can_collide = true;
     alien->body.mask = {};
     alien->body.position.x = col * 16 + 24;
-    alien->body.position.y = 136 - 8 - row * 16;
+    alien->body.position.y = AlienArmy_GetStartingY(g_game.player[g_game.player_playing].rounds) - 8 - row * 16;
     alien->sprite_frame = 0;
+    alien->id = row*11+col;
     alien->showing = true;
     AsignAlienMask(alien);
 }
@@ -83,7 +87,7 @@ int AlienArmy_ReloadRate(int score) {
     return 7;
 }
 
-bool AlienArmy_CanFire(AlienArmy_t *alien_army, int score, BulletType bullet) {
+bool AlienArmy_CanFire(AlienArmy_t *alien_army, int score, BulletType bullet) { // TODO mas condicionales
     int rate = AlienArmy_ReloadRate(score);
     for (int i = 1; i < 4; i++) {
         if (bullet != i && Bullet_registry[i].step <= rate && Bullet_registry[i].active) return false;
@@ -176,8 +180,6 @@ void AlienArmy_ShootPlunger(AlienArmy_t *alien_army, int playerX) {
 }
 
 void AlienArmy_ControlBullets(AlienArmy_t *alien_army, int score, int playerX) {
-    int y = -1;
-    int x = -1;
     switch (alien_army->bullet_to_move) {
         case kBulletType_Squiggly:
             if (!Bullet_registry[kBulletType_Squiggly].active) {
@@ -242,11 +244,15 @@ AlienArmyFlag AlienArmy_Move(AlienArmy_t *alien_army, int score, int playerX) {
             if (alien_army->aliens[index].active) finished = true;
             else index = (index + 1) % 55;
         } while (!finished && alien_army->aliens_alive > 0);
-        int sound_interval = alien_army->aliens_alive / 2 + 4; // lento con muchos, rapido con pocos
-        if (g_tick % sound_interval == 0) {
-        g_Soloud.play(g_AlienSounds[alien_army->sound_index]);
-        alien_army->sound_index = (alien_army->sound_index + 1) % 4;
+        
+        if (g_game.game_state == kGameState_Playing){
+            int sound_interval = alien_army->aliens_alive / 2 + 4; // lento con muchos, rapido con pocos
+            if (g_tick % sound_interval == 0) {
+                g_Soloud.play(g_AlienSounds[alien_army->sound_index]);
+                alien_army->sound_index = (alien_army->sound_index + 1) % 4;
+            }
         }
+
         AlienArmy_ControlBullets(alien_army, score, playerX);
     } else {
         if (alien_army->army_state == kAlienArmyState_generating) {
@@ -297,15 +303,18 @@ int AlienGetPoints(AlienType type) {
 void Dead(Alien_t *alien) {
     if (alien->active) {
         alien->active = false;
-        g_Soloud.play(g_AlienExplosion);
+
+        if (g_game.game_state == kGameState_Playing){
+            g_Soloud.play(g_AlienExplosion);
+        }
+
         alien->body.mask = g_assets.AlienExplosionMask;
         AddScore(AlienGetPoints(alien->type));
         AlienArmy_t *alien_army = &g_game.player[g_game.player_playing].alien_army;
 
         alien_army->aliens_alive--;
         alien_army->alien_explosion_tick = 16;
-        alien_army->alien_died = alien - alien_army->aliens;
+        // alien_army->alien_died = alien - alien_army->aliens;
+        alien_army->alien_died = alien->id;
     }
 }
-
-#endif // ALIENS_ARMY_CC

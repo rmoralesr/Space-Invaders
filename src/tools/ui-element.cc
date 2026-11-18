@@ -1,64 +1,18 @@
-#ifndef UI_ELEMENT_CC
-#define UI_ELEMENT_CC 1
+#include "ui-element.hh"
+#include "..\core\game.hh"
 
-#include "../core/cirno.cc"
-#include "../core/types.cc"
-#include "../entities/body.cc"
-#include "asset-loader.cc"
 
-// FUNCIONES PARA LA INTERFAZ DEL JUEGO
-
-struct UIElement_t {
-    bool active = false, flashing = false;
-    Body_t body = { false };
-    long long int queued_tick;
-};
-
-const int kMaxAnimationExtraMasks = 3;
-struct AnimatedUIElement_t {
-    bool active;
-    Vector2_t delta;
-    UIElement_t element;
-    Mask_t extra_masks[kMaxAnimationExtraMasks];
-    int frame_count = 1;
-    int frame_rate = 4;
-    long long int end_tick;
-};
-
-struct WipeScreen {
-    Vector2_t position;
-    Vector2_t size;
-    int step_size = 16, current_step = -1;
-    long long int queued_tick = 0;
-};
-
-const unsigned int UIElement_kRegistryCapacity = 200;
 unsigned int UIElement_registry_active_count = 0;
 UIElement_t UIElement_registry[UIElement_kRegistryCapacity] = {0};
 
-const unsigned int AnimatedUIElement_kRegistryCapacity = 5;
 unsigned int AnimatedUIElement_registry_active_count = 0;
 AnimatedUIElement_t AnimatedUIElement_registry[AnimatedUIElement_kRegistryCapacity] = {0};
-
-const unsigned int ProgressiveTextTickRate = 6;
-
-const Vector2_t kCreditsNumberPosition = {200,240};
-const Vector2_t kScore1NumberPosition = {10 + 8*2 , 9 + 8*2};
-const Vector2_t kScore2NumberPosition = {10 + 8*20, 9 + 8*2};
-const Vector2_t kHiScoreNumberPosition = {10 + 8*10, 9 + 8*2};
-const Vector2_t kLivesNumberPosition = {10, 240};
-const Vector2_t kTaitoCopPosition = {82,32};
 
 WipeScreen g_wipe_screen;
 
 Body_t g_bottomline = {};
 
-// Prototipaje
-
-UIElement_t* UIElement_Construct();
-void Destruct(UIElement_t* self);
-
-// Definiciones
+// FUNCIONES PARA LA INTERFAZ DEL JUEGO
 
 void GenerateBottomLine(){
     g_bottomline.mask = g_assets.LineMask;
@@ -94,21 +48,21 @@ void Destruct(AnimatedUIElement_t* self) {
   self->active = false;
   AnimatedUIElement_registry_active_count--;
 }
-void EraseUIElement(Vector2_t position, int exluded_index = -1){
+void EraseUIElement(Vector2_t position, int exluded_index){
     for (int j = 0; j < UIElement_kRegistryCapacity; j++){
         if (UIElement_registry[j].body.position.x == position.x &&
             UIElement_registry[j].body.position.y == position.y &&
             UIElement_registry[j].queued_tick <= g_tick && j != exluded_index) Destruct(&UIElement_registry[j]);
     }
 }
-void EraseText(Vector2_t position, int length = 1){
+void EraseText(Vector2_t position, int length){
     for (int i = 0; i < length; i++){
         EraseUIElement(position);
         position.x += kCharactersWidth + 3;
     }
 }
 
-void GenerateUIElement(Body_t b, long long int tick = 0, bool flashing = false){
+void GenerateUIElement(Body_t b, long long int tick, bool flashing){
     int n = 0;
     bool free_space = false;
     while(n < UIElement_kRegistryCapacity && !free_space){
@@ -131,7 +85,7 @@ void QueuedEraseText(Vector2_t position, int length, long long int tick){
 }
 
 void GenerateAnimatedUIElement(Body_t b, long long int start_tick, long long int end_tick, Vector2_t delta, 
-    Mask_t extra_masks[3] = {0}, int fr_count = 1, int fr_rate = 4, bool flashing = false){
+    Mask_t extra_masks[3], int fr_count, int fr_rate, bool flashing){
 
     int n = 0;
     bool free_space = false;
@@ -173,7 +127,7 @@ void ClearUIContent(){
 
 // Texto
 void GenerateText(const char *text, Vector2_t position, 
-    int start_tick = 0, int wait_rate = 0, bool flashing = false, bool ignore_space = false){
+    int start_tick, int wait_rate, bool flashing, bool ignore_space){
     long long int queue_tick = start_tick;
     if (queue_tick == 0) queue_tick = g_tick;
     int i = 0;
@@ -187,7 +141,7 @@ void GenerateText(const char *text, Vector2_t position,
         i++;
     }
 }
-void GenerateNumber(int value, int digits, Vector2_t position, int start_tick = 0, bool flashing = false) {
+void GenerateNumber(int value, int digits, Vector2_t position, int start_tick, bool flashing) {
     if (start_tick == 0) start_tick = g_tick;
     if (value > pow(10, digits) - 1) 
         value = pow(10, digits) - 1;
@@ -227,11 +181,9 @@ void AdvanceWipeScreen(WipeScreen *wp){
 }
 void WipeScreenToContent(WipeScreen *wp){
     wp->position = {0,40};
-    wp->size = {kWindowSize.x, 200};
+    wp->size = {kWindowSize.x, 199};
 }
 void WipeScreenToFull(WipeScreen *wp){
     wp->position = {0,0};
     wp->size = {kWindowSize.x, kWindowSize.y};
 }
-
-#endif // UI_ELEMENT_CC

@@ -1,28 +1,19 @@
-#ifndef UPDATE_CC
-#define UPDATE_CC 1
+#include "update.hh"
 
-#include <esat/draw.h>
-#include "../core/types.cc"
-#include "../entities/body.cc"
-#include "../tools/ui-element.cc"
-#include "../tools/asset-loader.cc"
-#include "../tools/input.cc"
-#include "../tools/menus.cc"
-#include "../entities/aliens_army.cc"
-#include "../entities/UFO.cc"
-#include "../entities/player.cc"
-#include "../entities/collision-handler.cc"
-#include "../core/score.cc"
+#include "../core/game.hh"
+#include "../entities/body.hh"
+#include "../tools/ui-element.hh"
+#include "../tools/asset-loader.hh"
+#include "../tools/input.hh"
+#include "../tools/menus.hh"
+#include "../entities/aliens_army.hh"
+#include "../entities/UFO.hh"
+#include "../entities/player.hh"
+#include "../entities/collision-handler.hh"
+#include "../core/score.hh"
 
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
-void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
-	Dead(&alien_army->aliens[g_tick%55]);
-}
-
-void MatarPlayer(Player_t *player, Game_t *game) { // TODO quitar
-	Dead(player, 1);
-}
 void ClearQueuedActions(){
 	for (int i = 0; i < Update_kQueueCapacity; i++){
 		Update_queue[i].active = false;
@@ -57,45 +48,11 @@ void PlayingInit(Game_t *game){
 
 void GameOverInit(Game_t *game) {
 	if (game->game_state != kGameState_GameOver){
-		
 		ClearUIContent();
 
-		if (game->game_state == kGameState_DemoDeath){
+    	if (game->game_state == kGameState_DemoDeath) EscapeUFO();
 
-			WipeScreenToContent(&g_wipe_screen);
-			g_wipe_screen.queued_tick = g_tick;
-			QueueUpdate(kUpdateID_InsertCoin, g_tick + 22);
-
-		} else {
-			if (game->multiplayer && game->player[game->player_playing].dead) {
-				GenerateText("game over  player< >",{33,224},g_tick, ProgressiveTextTickRate);
-				GenerateText(game->player_playing ? "2" : "1",{177,224},g_tick + 140, ProgressiveTextTickRate);
-				
-				if(!game->player[!game->player_playing].dead){
-					WipeScreenToContent(&g_wipe_screen);
-					g_wipe_screen.queued_tick = g_tick + 180;
-					QueueUpdate(kUpdateID_Afterdeath, g_tick + 180 + 22);
-				} else {
-					GenerateText("game over",{81,59},g_tick + 180, ProgressiveTextTickRate);
-
-					WipeScreenToContent(&g_wipe_screen);
-					g_wipe_screen.queued_tick = g_tick + 180 + 180;
-
-					QueueUpdate(kUpdateID_OnGameOverEnd, g_tick + 180 + 180 + 22);
-				}
-			} else if(game->player[game->player_playing].dead) {
-				GenerateText("game over",{81,59},g_tick, ProgressiveTextTickRate);
-				WipeScreenToContent(&g_wipe_screen);
-				g_wipe_screen.queued_tick = g_tick + 180;
-
-				QueueUpdate(kUpdateID_OnGameOverEnd, g_tick + 180 + 22);
-			} else {
-				WipeScreenToContent(&g_wipe_screen);
-				g_wipe_screen.queued_tick = g_tick + 40;
-				QueueUpdate(kUpdateID_Afterdeath, g_tick + 80);
-			}
-		}
-
+		LoadGameOverMenu(game);
 		game->game_state = kGameState_GameOver;
 
 	}
@@ -107,41 +64,37 @@ void PlayerInput(Game_t *game){
 	if(current_player->pause_tick % 140 == 0) current_player->pause = false; /// TODO Pause (Tiempo que esta el player desaparecido pero sigue siendo targeteable)
 	else current_player->pause_tick++;
 
-	if (game->game_state == kGameState_Playing && !current_player->pause){
-		if(game->input.action_button) Shoot(current_player);
+	if (!current_player->pause){
+		if (game->game_state == kGameState_Playing){
+			if(game->input.action_button) Shoot(current_player);
 
-		if (game->input.left_button) {
-			Move(current_player, {-1, 0});
-		} else if (game->input.right_button) {
-			Move(current_player, {+1, 0});
-		}
+			if (game->input.left_button) {
+				Move(current_player, {-1, 0});
+			} else if (game->input.right_button) {
+				Move(current_player, {+1, 0});
+			}
 
-	} else if (game->game_state == kGameState_Demo){
-		if ( g_tick % 180 < 140){
-			if ( g_tick%360 < 260) Move(current_player, {+1, 0});
-			else Move(current_player, {-1, 0});
+		} else if (game->game_state == kGameState_Demo){
+			if ( g_tick % 180 < 140){
+				if ( g_tick%360 < 260) Move(current_player, {+1, 0});
+				else Move(current_player, {-1, 0});
+			}
+			if (  g_tick % 90 == 0 ) Shoot(current_player);
 		}
-		if (  g_tick % 90 == 0 ) Shoot(current_player);
 	}
 }
 
 void PlayerLogic(Game_t *game){
-	Player_t *current_player = &game->player[game->player_playing];
 
 	AlienArmyFlag alien_army_flag = AlienArmy_Control(
-		&current_player->alien_army,
-		current_player->score, 
-		current_player->body.position.x
+		&game->player[game->player_playing].alien_army,
+		game->player[game->player_playing].score,
+		game->player[game->player_playing].body.position.x
 	);
 	
 	// UFO
 	TickUFO();
 	if (g_tick == g_UFO.start_tick) GenerateUFO();
-	
-	if (esat::IsKeyDown('M')) MatarAlien(&current_player->alien_army); // TODO Quitar
-	if (esat::IsKeyDown('K')) MatarPlayer(current_player, game); // TODO Quitar
-	if (esat::IsKeyDown('V')) current_player->lives++; // TODO Quitar
-	if (esat::IsKeyDown('U')) DestroyUFO(); // TODO Quitar
 
 	// Jugador
 	PlayerInput(game);
@@ -165,13 +118,13 @@ void PlayerLogic(Game_t *game){
 
 		// Bunkers
 		for (j = 0; j < kBunkerLimit; j++) {
-			body = &current_player->bunker[j].body;
+			body = &game->player[game->player_playing].bunker[j].body;
 			Collide(p_bullet, body);
 		}
 
 		// Aliens
 		for (j = 0; j < 55; j++) {
-			alien = &current_player->alien_army.aliens[j];
+			alien = &game->player[game->player_playing].alien_army.aliens[j];
 			if(alien->active) Collide(p_bullet, alien);
 		}
 	}
@@ -181,16 +134,16 @@ void PlayerLogic(Game_t *game){
 		bullet = &Bullet_registry[i+1];
 		if (bullet->active) {
 			if (i == g_tick % 3) // Cada disparo (de alien) toma turnos para ser simulado
-				Tick(bullet, current_player->alien_army.aliens_alive <= 8);
+				Tick(bullet, game->player[game->player_playing].alien_army.aliens_alive <= 8);
 
 			Collide(p_bullet, bullet);
 
 			for (j = 0; j < kBunkerLimit; j++) {
-				body = &current_player->bunker[j].body;
+				body = &game->player[game->player_playing].bunker[j].body;
 				Collide(bullet, body);
 			}
 
-			Collide(bullet, current_player);
+			Collide(bullet, &game->player[game->player_playing]);
 
 			if (!bullet->dying && bullet->body.position.y > 228) {
 				Dead(bullet);
@@ -211,19 +164,19 @@ void PlayerLogic(Game_t *game){
 
 	// Aliens con barreras
 	for (i = 0; i < 11; i++) {
-		alien = AlienArmy_GetLowestAlienInColumn(&current_player->alien_army, i);
+		alien = AlienArmy_GetLowestAlienInColumn(&game->player[game->player_playing].alien_army, i);
 		if (alien != nullptr) {
 			for (j = 0; j < kBunkerLimit; j++) {
-				bunker = &current_player->bunker[j];
+				bunker = &game->player[game->player_playing].bunker[j];
 				Collide(alien, bunker);
 			}
 		}
 	}
 
-
-
-	if (alien_army_flag == kAlienArmyFlag_invaded) Dead(current_player, current_player->lives);
-	if (alien_army_flag == kAlienArmyFlag_exterminated && current_player->lives > 0) {
+	if (alien_army_flag == kAlienArmyFlag_invaded) Dead(&game->player[game->player_playing], game->player[game->player_playing].lives);
+	if (alien_army_flag == kAlienArmyFlag_exterminated && game->player[game->player_playing].lives > 0) {
+		game->player[game->player_playing].rounds++;
+		if (game->player[game->player_playing].rounds >= 9) game->player[game->player_playing].rounds = 1;
 		AlienArmy_Init(&game->player[game->player_playing].alien_army);
 		UFO_Init();
 	}
@@ -262,12 +215,6 @@ void DemoInit(Game_t *game){
 
 		PlayingInit(game);
 		game->player[0].lives = 1;
-		/*WipeScreenToContent(&g_wipe_screen);
-		g_wipe_screen.queued_tick = g_tick + 120;
-
-		GenerateText("*demo gameplay*", {50,200});
-
-		QueueUpdate(kUpdateID_InsertCoin, g_tick + 120 + 22);*/
 	}
 }
 
@@ -349,7 +296,7 @@ void GameUpdate(Game_t *game) {
 					game->game_state = kGameState_Playing;
 					PlayingInit(game);
 					break;
-				case kUpdateID_Afterdeath : 
+				case kUpdateID_Afterdeath :
 					if(game->multiplayer && !game->player[!game->player_playing].dead) {
 						game->player_playing = !game->player_playing;
 						QueueUpdate(kUpdateID_AboutToPlay, g_tick + 1);
@@ -364,7 +311,8 @@ void GameUpdate(Game_t *game) {
 					GameOverInit(game);
 					break;
 				case kUpdateID_OnGameOverEnd :
-					for(int i = 0; i < 2; i++) {	
+					EscapeUFO();
+					for(int i = 0; i < 2; i++) {
 						if(game->player[game->player_playing].lives == 0) AlienArmy_Init(&game->player[game->player_playing].alien_army); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
 						else if(game->multiplayer) AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
 						Player_Reset(&game->player[i]); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
@@ -448,5 +396,3 @@ void GameUpdate(Game_t *game) {
 			EraseUIElement(UIElement_registry[i].body.position, i);
     }
 }
-
-#endif // UPDATE_CC

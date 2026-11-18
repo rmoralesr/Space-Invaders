@@ -1,13 +1,4 @@
-#ifndef DRAW_CC
-#define DRAW_CC 1
-
-#include <esat/draw.h>
-
-#include "../tools/asset-loader.cc"
-#include "../entities/body.cc"
-#include "cirno.cc"
-
-const unsigned int kPixelScale = 3;
+#include "draw.hh"
 
 void DrawRectangle(Vector2_t position, Vector2_t size, unsigned char RGBA[4]){
     esat::DrawSetFillColor(RGBA[0], RGBA[1], RGBA[2]);
@@ -34,9 +25,7 @@ void DrawRectangle(Vector2_t position, Vector2_t size, unsigned char RGBA[4]){
 }
 
 void GetPositionColor(unsigned char RGBA[4], unsigned int x, unsigned int y) {
-
     esat::SpriteGetPixel(g_assets.ColorMask, x/8,y/8, RGBA);
-    
 }
 
 void SetToBlack(unsigned char RGBA[4]) {
@@ -107,5 +96,3 @@ void Draw(Body_t* self) {
     }
 
 }
-
-#endif // DRAW_CC
