@@ -109,10 +109,6 @@ void Dead_Animation(Player_t *self) {
   if(self->dying_tick%4 == 0) self->dying = !self->dying;
 }
 
-void MoveTo(Player_t *self, Vector2_t pos) {
-  MoveTo(&self->body, pos);
-}
-
 void Move(Player_t *self, Vector2_t delta) {
   if (
     (self->body.position.x > 16 && self->body.position.x < (208 - self->body.mask.size.x)) || 
