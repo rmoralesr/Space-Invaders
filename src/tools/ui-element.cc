@@ -227,7 +227,7 @@ void AdvanceWipeScreen(WipeScreen *wp){
 }
 void WipeScreenToContent(WipeScreen *wp){
     wp->position = {0,40};
-    wp->size = {kWindowSize.x, 200};
+    wp->size = {kWindowSize.x, 199};
 }
 void WipeScreenToFull(WipeScreen *wp){
     wp->position = {0,0};
