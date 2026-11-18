@@ -17,7 +17,12 @@
 // FUNCIONES DE ACTUALIZACIÓN DE VALORES DEL JUEGO
 
 void MatarAlien(AlienArmy_t *alien_army) { // TODO quitar
-	Dead(&alien_army->aliens[g_tick%55]);
+	for (int i = 0; i < 55; i++) {
+		if (alien_army->aliens[(g_tick+i)%55].active) {
+			Dead(&alien_army->aliens[(g_tick+i)%55]);
+			return;
+		}
+	}
 }
 
 void MatarPlayer(Player_t *player, Game_t *game) { // TODO quitar
@@ -127,21 +132,20 @@ void PlayerInput(Game_t *game){
 }
 
 void PlayerLogic(Game_t *game){
-	Player_t *current_player = &game->player[game->player_playing];
 
 	AlienArmyFlag alien_army_flag = AlienArmy_Control(
-		&current_player->alien_army,
-		current_player->score, 
-		current_player->body.position.x
+		&game->player[game->player_playing].alien_army,
+		game->player[game->player_playing].score,
+		game->player[game->player_playing].body.position.x
 	);
 	
 	// UFO
 	TickUFO();
 	if (g_tick == g_UFO.start_tick) GenerateUFO();
 
-	if (esat::IsKeyDown('M')) MatarAlien(&current_player->alien_army); //TODO Quitar
-	if (esat::IsKeyDown('K')) MatarPlayer(current_player, game); //TODO Quitar
-	if (esat::IsKeyDown('V')) current_player->lives++; //TODO Quitar
+	if (esat::IsKeyDown('M')) MatarAlien(&game->player[game->player_playing].alien_army); //TODO Quitar
+	if (esat::IsKeyDown('K')) MatarPlayer(&game->player[game->player_playing], game); //TODO Quitar
+	if (esat::IsKeyDown('V')) game->player[game->player_playing].lives++; //TODO Quitar
 	if (esat::IsKeyDown('U')) DestroyUFO(); //TODO Quitar
 
 	// Jugador
@@ -166,13 +170,13 @@ void PlayerLogic(Game_t *game){
 
 		// Bunkers
 		for (j = 0; j < kBunkerLimit; j++) {
-			body = &current_player->bunker[j].body;
+			body = &game->player[game->player_playing].bunker[j].body;
 			Collide(p_bullet, body);
 		}
 
 		// Aliens
 		for (j = 0; j < 55; j++) {
-			alien = &current_player->alien_army.aliens[j];
+			alien = &game->player[game->player_playing].alien_army.aliens[j];
 			if(alien->active) Collide(p_bullet, alien);
 		}
 	}
@@ -182,16 +186,16 @@ void PlayerLogic(Game_t *game){
 		bullet = &Bullet_registry[i+1];
 		if (bullet->active) {
 			if (i == g_tick % 3) // Cada disparo (de alien) toma turnos para ser simulado
-				Tick(bullet, current_player->alien_army.aliens_alive <= 8);
+				Tick(bullet, game->player[game->player_playing].alien_army.aliens_alive <= 8);
 
 			Collide(p_bullet, bullet);
 
 			for (j = 0; j < kBunkerLimit; j++) {
-				body = &current_player->bunker[j].body;
+				body = &game->player[game->player_playing].bunker[j].body;
 				Collide(bullet, body);
 			}
 
-			Collide(bullet, current_player);
+			Collide(bullet, &game->player[game->player_playing]);
 
 			if (!bullet->dying && bullet->body.position.y > 228) {
 				Dead(bullet);
@@ -212,10 +216,10 @@ void PlayerLogic(Game_t *game){
 
 	// Aliens con barreras
 	for (i = 0; i < 11; i++) {
-		alien = AlienArmy_GetLowestAlienInColumn(&current_player->alien_army, i);
+		alien = AlienArmy_GetLowestAlienInColumn(&game->player[game->player_playing].alien_army, i);
 		if (alien != nullptr) {
 			for (j = 0; j < kBunkerLimit; j++) {
-				bunker = &current_player->bunker[j];
+				bunker = &game->player[game->player_playing].bunker[j];
 				Collide(alien, bunker);
 			}
 		}
@@ -223,8 +227,10 @@ void PlayerLogic(Game_t *game){
 
 
 
-	if (alien_army_flag == kAlienArmyFlag_invaded) Dead(current_player, current_player->lives);
-	if (alien_army_flag == kAlienArmyFlag_exterminated && current_player->lives > 0) {
+	if (alien_army_flag == kAlienArmyFlag_invaded) Dead(&game->player[game->player_playing], game->player[game->player_playing].lives);
+	if (alien_army_flag == kAlienArmyFlag_exterminated && game->player[game->player_playing].lives > 0) {
+		game->player[game->player_playing].rounds++;
+		if (game->player[game->player_playing].rounds >= 9) game->player[game->player_playing].rounds = 1;
 		AlienArmy_Init(&game->player[game->player_playing].alien_army);
 		UFO_Init();
 	}

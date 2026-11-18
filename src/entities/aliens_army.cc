@@ -27,13 +27,36 @@ AlienType GetAlienType(int row) {
     return kAlienType_squid;
 }
 
+int AlienArmy_GetStartingY(int rounds) {
+    switch (rounds) {
+        case 0: return 136;
+            break;
+        case 1: return 160;
+            break;
+        case 2: return 176;
+            break;
+        case 3:
+        case 4:
+        case 5:
+            return 184;
+            break;
+        case 6:
+        case 7:
+        case 8:
+            return 192;
+            break;
+        default: break;
+    }
+    return 136;
+}
+
 void Alien_Init(Alien_t *alien, int row, int col) {
     alien->type = GetAlienType(row);
     alien->active = false;
     alien->body.can_collide = true;
     alien->body.mask = {};
     alien->body.position.x = col * 16 + 24;
-    alien->body.position.y = 136 - 8 - row * 16;
+    alien->body.position.y = AlienArmy_GetStartingY(g_game.player[g_game.player_playing].rounds) - 8 - row * 16;
     alien->sprite_frame = 0;
     alien->id = row*11+col;
     alien->showing = true;

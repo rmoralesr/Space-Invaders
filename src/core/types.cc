@@ -76,6 +76,7 @@ struct Player_t {
     int dying_tick;
     int score;
     int lives;
+    int rounds;
 
     Body_t body;
     Bunker_t bunker[kBunkerLimit];
