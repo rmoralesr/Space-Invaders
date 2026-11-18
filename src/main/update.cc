@@ -39,8 +39,7 @@ void PlayingInit(Game_t *game){
 	GenerateNumber(game->player[0].score,4, kScore1NumberPosition);
 	if(game->multiplayer) GenerateNumber(game->player[1].score,4, kScore2NumberPosition);
 	
-	if(game->player[game->player_playing].lives == 0) AlienArmy_Init(&game->player[game->player_playing].alien_army);
-	else if(game->multiplayer) AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army);
+	if(game->multiplayer) AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army);
 	UFO_Init();
 	Player_Reset(&game->player[game->player_playing]);
 
@@ -182,6 +181,26 @@ void PlayerLogic(Game_t *game){
 	}
 }
 
+void ResetGame(Game_t *game) {
+	for(int i = 0; i < 2; i++) {
+		PlayerSetUp(&game->player[i]); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
+		AlienArmy_Init(&game->player[i].alien_army); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
+	}
+	game->player_playing = 0; // TODO
+}
+
+void CheckCredits(Game_t *game) {
+	if (game->credits > 0) {
+		ClearQueuedActions();
+		game->game_state = kGameState_ChoosingPlayers;
+
+		WipeScreenToContent(&g_wipe_screen);
+		g_wipe_screen.queued_tick = g_tick;
+
+		QueueUpdate(kUpdateID_ChoosingPlayer, g_tick + 22);
+	}
+}
+
 void UpdateCredits(Game_t *game, int number_credits) {
 	game->credits+=number_credits;
 	GenerateNumber(game->credits,2, kCreditsNumberPosition);
@@ -202,19 +221,16 @@ void PreviewingInit(Game_t *game){
 
 void DemoInit(Game_t *game){
 	if (game->game_state != kGameState_Demo){
+		ResetGame(game);
 
 		GenerateLives(3);
 		game->multiplayer = false;
-		game->player_playing = 0;
-		game->player[0].lives = 0;
-
 		game->game_state = kGameState_Demo;
 
 		g_wipe_screen.current_step = -1;
 		ClearUIContent();
 
 		PlayingInit(game);
-		game->player[0].lives = 1;
 	}
 }
 
@@ -312,12 +328,6 @@ void GameUpdate(Game_t *game) {
 					break;
 				case kUpdateID_OnGameOverEnd :
 					EscapeUFO();
-					for(int i = 0; i < 2; i++) {
-						if(game->player[game->player_playing].lives == 0) AlienArmy_Init(&game->player[game->player_playing].alien_army); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
-						else if(game->multiplayer) AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
-						Player_Reset(&game->player[i]); /// TODO Pensar como dejar los players vivos despues del game para no tener problemas al iniciar con multiplayer
-					}
-					game->player_playing = 0; // TODO
 
 					if (game->credits > 0) {
 						ChoosingPlayerInit(game);
@@ -338,19 +348,10 @@ void GameUpdate(Game_t *game) {
 				GenerateText("taito cop", kTaitoCopPosition);
 			}
 
-			if (game->credits > 0) {
-				ClearQueuedActions();
-				game->game_state = kGameState_ChoosingPlayers;
-
-				WipeScreenToContent(&g_wipe_screen);
-				g_wipe_screen.queued_tick = g_tick;
-
-				QueueUpdate(kUpdateID_ChoosingPlayer, g_tick + 22);
-			}
+			CheckCredits(game);
 			break;
 		}
 		case kGameState_ChoosingPlayers: {
-			game->player[0].pause = true; /// TODO Pause (Seteo inicial del pause para que no se salte la pausa)
 			if (game->input.insert_credit && game->credits == 2) {
 				WipeScreenToContent(&g_wipe_screen);
 				g_wipe_screen.queued_tick = g_tick;
@@ -358,9 +359,11 @@ void GameUpdate(Game_t *game) {
 			}
 			if (game->input.one_player_button && game->credits >= 1) {
 				game->multiplayer = false;
+				ResetGame(game);
 				UpdateCredits(game, -1);
 			} else if (game->input.two_player_button && game->credits >= 2) {
 				game->multiplayer = true;
+				ResetGame(game);
 				game->player[1].pause = false; /// TODO Pause (Para que no salga la pausa en el player 2)
 				UpdateCredits(game, -2);
 			}
@@ -368,6 +371,7 @@ void GameUpdate(Game_t *game) {
 		}
 		case kGameState_AboutToPlay: break;
 		case kGameState_Demo:
+			CheckCredits(game);
 		case kGameState_Playing: {
 
 			if(game->player[game->player_playing].active) {

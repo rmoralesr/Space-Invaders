@@ -12,6 +12,9 @@ void PlayerInput(Game_t *game);
 
 void PlayerLogic(Game_t *game);
 
+void ResetGame(Game_t *game);
+
+void CheckCredits(Game_t *game);
 void UpdateCredits(Game_t *game, int number_credits);
 
 void PreviewingInit(Game_t *game);

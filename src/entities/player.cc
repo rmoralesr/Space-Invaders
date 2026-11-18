@@ -36,6 +36,18 @@ void Player_Construct(Player_t *self) {
     Player_Assets(self);
 }
 
+void PlayerSetUp(Player_t *self) { 
+  self->pause = true;
+  self->dead = false;
+  self->score = 0;
+  self->lives = 3;
+  self->rounds = 0;
+  self->pause_tick = 1;
+  
+  Player_Bunker_Assets(self);
+  Player_Assets(self);
+}
+
 void Player_Reset(Player_t *self) {
   if (!self->active) {
     self->active = true;
@@ -44,12 +56,6 @@ void Player_Reset(Player_t *self) {
     self->pause_tick = 1; /// TODO Pause (Contar ticks de pausa)
     self->dying_tick = 0;
 
-    if (self->lives == 0) {      
-      self->score = 0;
-      self->lives = 3;
-      self->rounds = 0;
-      Player_Bunker_Assets(self);
-    }
     GenerateLives(self->lives);
 
     Player_Assets(self);
@@ -73,7 +79,10 @@ void Dead(Player_t *self, int damage) {
       GenerateLives(self->lives);
       g_Soloud.play(g_PlayerExplosion);
 
-    } else g_game.game_state = kGameState_DemoDeath;
+    } else {
+      g_game.game_state = kGameState_DemoDeath;
+      self->lives = 0;
+    }
 
     if(self->lives <= 0) {
       self->lives = 0;
