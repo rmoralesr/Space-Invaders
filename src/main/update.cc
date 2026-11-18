@@ -32,8 +32,7 @@ void PlayingInit(Game_t *game){
 
 	GenerateNumber(game->player[0].score,4, kScore1NumberPosition);
 	if(game->multiplayer) GenerateNumber(game->player[1].score,4, kScore2NumberPosition);
-	
-	// if(game->multiplayer) AlienArmy_SetRegeneration(&game->player[game->player_playing].alien_army);
+
 	UFO_Init();
 	Player_Reset(&game->player[game->player_playing]);
 

@@ -90,8 +90,6 @@ void Dead(Player_t *self, int damage) {
     }
 
     if(g_game.multiplayer && !g_game.player[!g_game.player_playing].dead) { // Si es multiplayer comprueba que el otro player aun siga vivo
-      // WipeScreenToContent(&g_wipe_screen);
-			// g_wipe_screen.queued_tick = g_tick + 60;
       QueueUpdate(kUpdateID_GameOver, g_tick + 60 + 22);
     } else if(!self->dead) {
       QueueUpdate(kUpdateID_Afterdeath, g_tick + 60);

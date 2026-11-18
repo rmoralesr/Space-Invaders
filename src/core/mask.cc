@@ -13,7 +13,6 @@ bool IsValidPosition(Mask_t *mask, unsigned int x, unsigned int y) {
 }
 
 unsigned int GetIndex(Mask_t *mask, unsigned int x, unsigned int y) {
-  assert(IsValidPosition(mask, x,y)); // Borrar en release
 
   return y * mask->size.x + x;
 }
@@ -77,7 +76,6 @@ void FromFile(Mask_t *mask, const char *path,
 
   if (mx*my > kMask_WordCount*8) {
     printf("FromFile: %s es demasiado grande (%d x %d)", path, mx, my);
-    assert(false); // Abortamos porque probablemente escribiriamos en buffers ajenos
   }
   printf("%d, %d\n", mx, my);
 
